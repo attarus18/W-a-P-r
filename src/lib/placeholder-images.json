@@ -1,0 +1,40 @@
+{
+  "placeholderImages": [
+    {
+      "id": "candle-making",
+      "description": "Artisan hands carefully pouring wax into a candle mold.",
+      "imageUrl": "https://images.unsplash.com/photo-1604249180535-583716d9ec33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjYW5kbGUlMjBtYWtpbmd8ZW58MHx8fHwxNzY4MjQzMjkwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "candle making"
+    },
+    {
+      "id": "wax-melts",
+      "description": "A collection of colorful scented wax melts.",
+      "imageUrl": "https://images.unsplash.com/photo-1711207354630-20b977c4bfc3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3YXglMjBtZWx0c3xlbnwwfHx8fDE3NjgyNDMyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wax melts"
+    },
+    {
+      "id": "artisan-candle",
+      "description": "A finished artisan candle with a wooden wick, decorated with dried flowers.",
+      "imageUrl": "https://images.unsplash.com/photo-1764822553647-b3a680513eaf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhcnRpc2FuJTIwY2FuZGxlfGVufDB8fHx8MTc2ODI0MzI5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "artisan candle"
+    },
+    {
+      "id": "candle-shop",
+      "description": "A beautifully arranged shelf in a candle shop.",
+      "imageUrl": "https://images.unsplash.com/photo-1618324497832-05e6e65f0131?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjYW5kbGUlMjBzaG9wfGVufDB8fHx8MTc2ODI0MzI5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "candle shop"
+    },
+    {
+      "id": "lavender-candle",
+      "description": "A lavender scented candle in a glass jar.",
+      "imageUrl": "https://images.unsplash.com/photo-1758356345661-49276f7b3100?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsYXZlbmRlciUyMGNhbmRsZXxlbnwwfHx8fDE3NjgyNDMyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lavender candle"
+    },
+    {
+      "id": "vanilla-candle",
+      "description": "A vanilla scented pillar candle.",
+      "imageUrl": "https://images.unsplash.com/photo-1742544637816-44a0e7f016c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx2YW5pbGxhJTIwY2FuZGxlfGVufDB8fHx8MTc2ODI0MzI5MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vanilla candle"
+    }
+  ]
+}

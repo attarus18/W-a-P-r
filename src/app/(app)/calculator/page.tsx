@@ -1,0 +1,218 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
+import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/context/language-context';
+import { useCurrency } from '@/context/currency-context';
+import jsPDF from 'jspdf';
+import { useIsMobile } from '@/hooks/use-mobile';
+
+type FormValues = {
+  cera: number;
+  stoppino: number;
+  contenitore: number;
+  fragranza: number;
+  colore: number;
+  spedizione: number;
+};
+
+export default function CalculatorPage() {
+  const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm<FormValues>({
+    defaultValues: {
+      cera: 0,
+      stoppino: 0,
+      contenitore: 0,
+      fragranza: 0,
+      colore: 0,
+      spedizione: 0
+    }
+  });
+  const [totalCost, setTotalCost] = useState<number | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const { toast } = useToast();
+  const { t } = useLanguage();
+  const { formatCurrency, currency } = useCurrency();
+  const isMobile = useIsMobile();
+
+  const onSubmit: SubmitHandler<FormValues> = data => {
+    const cost = Object.values(data).reduce((acc, value) => acc + (Number(value) || 0), 0);
+    setTotalCost(cost);
+  };
+  
+  const handleReset = () => {
+    reset();
+    setTotalCost(null);
+  };
+
+  const handleShare = () => {
+    if (totalCost !== null) {
+      navigator.clipboard.writeText(`${t('calculator.share_text')}: ${formatCurrency(totalCost)}`);
+      toast({
+        title: t('calculator.toast_title'),
+        description: t('calculator.toast_description'),
+      });
+    }
+  };
+
+  const handleGeneratePdf = () => {
+    if (totalCost === null) return;
+    setIsPrinting(true);
+
+    try {
+        const doc = new jsPDF({ orientation: 'p', unit: 'px', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.width;
+        const margin = 30;
+        let y = margin;
+
+        const primaryColor = '#f97316';
+        const textColor = '#111827';
+        const mutedColor = '#6b7280';
+
+        // --- HEADER ---
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        doc.setTextColor(primaryColor);
+        doc.text('WAX PRO', pageWidth / 2, y, { align: 'center', charSpace: 2 });
+        y += 15;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(mutedColor);
+        doc.text(t('calculator.title').toUpperCase(), pageWidth / 2, y, { align: 'center', charSpace: 1 });
+        y += 30;
+
+        // --- INPUT COSTS ---
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(mutedColor);
+        doc.text(t('calculator.form_title').toUpperCase(), margin, y);
+        y += 15;
+
+        const formValues = getValues();
+        const costs = [
+            { label: t('calculator.wax_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.cera },
+            { label: t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.stoppino },
+            { label: t('calculator.container_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.contenitore },
+            { label: t('calculator.fragrance_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.fragranza },
+            { label: t('calculator.color_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.colore },
+            { label: t('calculator.shipping_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.spedizione },
+        ];
+
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(textColor);
+        costs.forEach(cost => {
+            doc.text(`${cost.label}:`, margin, y);
+            doc.text(formatCurrency(cost.value), pageWidth - margin, y, { align: 'right' });
+            y += 15;
+        });
+        
+        y += 15;
+
+        // --- TOTAL COST ---
+        doc.setFillColor(primaryColor);
+        doc.rect(margin, y, pageWidth - (margin * 2), 50, 'F');
+        
+        y += 20;
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor('#FFFFFF');
+        doc.text(t('calculator.result_title').toUpperCase(), margin + 15, y);
+        
+        y += 15;
+        doc.setFontSize(22);
+        doc.text(formatCurrency(totalCost), pageWidth - margin - 15, { align: 'right' });
+
+        if (isMobile) {
+            const pdfBlob = doc.output('blob');
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            const newWindow = window.open(blobUrl, '_blank');
+            if (!newWindow) {
+                 toast({
+                    variant: "destructive",
+                    title: t('report.pdf_error_title'),
+                    description: t('report.pdf.popup_blocked'),
+                });
+            }
+        } else {
+            doc.save('waxpro-costo-produzione.pdf');
+        }
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        toast({
+            variant: "destructive",
+            title: t('report.pdf_error_title'),
+            description: t('report.pdf_error_description'),
+        });
+    } finally {
+        setIsPrinting(false);
+    }
+  };
+
+  const InputField = ({ id, label, icon: Icon, ...props }: { id: keyof FormValues, label: string, icon: React.ElementType, [key: string]: any }) => (
+      <div className="space-y-2">
+        <Label htmlFor={id}>{label}</Label>
+        <div className="relative flex items-center">
+            <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input id={id} type="number" step="0.01" className="pl-10" {...register(id)} {...props} />
+        </div>
+      </div>
+  );
+
+  return (
+    <div className="space-y-8 max-w-2xl mx-auto">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
+        <p className="text-muted-foreground">{t('calculator.description')}</p>
+      </div>
+      <Card>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle>{t('calculator.form_title')}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <InputField id="cera" label={t('calculator.wax_cost_label', { currency: currency.symbol })} icon={Flame} />
+            <InputField id="stoppino" label={t('calculator.wick_cost_label', { currency: currency.symbol })} icon={Combine} />
+            <InputField id="contenitore" label={t('calculator.container_cost_label', { currency: currency.symbol })} icon={GlassWater} />
+            <InputField id="fragranza" label={t('calculator.fragrance_cost_label', { currency: currency.symbol })} icon={Droplets} />
+            <InputField id="colore" label={t('calculator.color_cost_label', { currency: currency.symbol })} icon={Palette} />
+            <InputField id="spedizione" label={t('calculator.shipping_cost_label', { currency: currency.symbol })} icon={Truck} />
+          </CardContent>
+          <CardFooter className="flex justify-between items-center flex-wrap gap-4">
+             <Button type="submit">{t('calculator.submit_button')}</Button>
+             <Button type="button" variant="ghost" onClick={handleReset}>
+                <RotateCcw className="mr-2 h-4 w-4" /> {t('calculator.reset_button')}
+             </Button>
+          </CardFooter>
+        </form>
+      </Card>
+      
+      {totalCost !== null && (
+        <Card className="bg-primary/10 border-primary/20">
+          <CardHeader>
+            <CardTitle>{t('calculator.result_title')}</CardTitle>
+            <CardDescription>{t('calculator.result_description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold text-primary">{formatCurrency(totalCost)}</p>
+          </CardContent>
+          <CardFooter className="justify-center gap-4">
+            <Button variant="outline" onClick={handleShare}>
+              <Share2 className="mr-2 h-4 w-4" />
+              {t('calculator.share_button')}
+            </Button>
+            <Button variant="outline" onClick={handleGeneratePdf} disabled={isPrinting}>
+              {isPrinting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Printer className="mr-2 h-4 w-4" />}
+              {isPrinting ? t('report.generating_pdf') : t('calculator.pdf_button')}
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+    </div>
+  );
+}
