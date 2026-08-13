@@ -100,7 +100,7 @@ export default function SettingsPage() {
             <UserIcon className="h-5 w-5" />
             {t('settings.profile_title')}
           </CardTitle>
-          {user && <CardDescription>{t('settings.logged_in_as', { email: user.email })}</CardDescription>}
+          {user && <CardDescription>{t('settings.logged_in_as', { email: user.email ?? '' })}</CardDescription>}
         </CardHeader>
         <CardContent className="space-y-6">
             <div className="space-y-2">
