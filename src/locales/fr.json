@@ -280,6 +280,17 @@
     "success_description": "Un lien de réinitialisation du mot de passe a été envoyé à {email}.",
     "error_title": "Erreur"
   },
+  "reset_password": {
+    "title": "Définir un nouveau mot de passe",
+    "description": "Choisissez un nouveau mot de passe pour votre compte.",
+    "new_password_label": "Nouveau mot de passe",
+    "confirm_password_label": "Confirmer le mot de passe",
+    "submit_button": "Enregistrer le nouveau mot de passe",
+    "success_title": "Mot de passe mis à jour",
+    "success_description": "Votre mot de passe a été mis à jour. Connectez-vous avec votre nouveau mot de passe.",
+    "error_title": "Erreur",
+    "invalid_link": "Lien invalide ou expiré. Demandez-en un nouveau depuis la page de connexion."
+  },
   "access_denied": {
     "title": "Accès restreint",
     "description": "La fonctionnalité '{feature}' est disponible uniquement pour les utilisateurs enregistrés.",

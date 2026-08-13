@@ -5,7 +5,7 @@ import { NotebookPen, Calculator, Warehouse, Wand2, Settings, PieChart, BookOpen
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { useUser } from '@/firebase';
+import { useUser } from '@/context/auth-context';
 
 
 export default function DashboardPage() {

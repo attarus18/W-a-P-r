@@ -280,6 +280,17 @@
     "success_description": "A password reset link has been sent to {email}.",
     "error_title": "Error"
   },
+  "reset_password": {
+    "title": "Set a new password",
+    "description": "Choose a new password for your account.",
+    "new_password_label": "New password",
+    "confirm_password_label": "Confirm password",
+    "submit_button": "Save new password",
+    "success_title": "Password updated",
+    "success_description": "Your password has been updated. Sign in with your new password.",
+    "error_title": "Error",
+    "invalid_link": "Invalid or expired link. Request a new one from the login page."
+  },
   "access_denied": {
     "title": "Access Restricted",
     "description": "The '{feature}' feature is available only for registered users.",

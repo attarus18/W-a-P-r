@@ -3,10 +3,10 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useUser, useFirestore } from '@/firebase';
+import { useUser } from '@/context/auth-context';
+import { createClient } from '@/lib/supabase/client';
 import { getSubscriptionData } from '@/ai/flows/stripe-flows';
 import { useToast } from '@/hooks/use-toast';
-import { doc, setDoc } from 'firebase/firestore';
 import { Loader2, PartyPopper } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/language-context';
@@ -15,7 +15,7 @@ function SuccessContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user, isUserLoading } = useUser();
-    const firestore = useFirestore();
+    const [supabase] = useState(() => createClient());
     const { toast } = useToast();
     const { t } = useLanguage();
     const [message, setMessage] = useState(t('subscribe.processing'));
@@ -24,7 +24,7 @@ function SuccessContent() {
     useEffect(() => {
         const sessionId = searchParams.get('session_id');
 
-        if (isUserLoading || isUpdating || !user || !firestore || !sessionId) {
+        if (isUserLoading || isUpdating || !user || !sessionId) {
             return;
         }
 
@@ -34,17 +34,15 @@ function SuccessContent() {
                 // Recupero dati da Stripe
                 const subData = await getSubscriptionData({ sessionId });
 
-                // Aggiornamento Firestore con ID ed Email per superare le regole di sicurezza
-                const userDocRef = doc(firestore, 'users', user.uid);
-                
-                await setDoc(userDocRef, {
-                    id: user.uid,
-                    email: user.email || '',
-                    stripeCustomerId: subData.stripeCustomerId,
-                    subscriptionPlan: subData.subscriptionPlan,
-                    subscriptionStatus: subData.subscriptionStatus,
-                    subscriptionPeriodEndDate: subData.subscriptionPeriodEndDate,
-                }, { merge: true });
+                // Aggiornamento ottimistico lato client per un feedback immediato;
+                // il webhook Stripe (Fase 5) resta la fonte di verità in caso di
+                // rinnovi, cancellazioni o se questa pagina non viene mai raggiunta.
+                await supabase.from('profiles').update({
+                    stripe_customer_id: subData.stripeCustomerId,
+                    subscription_plan: subData.subscriptionPlan,
+                    subscription_status: subData.subscriptionStatus,
+                    subscription_period_end_date: subData.subscriptionPeriodEndDate,
+                }).eq('id', user.id);
 
                 setMessage(t('subscribe.success_message'));
                 toast({
@@ -68,7 +66,7 @@ function SuccessContent() {
         };
 
         updateSubscription();
-    }, [user, isUserLoading, firestore, router, searchParams, toast, t, isUpdating]);
+    }, [user, isUserLoading, supabase, router, searchParams, toast, t, isUpdating]);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">

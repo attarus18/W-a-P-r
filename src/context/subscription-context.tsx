@@ -1,7 +1,8 @@
 'use client';
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
-import { useUser, useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+
+import React, { createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
+import { useUser } from '@/context/auth-context';
+import { createClient } from '@/lib/supabase/client';
 import type { User as AppUser } from '@/lib/data';
 
 interface SubscriptionContextType {
@@ -16,21 +17,34 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const { user, isUserLoading } = useUser();
-    const firestore = useFirestore();
+    const [supabase] = useState(() => createClient());
+    const [profileRow, setProfileRow] = useState<any>(null);
+    const [isProfileLoading, setIsProfileLoading] = useState(true);
 
-    const userDocRef = useMemoFirebase(() => {
-        if (!firestore || !user) return null;
-        return doc(firestore, 'users', user.uid);
-    }, [firestore, user]);
+    useEffect(() => {
+        if (!user) {
+            setProfileRow(null);
+            setIsProfileLoading(false);
+            return;
+        }
+        setIsProfileLoading(true);
+        supabase
+            .from('profiles')
+            .select('stripe_customer_id, subscription_plan, subscription_status, subscription_period_end_date')
+            .eq('id', user.id)
+            .single()
+            .then(({ data }) => {
+                setProfileRow(data);
+                setIsProfileLoading(false);
+            });
+    }, [supabase, user]);
 
-    const { data: userData, isLoading: isUserDocLoading } = useDoc<AppUser>(userDocRef);
-
-    const subscription = useMemo(() => userData ? {
-        stripeCustomerId: userData.stripeCustomerId,
-        subscriptionPlan: userData.subscriptionPlan,
-        subscriptionStatus: userData.subscriptionStatus,
-        subscriptionPeriodEndDate: userData.subscriptionPeriodEndDate,
-    } : null, [userData]);
+    const subscription = useMemo(() => profileRow ? {
+        stripeCustomerId: profileRow.stripe_customer_id,
+        subscriptionPlan: profileRow.subscription_plan,
+        subscriptionStatus: profileRow.subscription_status,
+        subscriptionPeriodEndDate: profileRow.subscription_period_end_date,
+    } : null, [profileRow]);
 
     const isPro = useMemo(() => subscription?.subscriptionStatus === 'active', [subscription]);
     const isTrialing = useMemo(() => subscription?.subscriptionStatus === 'trialing', [subscription]);
@@ -38,7 +52,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
     const value = {
       subscription,
-      isSubscriptionLoading: isUserLoading || isUserDocLoading,
+      isSubscriptionLoading: isUserLoading || isProfileLoading,
       isPro,
       isTrialing,
       hasActiveSubscription,

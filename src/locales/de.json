@@ -280,6 +280,17 @@
     "success_description": "Ein Link zum Zurücksetzen des Passworts wurde an {email} gesendet.",
     "error_title": "Fehler"
   },
+  "reset_password": {
+    "title": "Neues Passwort festlegen",
+    "description": "Wähle ein neues Passwort für dein Konto.",
+    "new_password_label": "Neues Passwort",
+    "confirm_password_label": "Passwort bestätigen",
+    "submit_button": "Neues Passwort speichern",
+    "success_title": "Passwort aktualisiert",
+    "success_description": "Dein Passwort wurde aktualisiert. Melde dich mit dem neuen Passwort an.",
+    "error_title": "Fehler",
+    "invalid_link": "Ungültiger oder abgelaufener Link. Fordere einen neuen über die Anmeldeseite an."
+  },
   "access_denied": {
     "title": "Zugriff eingeschränkt",
     "description": "Die Funktion '{feature}' ist nur für registrierte Benutzer verfügbar.",

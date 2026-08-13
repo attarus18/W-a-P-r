@@ -1,10 +1,9 @@
 'use client';
 
-import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
 import type { Product, Sale, WithId } from '@/lib/data';
-import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
-import { addDocumentNonBlocking, deleteDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { collection, doc } from 'firebase/firestore';
+import { useUser } from '@/context/auth-context';
+import { createClient } from '@/lib/supabase/client';
 
 interface ProductContextType {
   products: WithId<Product>[];
@@ -23,35 +22,91 @@ interface SalesContextType {
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
 
+function rowToProduct(row: any): WithId<Product> {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    name: row.name,
+    quantity: row.quantity,
+    reorderThreshold: row.reorder_threshold,
+    productionCost: row.production_cost,
+    sellPrice: row.sell_price,
+    timestamp: row.created_at,
+  };
+}
+
+function rowToSale(row: any): WithId<Sale> {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    productId: row.product_id,
+    quantity: row.quantity,
+    salePrice: row.sale_price,
+    productionCost: row.production_cost,
+    timestamp: row.created_at,
+  };
+}
+
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
-  const firestore = useFirestore();
+  const [supabase] = useState(() => createClient());
+
+  // Modalita' ospite (nessun utente autenticato): dati solo in memoria,
+  // persi al refresh, esattamente come nella versione Firestore.
   const [localProducts, setLocalProducts] = useState<WithId<Product>[]>([]);
 
-  const productsCollection = useMemoFirebase(() => {
-    if (!firestore || !user) return null;
-    return collection(firestore, 'users', user.uid, 'products');
-  }, [firestore, user]);
+  const [remoteProducts, setRemoteProducts] = useState<WithId<Product>[]>([]);
+  const [remoteSales, setRemoteSales] = useState<WithId<Sale>[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [salesLoading, setSalesLoading] = useState(true);
 
-  const salesCollection = useMemoFirebase(() => {
-      if (!firestore || !user) return null;
-      return collection(firestore, 'users', user.uid, 'sales');
-  }, [firestore, user]);
+  const refetchProducts = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at');
+    setRemoteProducts((data ?? []).map(rowToProduct));
+  }, [supabase, user]);
 
-  const { data: firestoreProducts, isLoading: productsLoading } = useCollection<Product>(productsCollection);
-  const { data: firestoreSales, isLoading: salesLoading } = useCollection<Sale>(salesCollection);
+  const refetchSales = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('sales')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at');
+    setRemoteSales((data ?? []).map(rowToSale));
+  }, [supabase, user]);
 
-  const products = user ? firestoreProducts ?? [] : localProducts;
-  const sales = user ? firestoreSales ?? [] : [];
+  useEffect(() => {
+    if (!user) {
+      setProductsLoading(false);
+      setSalesLoading(false);
+      return;
+    }
+    setProductsLoading(true);
+    setSalesLoading(true);
+    Promise.all([refetchProducts(), refetchSales()]).finally(() => {
+      setProductsLoading(false);
+      setSalesLoading(false);
+    });
+  }, [user, refetchProducts, refetchSales]);
+
+  const products = user ? remoteProducts : localProducts;
+  const sales = user ? remoteSales : [];
 
   const addProduct = useCallback((newProduct: Omit<Product, 'id' | 'timestamp' | 'userId'>) => {
-    if (user && productsCollection) {
-      const productToAdd = {
-        ...newProduct,
-        userId: user.uid,
-        timestamp: new Date().toISOString(),
-      };
-      addDocumentNonBlocking(productsCollection, productToAdd);
+    if (user) {
+      supabase.from('products').insert({
+        user_id: user.id,
+        name: newProduct.name,
+        quantity: newProduct.quantity,
+        reorder_threshold: newProduct.reorderThreshold,
+        production_cost: newProduct.productionCost,
+        sell_price: newProduct.sellPrice,
+      }).then(() => refetchProducts());
     } else {
       const productToAdd: WithId<Product> = {
         ...newProduct,
@@ -61,36 +116,42 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       };
       setLocalProducts(prev => [...prev, productToAdd]);
     }
-  }, [user, productsCollection]);
+  }, [user, supabase, refetchProducts]);
 
   const updateProduct = useCallback((updatedProduct: WithId<Product>) => {
-    if (user && firestore) {
-      const productRef = doc(firestore, 'users', user.uid, 'products', updatedProduct.id);
-      const { id, ...productData } = updatedProduct;
-      updateDocumentNonBlocking(productRef, productData);
+    if (user) {
+      supabase.from('products').update({
+        name: updatedProduct.name,
+        quantity: updatedProduct.quantity,
+        reorder_threshold: updatedProduct.reorderThreshold,
+        production_cost: updatedProduct.productionCost,
+        sell_price: updatedProduct.sellPrice,
+      }).eq('id', updatedProduct.id).then(() => refetchProducts());
     } else {
-       setLocalProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+      setLocalProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
     }
-  }, [user, firestore]);
+  }, [user, supabase, refetchProducts]);
 
   const deleteProduct = useCallback((productId: string) => {
-    if (user && firestore) {
-        const productRef = doc(firestore, 'users', user.uid, 'products', productId);
-        deleteDocumentNonBlocking(productRef);
+    if (user) {
+      supabase.from('products').delete().eq('id', productId).then(() => refetchProducts());
     } else {
       setLocalProducts(prev => prev.filter(p => p.id !== productId));
     }
-  }, [user, firestore]);
+  }, [user, supabase, refetchProducts]);
 
   const recordSale = useCallback((newSale: Omit<Sale, 'id' | 'userId'>) => {
-      if (user && salesCollection) {
-          const saleToAdd = {
-              ...newSale,
-              userId: user.uid,
-          };
-          addDocumentNonBlocking(salesCollection, saleToAdd);
-      }
-  }, [user, salesCollection]);
+    if (user) {
+      supabase.from('sales').insert({
+        user_id: user.id,
+        product_id: newSale.productId,
+        quantity: newSale.quantity,
+        sale_price: newSale.salePrice,
+        production_cost: newSale.productionCost,
+      }).then(() => refetchSales());
+    }
+    // Nessun-op per gli ospiti, come nella versione Firestore.
+  }, [user, supabase, refetchSales]);
 
   return (
     <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, recordSale, isLoading: productsLoading }}>

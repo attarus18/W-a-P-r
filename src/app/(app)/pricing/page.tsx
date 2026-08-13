@@ -5,16 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { CheckCircle2, Loader2, Zap } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
-import { useUser, useFirestore } from '@/firebase';
+import { useUser } from '@/context/auth-context';
+import { createClient } from '@/lib/supabase/client';
 import { createCheckoutSession } from '@/ai/flows/stripe-flows';
 import { useToast } from '@/hooks/use-toast';
-import { doc, getDoc } from 'firebase/firestore';
-import type { User as AppUser } from '@/lib/data';
 
 export default function PricingPage() {
   const { t } = useLanguage();
   const { user } = useUser();
-  const firestore = useFirestore();
+  const [supabase] = useState(() => createClient());
   const { toast } = useToast();
   const [loadingPriceId, setLoadingPriceId] = useState<string | null>(null);
 
@@ -79,16 +78,18 @@ export default function PricingPage() {
     setLoadingPriceId(priceId);
 
     try {
-      const userDocRef = doc(firestore, 'users', user.uid);
-      const userDoc = await getDoc(userDocRef);
-      const userData = userDoc.data() as AppUser;
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('stripe_customer_id')
+        .eq('id', user.id)
+        .single();
 
       // Inviamo gli URL di successo e annullamento basati sull'origine corrente del browser
-      const { url } = await createCheckoutSession({ 
-        priceId, 
-        userId: user.uid,
+      const { url } = await createCheckoutSession({
+        priceId,
+        userId: user.id,
         email: user.email,
-        stripeCustomerId: userData?.stripeCustomerId,
+        stripeCustomerId: profile?.stripe_customer_id ?? undefined,
         successUrl: `${window.location.origin}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/subscribe/cancel`,
       });

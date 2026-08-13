@@ -280,6 +280,17 @@
     "success_description": "Se ha enviado un enlace para restablecer la contraseña a {email}.",
     "error_title": "Error"
   },
+  "reset_password": {
+    "title": "Establecer una nueva contraseña",
+    "description": "Elige una nueva contraseña para tu cuenta.",
+    "new_password_label": "Nueva contraseña",
+    "confirm_password_label": "Confirmar contraseña",
+    "submit_button": "Guardar nueva contraseña",
+    "success_title": "Contraseña actualizada",
+    "success_description": "Tu contraseña se ha actualizado. Inicia sesión con tu nueva contraseña.",
+    "error_title": "Error",
+    "invalid_link": "Enlace no válido o caducado. Solicita uno nuevo desde la página de inicio de sesión."
+  },
   "access_denied": {
     "title": "Acceso restringido",
     "description": "La función '{feature}' solo está disponible para usuarios registrados.",

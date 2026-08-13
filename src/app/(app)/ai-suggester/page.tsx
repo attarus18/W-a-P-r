@@ -12,7 +12,7 @@ import SuggestionCard from '@/components/ai/suggestion-card';
 import { Loader2, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
-import { useUser } from '@/firebase';
+import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import { useSubscription } from '@/context/subscription-context';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';

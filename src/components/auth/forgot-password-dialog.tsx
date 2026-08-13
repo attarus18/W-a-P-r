@@ -17,8 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useLanguage } from '@/context/language-context';
-import { useAuth } from '@/firebase';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
@@ -36,7 +35,7 @@ interface ForgotPasswordDialogProps {
 
 export default function ForgotPasswordDialog({ children, open, onOpenChange }: ForgotPasswordDialogProps) {
   const { t } = useLanguage();
-  const auth = useAuth();
+  const supabase = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,7 +49,10 @@ export default function ForgotPasswordDialog({ children, open, onOpenChange }: F
   const onSubmit: SubmitHandler<ForgotPasswordFormValues> = async (data) => {
     setIsLoading(true);
     try {
-      await sendPasswordResetEmail(auth, data.email);
+      const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
       toast({
         title: t('forgot_password.success_title'),
         description: t('forgot_password.success_description', { email: data.email }),

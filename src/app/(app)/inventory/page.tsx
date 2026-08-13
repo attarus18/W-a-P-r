@@ -8,7 +8,7 @@ import { PlusCircle, ShoppingCart, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import AddProductDialog from '@/components/inventory/add-product-dialog';
 import { useProducts } from '@/context/product-context';
-import { useUser } from '@/firebase';
+import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import { useSubscription } from '@/context/subscription-context';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';

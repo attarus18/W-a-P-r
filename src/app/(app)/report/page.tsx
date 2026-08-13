@@ -11,7 +11,7 @@ import { useCurrency } from '@/context/currency-context';
 import { startOfDay, startOfWeek, startOfMonth, startOfYear, endOfDay, endOfWeek, endOfMonth, endOfYear, format } from 'date-fns';
 import { enUS, it, es, fr, de } from 'date-fns/locale';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useUser } from '@/firebase';
+import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import jsPDF from 'jspdf';
 import { useToast } from '@/hooks/use-toast';

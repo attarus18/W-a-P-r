@@ -20,8 +20,7 @@ import {
 import { useLanguage } from "@/context/language-context";
 import { useCurrency } from "@/context/currency-context";
 import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings, Link as LinkIcon } from "lucide-react";
-import { useUser, useAuth } from "@/firebase";
-import { signOut } from "firebase/auth";
+import { useUser, useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
 import { useSubscription } from "@/context/subscription-context";
@@ -35,7 +34,7 @@ export default function SettingsPage() {
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency, currencies } = useCurrency();
   const { user } = useUser();
-  const auth = useAuth();
+  const supabase = useAuth();
   const router = useRouter();
   const { subscription, hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const { toast } = useToast();
@@ -50,9 +49,7 @@ export default function SettingsPage() {
   }, []);
 
   const handleLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-    }
+    await supabase.auth.signOut();
     router.push('/login');
   };
 

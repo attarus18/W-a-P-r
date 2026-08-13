@@ -12,8 +12,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useAuth, useUser } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth, useUser } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -39,7 +38,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { t } = useLanguage();
-  const auth = useAuth();
+  const supabase = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const { toast } = useToast();
@@ -64,7 +63,8 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      const { error } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password });
+      if (error) throw error;
       router.push('/dashboard');
     } catch (error: any) {
       console.error("Login failed:", error);
