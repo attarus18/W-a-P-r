@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
 import { useSubscription } from "@/context/subscription-context";
 import { differenceInDays } from 'date-fns';
-import { createStripePortalSession } from '@/ai/flows/stripe-flows';
+import { createStripePortalSession } from '@/lib/stripe/actions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/settings/theme-toggle';

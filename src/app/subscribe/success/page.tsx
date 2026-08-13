@@ -5,7 +5,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
-import { getSubscriptionData } from '@/ai/flows/stripe-flows';
+import { getSubscriptionData } from '@/lib/stripe/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PartyPopper } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

@@ -7,7 +7,7 @@ import { CheckCircle2, Loader2, Zap } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
-import { createCheckoutSession } from '@/ai/flows/stripe-flows';
+import { createCheckoutSession } from '@/lib/stripe/actions';
 import { useToast } from '@/hooks/use-toast';
 
 export default function PricingPage() {
