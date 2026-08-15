@@ -8,7 +8,7 @@ App di gestione della produzione di candele: calcolo costi, ricette, magazzino, 
 - Supabase (Postgres + Auth) per dati e autenticazione
 - Genkit + Gemini per il "Suggeritore IA"
 - Stripe per gli abbonamenti (checkout hosted + webhook)
-- Cloudflare Pages per l'hosting
+- Cloudflare Workers (via `@opennextjs/cloudflare`) per l'hosting
 
 Il progetto è stato migrato da Firebase (Firestore + Firebase Auth + Firebase App Hosting) a questo stack per uscire da Firebase Studio, in via di dismissione, e ridurre il lock-in.
 
@@ -49,7 +49,7 @@ Copia il secret stampato (`whsec_...`) in `STRIPE_WEBHOOK_SECRET`.
 
 ## Deploy
 
-Vedi [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) per la procedura completa (Cloudflare Pages, variabili d'ambiente, registrazione del webhook di produzione su Stripe).
+Vedi [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) per la procedura completa (Cloudflare Workers, variabili d'ambiente, registrazione del webhook di produzione su Stripe).
 
 ## Note
 
