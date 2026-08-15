@@ -1,9 +1,7 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "waxpro-manager",
+  "name": "w-a-p-r1",
+  "compatibility_date": "2026-08-15",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2026-08-14",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
