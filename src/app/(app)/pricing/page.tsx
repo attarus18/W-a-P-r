@@ -75,6 +75,16 @@ export default function PricingPage() {
         return;
     }
 
+    if (!priceId) {
+      toast({
+        variant: 'destructive',
+        title: t('pricing.error_checkout_title'),
+        description: 'ID piano non configurato. Contatta il supporto.',
+      });
+      console.error('Stripe checkout error: priceId mancante. Verifica le variabili NEXT_PUBLIC_STRIPE_*_PRICE_ID al momento del build.');
+      return;
+    }
+
     setLoadingPriceId(priceId);
 
     try {
