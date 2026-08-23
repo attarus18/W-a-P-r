@@ -6,7 +6,6 @@ App di gestione della produzione di candele: calcolo costi, ricette, magazzino, 
 
 - Next.js 15 (App Router) + TypeScript + Tailwind
 - Supabase (Postgres + Auth) per dati e autenticazione
-- Genkit + Gemini per il "Suggeritore IA"
 - Stripe per gli abbonamenti (checkout hosted + webhook)
 - Cloudflare Workers (via `@opennextjs/cloudflare`) per l'hosting
 
@@ -29,7 +28,6 @@ Il progetto è stato migrato da Firebase (Firestore + Firebase Auth + Firebase A
    NEXT_PUBLIC_STRIPE_HOBBY_PRICE_ID=
    NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=
    NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID=
-   GEMINI_API_KEY=
    NEXT_PUBLIC_APP_URL=http://localhost:9002
    ```
 3. Setup del database: vedi [supabase/README.md](supabase/README.md) (schema, RLS, disabilitare la conferma email).

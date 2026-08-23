@@ -6,7 +6,7 @@
     "recipe_calculator": "Recipe Calculator",
     "inventory": "Inventory",
     "report": "Report",
-    "ai_suggester": "AI Suggester",
+    "recipes": "Recipes",
     "settings": "Settings",
     "logout": "Logout",
     "instructions": "Instructions"
@@ -48,7 +48,7 @@
       "recipe_calculator": "Calculate ingredient quantities for your recipes.",
       "inventory": "Manage your products, quantities, and stock.",
       "report": "Analyze profits and sales performance.",
-      "ai_suggester": "Get advice on materials to use for your creations.",
+      "recipes": "Save and retrieve your recipes with one click.",
       "settings": "Customize your account and app settings.",
       "instructions": "Check the manual to learn how to best use WaxPro."
     },
@@ -133,32 +133,33 @@
     "delete_alert_title": "Are you sure you want to delete this product?",
     "delete_alert_description": "This action cannot be undone and the product will be permanently removed."
   },
-  "ai_suggester": {
-    "title": "AI Material Suggester",
-    "description": "Get expert advice for your next candle creation.",
-    "form_title": "Describe Your Candle",
-    "candle_type_label": "Candle Type",
-    "candle_type_placeholder": "e.g. Pillar, Container",
-    "candle_type_pillar": "Pillar",
-    "candle_type_container": "Container",
-    "candle_type_votive": "Votive",
-    "candle_type_tealight": "Tealight",
-    "fragrance_label": "Desired Fragrance",
-    "fragrance_placeholder": "e.g. Lavender, Vanilla",
-    "container_label": "Container Choice",
-    "container_placeholder": "e.g. Glass jar, Tin",
-    "container_glass_jar": "Glass jar",
-    "container_tin": "Tin",
-    "container_ceramic": "Ceramic",
-    "container_mold": "Mold (freestanding)",
-    "submit_button": "Get Suggestions",
-    "loading_button": "Generating...",
-    "suggestions_title": "Suggestions",
-    "error_title": "Error",
-    "error_description": "Could not get suggestions from the AI. Please try again.",
-    "candle_type_required": "Candle type is required",
-    "fragrance_required": "Fragrance is required",
-    "container_required": "Container choice is required"
+  "recipes": {
+    "title": "Recipe Archive",
+    "description": "Save your recipes to reuse them anytime, without recalculating everything from scratch.",
+    "empty_title": "You don't have any saved recipes yet",
+    "empty_description": "Calculate a recipe and save it to the archive to find it here.",
+    "go_to_calculator_button": "Go to Recipe Calculator",
+    "recipe_count_free": "{count} of {limit} free recipes",
+    "recipe_count_unlimited": "{count} recipes saved",
+    "save_button": "Save to Archive",
+    "save_dialog_title": "Save Recipe",
+    "save_dialog_description": "Give this recipe a name to find it in the archive.",
+    "name_label": "Recipe Name",
+    "name_placeholder": "e.g. Evening Lavender Candle",
+    "name_required": "Recipe name is required.",
+    "notes_label": "Notes (optional)",
+    "notes_placeholder": "e.g. Slow burn, great for 200g jars",
+    "edit_title": "Edit Recipe",
+    "edit_description": "Rename the recipe or update the notes.",
+    "save_changes_button": "Save Changes",
+    "delete_button": "Delete",
+    "delete_alert_title": "Are you sure you want to delete this recipe?",
+    "delete_alert_description": "This action cannot be undone and the recipe will be permanently removed.",
+    "toast_saved_title": "Recipe saved",
+    "toast_saved_description": "The recipe has been added to your archive.",
+    "limit_reached_title": "Free recipe limit reached",
+    "limit_reached_desc": "You have reached the {limit} free recipe limit. Upgrade to save unlimited recipes.",
+    "upgrade_button": "View Plans"
   },
   "suggestion_card": {
     "option": "Option",
@@ -317,7 +318,7 @@
       "up_to_120": "Up to 120 products",
       "inventory": "Inventory Management",
       "reports": "Advanced Reports",
-      "ai_suggester": "AI Suggester"
+      "recipe_archive": "Unlimited Recipe Archive"
     },
     "start_trial_button": "Start 7-Day Free Trial",
     "trial_note": "After the 7-day trial, your subscription will automatically activate. You can cancel anytime.",
@@ -378,8 +379,9 @@
       "li3": "The total value of goods currently in stock.",
       "p2": "The chart below shows the trend of profit and units sold over time, giving you a clear view of your performance. You can also export a detailed report in PDF."
     },
-    "ai_suggester": {
-      "p1": "Not sure which materials to use? The AI Suggester is here to help. Describe the candle you want to create (type, fragrance, container) and the artificial intelligence will provide you with three optimal combinations of wax, wick, and color, ranked by convenience and quality."
+    "recipes": {
+      "p1": "The Recipe Archive lets you save recipes calculated in the Recipe Calculator, so you don't have to re-enter everything from scratch every time you make the same candle again.",
+      "p2": "You can rename or delete saved recipes at any time. The free plan includes 2 savable recipes; beyond that, an active subscription is required."
     },
     "settings": {
       "p1": "In the Settings section, you can customize your experience on WaxPro.",

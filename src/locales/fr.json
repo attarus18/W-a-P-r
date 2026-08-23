@@ -6,7 +6,7 @@
     "recipe_calculator": "Calculateur de recettes",
     "inventory": "Inventaire",
     "report": "Rapport",
-    "ai_suggester": "Suggerimenti IA",
+    "recipes": "Recettes",
     "settings": "Paramètres",
     "logout": "Déconnexion",
     "instructions": "Instructions"
@@ -48,7 +48,7 @@
       "recipe_calculator": "Calculez les quantités d'ingrédients pour vos recettes.",
       "inventory": "Gérez vos produits, quantités et stocks.",
       "report": "Analysez les bénéfices et les performances de vente.",
-      "ai_suggester": "Obtenez des conseils sur les matériaux à utiliser pour vos créations.",
+      "recipes": "Enregistrez et retrouvez vos recettes en un clic.",
       "settings": "Personnalisez les paramètres de votre compte et de l'application.",
       "instructions": "Consultez le manuel pour apprendre à utiliser au mieux WaxPro."
     },
@@ -133,32 +133,33 @@
     "delete_alert_title": "Êtes-vous sûr de vouloir supprimer ce produit ?",
     "delete_alert_description": "Cette action ne peut pas être annulée et le produit sera définitivement supprimé."
   },
-  "ai_suggester": {
-    "title": "Suggerimenti IA Matériaux",
-    "description": "Obtenez des conseils d'experts pour votre prochaine création de bougies.",
-    "form_title": "Décrivez votre bougie",
-    "candle_type_label": "Type de bougie",
-    "candle_type_placeholder": "ex. Pilier, Contenant",
-    "candle_type_pillar": "Pilier",
-    "candle_type_container": "Contenant",
-    "candle_type_votive": "Votive",
-    "candle_type_tealight": "Chauffe-plat",
-    "fragrance_label": "Parfum désiré",
-    "fragrance_placeholder": "ex. Lavande, Vanille",
-    "container_label": "Choix du contenant",
-    "container_placeholder": "ex. Pot en verre, Boîte en métal",
-    "container_glass_jar": "Pot en verre",
-    "container_tin": "Boîte en métal",
-    "container_ceramic": "Céramique",
-    "container_mold": "Moule (autoportant)",
-    "submit_button": "Obtenir des suggestions",
-    "loading_button": "Génération en cours...",
-    "suggestions_title": "Suggestions",
-    "error_title": "Erreur",
-    "error_description": "Impossible d'obtenir des suggestions de l'IA. Veuillez réessayer.",
-    "candle_type_required": "Le type de bougie est requis",
-    "fragrance_required": "Le parfum est requis",
-    "container_required": "Le choix du contenant est requis"
+  "recipes": {
+    "title": "Archive des recettes",
+    "description": "Enregistrez vos recettes pour les réutiliser à tout moment, sans tout recalculer depuis le début.",
+    "empty_title": "Vous n'avez pas encore de recette enregistrée",
+    "empty_description": "Calculez une recette et enregistrez-la dans l'archive pour la retrouver ici.",
+    "go_to_calculator_button": "Aller au calculateur de recettes",
+    "recipe_count_free": "{count} sur {limit} recettes gratuites",
+    "recipe_count_unlimited": "{count} recettes enregistrées",
+    "save_button": "Enregistrer dans l'archive",
+    "save_dialog_title": "Enregistrer la recette",
+    "save_dialog_description": "Donnez un nom à cette recette pour la retrouver dans l'archive.",
+    "name_label": "Nom de la recette",
+    "name_placeholder": "ex. Bougie Lavande du Soir",
+    "name_required": "Le nom de la recette est requis.",
+    "notes_label": "Notes (facultatif)",
+    "notes_placeholder": "ex. Combustion lente, idéal pour pots de 200g",
+    "edit_title": "Modifier la recette",
+    "edit_description": "Renommez la recette ou mettez à jour les notes.",
+    "save_changes_button": "Enregistrer les modifications",
+    "delete_button": "Supprimer",
+    "delete_alert_title": "Êtes-vous sûr de vouloir supprimer cette recette ?",
+    "delete_alert_description": "Cette action ne peut pas être annulée et la recette sera définitivement supprimée.",
+    "toast_saved_title": "Recette enregistrée",
+    "toast_saved_description": "La recette a été ajoutée à votre archive.",
+    "limit_reached_title": "Limite de recettes gratuites atteinte",
+    "limit_reached_desc": "Vous avez atteint la limite de {limit} recettes gratuites. Passez à un plan supérieur pour en enregistrer sans limite.",
+    "upgrade_button": "Voir les plans"
   },
   "suggestion_card": {
     "option": "Option",
@@ -317,7 +318,7 @@
       "up_to_120": "Jusqu'à 120 produits",
       "inventory": "Gestion de l'inventaire",
       "reports": "Rapports avancés",
-      "ai_suggester": "Suggerimenti IA"
+      "recipe_archive": "Archive de recettes illimitée"
     },
     "start_trial_button": "Commencer l'essai gratuit de 7 jours",
     "trial_note": "Après les 7 jours d'essai, votre abonnement s'activera automatiquement. Vous pouvez annuler à tout moment.",
@@ -378,8 +379,9 @@
         "li3": "La valeur totale des marchandises actuellement en stock.",
         "p2": "Le graphique ci-dessous montre l'évolution des bénéfices et des unités vendues dans le temps, vous donnant une vue claire de vos performances. Vous pouvez également exporter un rapport détaillé au format PDF."
     },
-    "ai_suggester": {
-        "p1": "Vous ne savez pas quels matériaux utiliser ? Le Suggeritore IA est là pour vous aider. Décrivez la bougie que vous souhaitez créer (type, parfum, contenant) et l'intelligence artificielle vous fournira trois combinaisons optimales de cire, mèche et couleur, classées par commodité et qualité."
+    "recipes": {
+        "p1": "L'Archive des recettes vous permet d'enregistrer les recettes calculées dans le Calculateur de recettes, afin de ne pas devoir tout ressaisir à chaque fois que vous refaites la même bougie.",
+        "p2": "Vous pouvez renommer ou supprimer les recettes enregistrées à tout moment. Le plan gratuit inclut 2 recettes enregistrables ; au-delà, un abonnement actif est requis."
     },
     "settings": {
         "p1": "Dans la section Paramètres, vous pouvez personnaliser votre expérience sur WaxPro.",

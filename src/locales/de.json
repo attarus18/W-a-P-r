@@ -6,7 +6,7 @@
     "recipe_calculator": "Rezeptrechner",
     "inventory": "Inventar",
     "report": "Bericht",
-    "ai_suggester": "KI-Vorschlag",
+    "recipes": "Rezepte",
     "settings": "Einstellungen",
     "logout": "Abmelden",
     "instructions": "Anleitungen"
@@ -48,7 +48,7 @@
       "recipe_calculator": "Berechnen Sie die Zutatenmengen für Ihre Rezepte.",
       "inventory": "Verwalten Sie Ihre Produkte, Mengen und Lagerbestände.",
       "report": "Analysieren Sie Gewinne und Verkaufsleistungen.",
-      "ai_suggester": "Holen Sie sich Ratschläge zu den Materialien für Ihre Kreationen.",
+      "recipes": "Speichern und finden Sie Ihre Rezepte mit einem Klick.",
       "settings": "Passen Sie Ihre Konto- und App-Einstellungen an.",
       "instructions": "Lesen Sie das Handbuch, um zu erfahren, wie Sie WaxPro am besten nutzen."
     },
@@ -133,32 +133,33 @@
     "delete_alert_title": "Sind Sie sicher, dass Sie dieses Produkt löschen möchten?",
     "delete_alert_description": "Diese Aktion kann nicht rückgängig gemacht werden und das Produkt wird dauerhaft entfernt."
   },
-  "ai_suggester": {
-    "title": "KI-Materialvorschlag",
-    "description": "Holen Sie sich Expertenrat für Ihre nächste Kerzenkreation.",
-    "form_title": "Beschreiben Sie Ihre Kerze",
-    "candle_type_label": "Kerzentyp",
-    "candle_type_placeholder": "z.B. Stumpenkerze, Behälterkerze",
-    "candle_type_pillar": "Stumpenkerze",
-    "candle_type_container": "Behälterkerze",
-    "candle_type_votive": "Votivkerze",
-    "candle_type_tealight": "Teelicht",
-    "fragrance_label": "Gewünschter Duft",
-    "fragrance_placeholder": "z.B. Lavendel, Vanille",
-    "container_label": "Behälterwahl",
-    "container_placeholder": "z.B. Glasgefäß, Dose",
-    "container_glass_jar": "Glasgefäß",
-    "container_tin": "Dose",
-    "container_ceramic": "Keramik",
-    "container_mold": "Form (freistehend)",
-    "submit_button": "Vorschläge erhalten",
-    "loading_button": "Wird generiert...",
-    "suggestions_title": "Vorschläge",
-    "error_title": "Fehler",
-    "error_description": "Vorschläge konnten nicht von der KI abgerufen werden. Bitte versuchen Sie es erneut.",
-    "candle_type_required": "Kerzentyp ist erforderlich",
-    "fragrance_required": "Duft ist erforderlich",
-    "container_required": "Behälterwahl ist erforderlich"
+  "recipes": {
+    "title": "Rezeptarchiv",
+    "description": "Speichern Sie Ihre Rezepte, um sie jederzeit wiederzuverwenden, ohne alles von Grund auf neu zu berechnen.",
+    "empty_title": "Sie haben noch keine gespeicherten Rezepte",
+    "empty_description": "Berechnen Sie ein Rezept und speichern Sie es im Archiv, um es hier wiederzufinden.",
+    "go_to_calculator_button": "Zum Rezeptrechner",
+    "recipe_count_free": "{count} von {limit} kostenlosen Rezepten",
+    "recipe_count_unlimited": "{count} gespeicherte Rezepte",
+    "save_button": "Im Archiv speichern",
+    "save_dialog_title": "Rezept speichern",
+    "save_dialog_description": "Geben Sie diesem Rezept einen Namen, um es im Archiv wiederzufinden.",
+    "name_label": "Rezeptname",
+    "name_placeholder": "z.B. Abendliche Lavendelkerze",
+    "name_required": "Der Rezeptname ist erforderlich.",
+    "notes_label": "Notizen (optional)",
+    "notes_placeholder": "z.B. Langsame Brenndauer, ideal für 200g-Gläser",
+    "edit_title": "Rezept bearbeiten",
+    "edit_description": "Benennen Sie das Rezept um oder aktualisieren Sie die Notizen.",
+    "save_changes_button": "Änderungen speichern",
+    "delete_button": "Löschen",
+    "delete_alert_title": "Sind Sie sicher, dass Sie dieses Rezept löschen möchten?",
+    "delete_alert_description": "Diese Aktion kann nicht rückgängig gemacht werden und das Rezept wird dauerhaft entfernt.",
+    "toast_saved_title": "Rezept gespeichert",
+    "toast_saved_description": "Das Rezept wurde zu Ihrem Archiv hinzugefügt.",
+    "limit_reached_title": "Limit für kostenlose Rezepte erreicht",
+    "limit_reached_desc": "Sie haben das Limit von {limit} kostenlosen Rezepten erreicht. Upgraden Sie, um unbegrenzt Rezepte zu speichern.",
+    "upgrade_button": "Pläne anzeigen"
   },
   "suggestion_card": {
     "option": "Option",
@@ -317,7 +318,7 @@
       "up_to_120": "Bis zu 120 Produkte",
       "inventory": "Inventarverwaltung",
       "reports": "Erweiterte Berichte",
-      "ai_suggester": "KI-Vorschlag"
+      "recipe_archive": "Unbegrenztes Rezeptarchiv"
     },
     "start_trial_button": "7-tägige kostenlose Testversion starten",
     "trial_note": "Nach der 7-tägigen Testphase wird Ihr Abonnement automatisch aktiviert. Sie können jederzeit kündigen.",
@@ -378,8 +379,9 @@
       "li3": "Den Gesamtwert der derzeit auf Lager befindlichen Waren.",
       "p2": "Das folgende Diagramm zeigt den Trend von Gewinn und verkauften Einheiten über die Zeit und gibt Ihnen einen klaren Überblick über Ihre Leistung. Sie können auch einen detaillierten Bericht als PDF exportieren."
     },
-    "ai_suggester": {
-      "p1": "Sie sind sich nicht sicher, welche Materialien Sie verwenden sollen? Der KI-Vorschlag ist hier, um Ihnen zu helfen. Beschreiben Sie die Kerze, die Sie erstellen möchten (Typ, Duft, Behälter), und die künstliche Intelligenz liefert Ihnen drei optimale Kombinationen aus Wachs, Docht und Farbe, geordnet nach Bequemlichkeit und Qualität."
+    "recipes": {
+      "p1": "Mit dem Rezeptarchiv können Sie im Rezeptrechner berechnete Rezepte speichern, sodass Sie nicht jedes Mal alles neu eingeben müssen, wenn Sie dieselbe Kerze wieder herstellen.",
+      "p2": "Sie können gespeicherte Rezepte jederzeit umbenennen oder löschen. Der kostenlose Plan umfasst 2 speicherbare Rezepte; darüber hinaus ist ein aktives Abonnement erforderlich."
     },
     "settings": {
       "p1": "Im Bereich Einstellungen können Sie Ihre Erfahrung auf WaxPro anpassen.",

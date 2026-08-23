@@ -104,7 +104,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+                    <DropdownMenuItem
+                        onSelect={(e) => {
+                            e.preventDefault();
+                            setTimeout(() => setIsEditDialogOpen(true), 0);
+                        }}
+                    >
                         <Pencil className="mr-2 h-4 w-4" />
                         <span>{t('product_card.edit_button')}</span>
                     </DropdownMenuItem>

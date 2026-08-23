@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, Calculator, Warehouse, PieChart, Wand2, Settings, NotebookPen } from 'lucide-react';
+import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export default function InstructionsPage() {
@@ -99,12 +99,13 @@ export default function InstructionsPage() {
             <AccordionItem value="item-5">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <Wand2 className="h-5 w-5 text-primary" />
-                    {t('navbar.ai_suggester')}
+                    <BookMarked className="h-5 w-5 text-primary" />
+                    {t('navbar.recipes')}
                 </div>
               </AccordionTrigger>
               <AccordionContent className="prose prose-sm dark:prose-invert max-w-none">
-                <p>{t('instructions.ai_suggester.p1')}</p>
+                <p>{t('instructions.recipes.p1')}</p>
+                <p>{t('instructions.recipes.p2')}</p>
               </AccordionContent>
             </AccordionItem>
             

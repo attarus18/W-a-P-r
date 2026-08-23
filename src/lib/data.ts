@@ -23,6 +23,21 @@ export type Product = {
   timestamp: string;
 };
 
+export type Recipe = {
+  id: string;
+  userId: string;
+  name: string;
+  totalWeight: number;
+  unit: 'g' | 'oz' | 'kg' | 'lb';
+  fragrancePct: number;
+  colorPct: number;
+  waxAmount: number;
+  fragranceAmount: number;
+  colorAmount: number;
+  notes?: string;
+  timestamp: string;
+};
+
 export type Sale = {
   id: string;
   userId: string;

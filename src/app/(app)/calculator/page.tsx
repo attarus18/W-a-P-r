@@ -126,7 +126,7 @@ export default function CalculatorPage() {
         
         y += 15;
         doc.setFontSize(22);
-        doc.text(formatCurrency(totalCost), pageWidth - margin - 15, { align: 'right' });
+        doc.text(formatCurrency(totalCost), pageWidth - margin - 15, y, { align: 'right' });
 
         if (isMobile) {
             const pdfBlob = doc.output('blob');

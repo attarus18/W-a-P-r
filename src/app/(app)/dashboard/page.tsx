@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { NotebookPen, Calculator, Warehouse, Wand2, Settings, PieChart, BookOpen } from 'lucide-react';
+import { NotebookPen, Calculator, Warehouse, BookMarked, Settings, PieChart, BookOpen } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -38,10 +38,10 @@ export default function DashboardPage() {
         description: t('dashboard.features.report'),
       },
       {
-        href: '/ai-suggester',
-        icon: Wand2,
-        title: t('navbar.ai_suggester'),
-        description: t('dashboard.features.ai_suggester'),
+        href: '/recipes',
+        icon: BookMarked,
+        title: t('navbar.recipes'),
+        description: t('dashboard.features.recipes'),
       },
       {
         href: '/settings',

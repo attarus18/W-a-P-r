@@ -6,7 +6,7 @@
     "recipe_calculator": "Calcolatore Ricette",
     "inventory": "Magazzino",
     "report": "Report",
-    "ai_suggester": "Suggeritore IA",
+    "recipes": "Ricette",
     "settings": "Impostazioni",
     "logout": "Logout",
     "instructions": "Istruzioni"
@@ -48,7 +48,7 @@
       "recipe_calculator": "Calcola le quantità di ingredienti per le tue ricette.",
       "inventory": "Gestisci i tuoi prodotti, le quantità e le scorte.",
       "report": "Analizza i profitti e le performance di vendita.",
-      "ai_suggester": "Ricevi consigli sui materiali da usare per le tue creazioni.",
+      "recipes": "Salva e ritrova le tue ricette con un click.",
       "settings": "Personalizza le impostazioni del tuo account e dell'app.",
       "instructions": "Consulta il manuale per scoprire come usare al meglio WaxPro."
     },
@@ -133,32 +133,33 @@
     "delete_alert_title": "Sei sicuro di voler eliminare questo prodotto?",
     "delete_alert_description": "L'azione non può essere annullata e il prodotto verrà rimosso definitivamente."
   },
-  "ai_suggester": {
-    "title": "Suggeritore Materiali IA",
-    "description": "Ottieni consigli da esperti per la tua prossima creazione di candele.",
-    "form_title": "Descrivi la tua candela",
-    "candle_type_label": "Tipo di Candela",
-    "candle_type_placeholder": "es. Colonna, Contenitore",
-    "candle_type_pillar": "Colonna",
-    "candle_type_container": "Contenitore",
-    "candle_type_votive": "Votiva",
-    "candle_type_tealight": "Tealight",
-    "fragrance_label": "Fragranza Desiderata",
-    "fragrance_placeholder": "es. Lavanda, Vaniglia",
-    "container_label": "Scelta del Contenitore",
-    "container_placeholder": "es. Barattolo di vetro, Latta",
-    "container_glass_jar": "Barattolo di vetro",
-    "container_tin": "Latta",
-    "container_ceramic": "Ceramica",
-    "container_mold": "Stampo (autoportante)",
-    "submit_button": "Ottieni Suggerimenti",
-    "loading_button": "Sto generando...",
-    "suggestions_title": "Suggerimenti",
-    "error_title": "Errore",
-    "error_description": "Impossibile ottenere suggerimenti dall'IA. Riprova.",
-    "candle_type_required": "Il tipo di candela è obbligatorio",
-    "fragrance_required": "La fragranza è obbligatoria",
-    "container_required": "La scelta del contenitore è obbligatoria"
+  "recipes": {
+    "title": "Archivio Ricette",
+    "description": "Salva le tue ricette per riutilizzarle quando vuoi, senza ricalcolare tutto da zero.",
+    "empty_title": "Non hai ancora ricette salvate",
+    "empty_description": "Calcola una ricetta e salvala nell'archivio per ritrovarla qui.",
+    "go_to_calculator_button": "Vai al Calcolatore Ricette",
+    "recipe_count_free": "{count} di {limit} ricette gratuite",
+    "recipe_count_unlimited": "{count} ricette salvate",
+    "save_button": "Salva nell'Archivio",
+    "save_dialog_title": "Salva Ricetta",
+    "save_dialog_description": "Dai un nome a questa ricetta per ritrovarla nell'archivio.",
+    "name_label": "Nome Ricetta",
+    "name_placeholder": "es. Candela Lavanda Serale",
+    "name_required": "Il nome della ricetta è obbligatorio.",
+    "notes_label": "Note (opzionale)",
+    "notes_placeholder": "es. Bruciatura lenta, ottima per barattoli da 200g",
+    "edit_title": "Modifica Ricetta",
+    "edit_description": "Rinomina la ricetta o aggiorna le note.",
+    "save_changes_button": "Salva Modifiche",
+    "delete_button": "Elimina",
+    "delete_alert_title": "Sei sicuro di voler eliminare questa ricetta?",
+    "delete_alert_description": "L'azione non può essere annullata e la ricetta verrà rimossa definitivamente.",
+    "toast_saved_title": "Ricetta salvata",
+    "toast_saved_description": "La ricetta è stata aggiunta al tuo archivio.",
+    "limit_reached_title": "Limite ricette gratuite raggiunto",
+    "limit_reached_desc": "Hai raggiunto il limite di {limit} ricette gratuite. Fai l'upgrade per salvarne senza limiti.",
+    "upgrade_button": "Vedi i Piani"
   },
   "suggestion_card": {
     "option": "Opzione",
@@ -317,7 +318,7 @@
       "up_to_120": "Fino a 120 prodotti",
       "inventory": "Gestione Magazzino",
       "reports": "Report Avanzati",
-      "ai_suggester": "Suggeritore AI"
+      "recipe_archive": "Archivio Ricette Illimitato"
     },
     "start_trial_button": "Inizia Prova Gratuita di 7 Giorni",
     "trial_note": "Dopo i 7 giorni di prova, l'abbonamento si attiverà automaticamente. Puoi cancellare in qualsiasi momento.",
@@ -378,8 +379,9 @@
       "li3": "Il valore totale della merce attualmente in magazzino.",
       "p2": "Il grafico sottostante mostra l'andamento del profitto e delle unità vendute nel tempo, offrendoti una visione chiara delle tue performance. Puoi anche esportare un report dettagliato in PDF."
     },
-    "ai_suggester": {
-      "p1": "Non sai quali materiali usare? Il Suggeritore IA è qui per aiutarti. Descrivi la candela che vuoi creare (tipo, fragranza, contenitore) e l'intelligenza artificiale ti fornirà tre combinazioni ottimali di cera, stoppino e colore, classificate per convenienza e qualità."
+    "recipes": {
+      "p1": "L'Archivio Ricette ti permette di salvare le ricette calcolate nel Calcolatore Ricette, così non devi reinserire tutto da zero ogni volta che rifai la stessa candela.",
+      "p2": "Puoi rinominare o eliminare le ricette salvate in qualsiasi momento. Il piano gratuito include 2 ricette salvabili; oltre questo limite serve un abbonamento attivo."
     },
     "settings": {
       "p1": "Nella sezione Impostazioni puoi personalizzare la tua esperienza su WaxPro.",

@@ -21,7 +21,6 @@ Il progetto usa [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) p
    - `NEXT_PUBLIC_STRIPE_PRO_PRICE_ID`
    - `NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID`
    - `NEXT_PUBLIC_APP_URL` (l'URL assegnato da Cloudflare, es. `https://waxpro-manager.<subdomain>.workers.dev`)
-   - `GEMINI_API_KEY` (o il nome esatto atteso da `@genkit-ai/google-genai`)
 6. Il flag di compatibilità `nodejs_compat` è già impostato in `wrangler.jsonc` (necessario perché il webhook Stripe in `src/app/api/stripe/webhook/route.ts` usa `crypto`). Non serve configurarlo separatamente nella dashboard.
 7. Avvia il primo deploy. **Verifica esplicitamente che il webhook Stripe funzioni** sull'URL di preview prima di considerare il deploy concluso — è il punto tecnico più a rischio di tutta la migrazione.
 8. Registra l'endpoint webhook di produzione su Stripe: Dashboard Stripe → **Developers → Webhooks → Add endpoint** → URL = `https://<tuo-dominio>/api/stripe/webhook`, eventi da ascoltare: `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Copia il **Signing secret** generato e impostalo come `STRIPE_WEBHOOK_SECRET` nel pannello Cloudflare (punto 5).

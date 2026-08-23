@@ -27,7 +27,7 @@ export default function PricingPage() {
         t('pricing.features.up_to_50'),
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
-        t('pricing.features.ai_suggester'),
+        t('pricing.features.recipe_archive'),
       ],
     },
     {
@@ -39,7 +39,7 @@ export default function PricingPage() {
         t('pricing.features.up_to_100'),
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
-        t('pricing.features.ai_suggester'),
+        t('pricing.features.recipe_archive'),
       ],
     },
     {
@@ -51,7 +51,7 @@ export default function PricingPage() {
         t('pricing.features.up_to_120'),
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
-        t('pricing.features.ai_suggester'),
+        t('pricing.features.recipe_archive'),
       ],
     },
   ];

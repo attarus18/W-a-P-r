@@ -6,7 +6,7 @@
     "recipe_calculator": "Calculadora de recetas",
     "inventory": "Inventario",
     "report": "Informe",
-    "ai_suggester": "Sugeridor de IA",
+    "recipes": "Recetas",
     "settings": "Ajustes",
     "logout": "Cerrar sesión",
     "instructions": "Instrucciones"
@@ -48,7 +48,7 @@
       "recipe_calculator": "Calcule las cantidades de ingredientes para sus recetas.",
       "inventory": "Administre sus productos, cantidades y existencias.",
       "report": "Analice las ganancias y el rendimiento de las ventas.",
-      "ai_suggester": "Obtenga consejos sobre los materiales a utilizar para sus creaciones.",
+      "recipes": "Guarde y encuentre sus recetas con un clic.",
       "settings": "Personalice la configuración de su cuenta y de la aplicación.",
       "instructions": "Consulte el manual para aprender a usar WaxPro de la mejor manera."
     },
@@ -133,32 +133,33 @@
     "delete_alert_title": "¿Está seguro de que desea eliminar este producto?",
     "delete_alert_description": "Esta acción no se puede deshacer y el producto se eliminará permanentemente."
   },
-  "ai_suggester": {
-    "title": "Sugeridor de materiales de IA",
-    "description": "Obtenga consejos de expertos para su próxima creación de velas.",
-    "form_title": "Describa su vela",
-    "candle_type_label": "Tipo de vela",
-    "candle_type_placeholder": "ej. Pilar, Recipiente",
-    "candle_type_pillar": "Pilar",
-    "candle_type_container": "Recipiente",
-    "candle_type_votive": "Votiva",
-    "candle_type_tealight": "Luz de té",
-    "fragrance_label": "Fragancia deseada",
-    "fragrance_placeholder": "ej. Lavanda, Vainilla",
-    "container_label": "Elección del recipiente",
-    "container_placeholder": "ej. Tarro de cristal, Lata",
-    "container_glass_jar": "Tarro de cristal",
-    "container_tin": "Lata",
-    "container_ceramic": "Cerámica",
-    "container_mold": "Molde (independiente)",
-    "submit_button": "Obtener sugerencias",
-    "loading_button": "Generando...",
-    "suggestions_title": "Sugerencias",
-    "error_title": "Error",
-    "error_description": "No se pudieron obtener sugerencias de la IA. Por favor, inténtelo de nuevo.",
-    "candle_type_required": "El tipo de vela es obligatorio",
-    "fragrance_required": "La fragancia es obligatoria",
-    "container_required": "La elección del recipiente es obligatoria"
+  "recipes": {
+    "title": "Archivo de recetas",
+    "description": "Guarde sus recetas para reutilizarlas en cualquier momento, sin recalcular todo desde cero.",
+    "empty_title": "Aún no tiene recetas guardadas",
+    "empty_description": "Calcule una receta y guárdela en el archivo para encontrarla aquí.",
+    "go_to_calculator_button": "Ir a la calculadora de recetas",
+    "recipe_count_free": "{count} de {limit} recetas gratuitas",
+    "recipe_count_unlimited": "{count} recetas guardadas",
+    "save_button": "Guardar en el archivo",
+    "save_dialog_title": "Guardar receta",
+    "save_dialog_description": "Dé un nombre a esta receta para encontrarla en el archivo.",
+    "name_label": "Nombre de la receta",
+    "name_placeholder": "ej. Vela de lavanda vespertina",
+    "name_required": "El nombre de la receta es obligatorio.",
+    "notes_label": "Notas (opcional)",
+    "notes_placeholder": "ej. Combustión lenta, ideal para tarros de 200g",
+    "edit_title": "Editar receta",
+    "edit_description": "Cambie el nombre de la receta o actualice las notas.",
+    "save_changes_button": "Guardar cambios",
+    "delete_button": "Eliminar",
+    "delete_alert_title": "¿Está seguro de que desea eliminar esta receta?",
+    "delete_alert_description": "Esta acción no se puede deshacer y la receta se eliminará permanentemente.",
+    "toast_saved_title": "Receta guardada",
+    "toast_saved_description": "La receta se ha añadido a su archivo.",
+    "limit_reached_title": "Límite de recetas gratuitas alcanzado",
+    "limit_reached_desc": "Ha alcanzado el límite de {limit} recetas gratuitas. Actualice para guardar recetas ilimitadas.",
+    "upgrade_button": "Ver planes"
   },
   "suggestion_card": {
     "option": "Opción",
@@ -317,7 +318,7 @@
       "up_to_120": "Hasta 120 productos",
       "inventory": "Gestión de inventario",
       "reports": "Informes avanzados",
-      "ai_suggester": "Sugeridor de IA"
+      "recipe_archive": "Archivo de recetas ilimitado"
     },
     "start_trial_button": "Iniciar prueba gratuita de 7 días",
     "trial_note": "Después de los 7 días de prueba, su suscripción se activará automáticamente. Puede cancelar en cualquier momento.",
@@ -378,8 +379,9 @@
       "li3": "El valor total de los bienes actualmente en stock.",
       "p2": "El gráfico a continuación muestra la tendencia de las ganancias y las unidades vendidas a lo largo del tiempo, brindándole una vista clara de su rendimiento. También puede exportar un informe detallado en PDF."
     },
-    "ai_suggester": {
-      "p1": "¿No está seguro de qué materiales usar? El Sugeridor de IA está aquí para ayudarlo. Describa la vela que desea crear (tipo, fragancia, recipiente) y la inteligencia artificial le proporcionará tres combinaciones óptimas de cera, mecha y color, clasificadas por conveniencia y calidad."
+    "recipes": {
+      "p1": "El Archivo de recetas le permite guardar las recetas calculadas en la Calculadora de recetas, para no tener que volver a introducir todo cada vez que haga la misma vela.",
+      "p2": "Puede cambiar el nombre o eliminar las recetas guardadas en cualquier momento. El plan gratuito incluye 2 recetas guardables; más allá de eso, se requiere una suscripción activa."
     },
     "settings": {
       "p1": "En la sección de Ajustes, puede personalizar su experiencia en WaxPro.",

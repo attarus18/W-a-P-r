@@ -8,11 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer } from 'lucide-react';
+import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer, BookMarked } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useRecipes } from '@/context/recipe-context';
+import { useSubscription } from '@/context/subscription-context';
+import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
+import { FREE_RECIPE_LIMIT } from '@/lib/constants';
 
 type FormValues = {
   totalWeight: number;
@@ -31,7 +35,10 @@ export default function RecipeCalculatorPage() {
   const [fragrance, setFragrance] = useState(5);
   const [color, setColor] = useState(1);
   const [result, setResult] = useState<RecipeResult | null>(null);
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { recipes, addRecipe } = useRecipes();
+  const { hasActiveSubscription } = useSubscription();
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -62,6 +69,40 @@ export default function RecipeCalculatorPage() {
   
   const unit = form.watch('unit');
   const totalWeight = form.watch('totalWeight');
+
+  const atRecipeLimit = !hasActiveSubscription && recipes.length >= FREE_RECIPE_LIMIT;
+
+  const handleSaveClick = () => {
+    if (atRecipeLimit) {
+      toast({
+        variant: 'destructive',
+        title: t('recipes.limit_reached_title'),
+        description: t('recipes.limit_reached_desc', { limit: FREE_RECIPE_LIMIT }),
+      });
+    } else {
+      setIsSaveDialogOpen(true);
+    }
+  };
+
+  const handleSaveRecipe = ({ name, notes }: { name: string; notes: string }) => {
+    if (!result) return;
+    addRecipe({
+      name,
+      notes: notes || undefined,
+      totalWeight,
+      unit,
+      fragrancePct: fragrance,
+      colorPct: color,
+      waxAmount: result.wax,
+      fragranceAmount: result.fragrance,
+      colorAmount: result.color,
+    });
+    setIsSaveDialogOpen(false);
+    toast({
+      title: t('recipes.toast_saved_title'),
+      description: t('recipes.toast_saved_description'),
+    });
+  };
 
   const handleShare = () => {
     if (result) {
@@ -276,7 +317,7 @@ ${t('recipe_calculator.result_title')}:
                 <span className="font-bold text-primary">{result.color} {unit}</span>
             </div>
           </CardContent>
-           <CardFooter className="justify-center gap-4">
+           <CardFooter className="justify-center gap-4 flex-wrap">
             <Button variant="outline" onClick={handleShare}>
               <Share2 className="mr-2 h-4 w-4" />
               {t('calculator.share_button')}
@@ -285,6 +326,12 @@ ${t('recipe_calculator.result_title')}:
               <Printer className="mr-2 h-4 w-4" />
               {t('recipe_calculator.pdf_button')}
             </Button>
+            <SaveRecipeDialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen} onSave={handleSaveRecipe}>
+              <Button onClick={handleSaveClick} disabled={atRecipeLimit}>
+                <BookMarked className="mr-2 h-4 w-4" />
+                {t('recipes.save_button')}
+              </Button>
+            </SaveRecipeDialog>
           </CardFooter>
         </Card>
       )}
