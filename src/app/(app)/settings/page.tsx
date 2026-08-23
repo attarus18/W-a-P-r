@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "@/context/language-context";
 import { useCurrency } from "@/context/currency-context";
-import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings, Link as LinkIcon } from "lucide-react";
+import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings } from "lucide-react";
 import { useUser, useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
@@ -39,14 +39,6 @@ export default function SettingsPage() {
   const { subscription, hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const { toast } = useToast();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
-  const [currentOrigin, setCurrentOrigin] = useState('');
-
-  useEffect(() => {
-    // Rileva l'origine corrente per mostrarla all'utente
-    if (typeof window !== 'undefined') {
-      setCurrentOrigin(window.location.origin);
-    }
-  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -106,22 +98,6 @@ export default function SettingsPage() {
             <div className="space-y-2">
                 <Label htmlFor="email">{t('settings.email_label')}</Label>
                 <Input id="email" type="email" value={user?.email || ''} disabled />
-            </div>
-
-            <div className="pt-4 border-t space-y-3">
-                <Label className="flex items-center gap-2 text-primary">
-                    <LinkIcon className="h-4 w-4" />
-                    URL Applicazione (per Kodular/Stripe)
-                </Label>
-                <div className="bg-muted p-3 rounded-md font-mono text-[10px] sm:text-xs break-all select-all cursor-pointer border border-dashed border-primary/30" onClick={() => {
-                    navigator.clipboard.writeText(currentOrigin);
-                    toast({ title: "Copiato!", description: "Indirizzo copiato negli appunti." });
-                }}>
-                    {currentOrigin || 'Rilevamento in corso...'}
-                </div>
-                <p className="text-[10px] text-muted-foreground italic">
-                    * Assicurati che questo URL inizi con <b>9002</b>. Copialo e usalo nella tua WebView di Kodular per evitare errori di reindirizzamento.
-                </p>
             </div>
         </CardContent>
         <CardFooter>

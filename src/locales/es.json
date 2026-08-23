@@ -112,7 +112,8 @@
     "save_changes_button": "Guardar cambios",
     "limit_reached_title": "Límite de productos alcanzado",
     "limit_reached_desc": "Ha alcanzado el límite de {limit} productos para su plan. Actualice para agregar más.",
-    "product_count": "{count} de {limit} productos"
+    "product_count": "{count} de {limit} productos",
+    "product_count_free": "{count} de {limit} productos de prueba"
   },
   "product_card": {
     "quantity": "Cantidad",

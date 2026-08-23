@@ -8,14 +8,11 @@ import { PlusCircle, ShoppingCart, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import AddProductDialog from '@/components/inventory/add-product-dialog';
 import { useProducts } from '@/context/product-context';
-import { useUser } from '@/context/auth-context';
-import AccessDenied from '@/components/auth/access-denied';
 import { useSubscription } from '@/context/subscription-context';
-import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { FREE_PRODUCT_LIMIT } from '@/lib/constants';
 
 export default function InventoryPage() {
-  const { user } = useUser();
   const { t } = useLanguage();
   const { products, addProduct, isLoading: productsLoading } = useProducts();
   const { subscription, isSubscriptionLoading, hasActiveSubscription, isTrialing } = useSubscription();
@@ -27,7 +24,7 @@ export default function InventoryPage() {
     if (subscription?.subscriptionPlan === 'hobby') return 50;
     if (subscription?.subscriptionPlan === 'pro') return 100;
     if (subscription?.subscriptionPlan === 'annual') return 120;
-    return 0;
+    return FREE_PRODUCT_LIMIT;
   };
   
   const productLimit = getProductLimit();
@@ -66,21 +63,17 @@ export default function InventoryPage() {
     );
   }
   
-  if (!user) {
-    return <AccessDenied featureName={t('navbar.inventory')} />;
-  }
-
-  if (!hasActiveSubscription) {
-    return <ProFeatureDialog />;
-  }
-
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t('inventory.title')}</h1>
           <p className="text-muted-foreground">{t('inventory.description')}</p>
-          <p className="text-sm text-primary font-medium mt-1">{t('inventory.product_count', { count: products.length, limit: productLimit })}</p>
+          <p className="text-sm text-primary font-medium mt-1">
+            {hasActiveSubscription
+              ? t('inventory.product_count', { count: products.length, limit: productLimit })
+              : t('inventory.product_count_free', { count: products.length, limit: productLimit })}
+          </p>
         </div>
         <AddProductDialog 
           open={isAddDialogOpen} 

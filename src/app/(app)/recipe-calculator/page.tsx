@@ -12,7 +12,6 @@ import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
@@ -36,7 +35,6 @@ export default function RecipeCalculatorPage() {
   const [color, setColor] = useState(1);
   const [result, setResult] = useState<RecipeResult | null>(null);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-  const isMobile = useIsMobile();
   const { recipes, addRecipe } = useRecipes();
   const { hasActiveSubscription } = useSubscription();
 
@@ -197,20 +195,7 @@ ${t('recipe_calculator.result_title')}:
             y += 25;
         });
   
-        if (isMobile) {
-            const pdfBlob = doc.output('blob');
-            const blobUrl = URL.createObjectURL(pdfBlob);
-            const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow) {
-                 toast({
-                    variant: "destructive",
-                    title: t('report.pdf_error_title'),
-                    description: t('report.pdf.popup_blocked'),
-                });
-            }
-        } else {
-            doc.save('waxpro-recipe.pdf');
-        }
+        doc.save('waxpro-recipe.pdf');
       } catch (error) {
           console.error("Error generating PDF:", error);
           toast({

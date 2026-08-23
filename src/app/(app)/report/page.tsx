@@ -15,7 +15,6 @@ import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import jsPDF from 'jspdf';
 import { useToast } from '@/hooks/use-toast';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useSubscription } from '@/context/subscription-context';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
 
@@ -40,7 +39,6 @@ export default function ReportPage() {
     const [timeRange, setTimeRange] = useState<TimeRange>('month');
     const [isPrinting, setIsPrinting] = useState(false);
     const { toast } = useToast();
-    const isMobile = useIsMobile();
 
     const dateLocale = localeMap[language] || enUS;
 
@@ -290,20 +288,7 @@ export default function ReportPage() {
             const noteText = doc.splitTextToSize(t('report.pdf.info_note_description'), pageWidth - (margin*2) - 20);
             doc.text(noteText, margin + 10, y);
 
-            if (isMobile) {
-                const pdfBlob = doc.output('blob');
-                const blobUrl = URL.createObjectURL(pdfBlob);
-                const newWindow = window.open(blobUrl, '_blank');
-                if (!newWindow) {
-                     toast({
-                        variant: "destructive",
-                        title: t('report.pdf_error_title'),
-                        description: t('report.pdf.popup_blocked'),
-                    });
-                }
-            } else {
-                doc.save('waxpro-inventory-report.pdf');
-            }
+            doc.save('waxpro-inventory-report.pdf');
 
         } catch (error) {
             console.error("Error generating PDF:", error);

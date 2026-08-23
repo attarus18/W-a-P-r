@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useCurrency } from '@/context/currency-context';
 import jsPDF from 'jspdf';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 type FormValues = {
   cera: number;
@@ -38,7 +37,6 @@ export default function CalculatorPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { formatCurrency, currency } = useCurrency();
-  const isMobile = useIsMobile();
 
   const onSubmit: SubmitHandler<FormValues> = data => {
     const cost = Object.values(data).reduce((acc, value) => acc + (Number(value) || 0), 0);
@@ -128,20 +126,7 @@ export default function CalculatorPage() {
         doc.setFontSize(22);
         doc.text(formatCurrency(totalCost), pageWidth - margin - 15, y, { align: 'right' });
 
-        if (isMobile) {
-            const pdfBlob = doc.output('blob');
-            const blobUrl = URL.createObjectURL(pdfBlob);
-            const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow) {
-                 toast({
-                    variant: "destructive",
-                    title: t('report.pdf_error_title'),
-                    description: t('report.pdf.popup_blocked'),
-                });
-            }
-        } else {
-            doc.save('waxpro-costo-produzione.pdf');
-        }
+        doc.save('waxpro-costo-produzione.pdf');
     } catch (error) {
         console.error("Error generating PDF:", error);
         toast({
