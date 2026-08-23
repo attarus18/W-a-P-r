@@ -16,8 +16,12 @@ const getStripeInstance = async () => {
         throw new Error("Stripe Secret Key non configurata nel file .env.");
     }
 
-    return new StripeModule.default(secretKey, {
+    const Stripe = StripeModule.default;
+    return new Stripe(secretKey, {
         apiVersion: '2024-06-20',
+        // Cloudflare Workers non ha accesso a socket TCP grezzi: il client HTTP
+        // Node di default di Stripe resta bloccato all'infinito. Va forzato fetch().
+        httpClient: Stripe.createFetchHttpClient(),
     });
 };
 

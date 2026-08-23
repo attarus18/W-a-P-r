@@ -9,8 +9,12 @@ export const runtime = 'nodejs';
 
 async function getStripe() {
   const StripeModule = await import('stripe');
-  return new StripeModule.default(process.env.STRIPE_SECRET_KEY!, {
+  const Stripe = StripeModule.default;
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2024-06-20',
+    // Cloudflare Workers non ha accesso a socket TCP grezzi: il client HTTP
+    // Node di default di Stripe resta bloccato all'infinito. Va forzato fetch().
+    httpClient: Stripe.createFetchHttpClient(),
   });
 }
 
