@@ -14,6 +14,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import jsPDF from 'jspdf';
+import { savePdf } from '@/lib/pdf-utils';
 import { useToast } from '@/hooks/use-toast';
 import { useSubscription } from '@/context/subscription-context';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
@@ -288,7 +289,7 @@ export default function ReportPage() {
             const noteText = doc.splitTextToSize(t('report.pdf.info_note_description'), pageWidth - (margin*2) - 20);
             doc.text(noteText, margin + 10, y);
 
-            doc.save('waxpro-inventory-report.pdf');
+            await savePdf(doc, 'waxpro-inventory-report.pdf');
 
         } catch (error) {
             console.error("Error generating PDF:", error);

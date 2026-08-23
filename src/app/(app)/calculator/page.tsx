@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useCurrency } from '@/context/currency-context';
 import jsPDF from 'jspdf';
+import { savePdf } from '@/lib/pdf-utils';
 
 type FormValues = {
   cera: number;
@@ -58,7 +59,7 @@ export default function CalculatorPage() {
     }
   };
 
-  const handleGeneratePdf = () => {
+  const handleGeneratePdf = async () => {
     if (totalCost === null) return;
     setIsPrinting(true);
 
@@ -126,7 +127,7 @@ export default function CalculatorPage() {
         doc.setFontSize(22);
         doc.text(formatCurrency(totalCost), pageWidth - margin - 15, y, { align: 'right' });
 
-        doc.save('waxpro-costo-produzione.pdf');
+        await savePdf(doc, 'waxpro-costo-produzione.pdf');
     } catch (error) {
         console.error("Error generating PDF:", error);
         toast({

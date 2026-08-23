@@ -12,6 +12,7 @@ import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
+import { savePdf } from '@/lib/pdf-utils';
 import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
@@ -118,7 +119,7 @@ ${t('recipe_calculator.result_title')}:
     }
   };
 
-  const handleGeneratePdf = () => {
+  const handleGeneratePdf = async () => {
     if (result) {
       try {
         const doc = new jsPDF();
@@ -195,7 +196,7 @@ ${t('recipe_calculator.result_title')}:
             y += 25;
         });
   
-        doc.save('waxpro-recipe.pdf');
+        await savePdf(doc, 'waxpro-recipe.pdf');
       } catch (error) {
           console.error("Error generating PDF:", error);
           toast({
