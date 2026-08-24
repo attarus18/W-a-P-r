@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">WaxPro Manager</string>
+    <string name="title_activity_main">WaxPro Manager</string>
+    <string name="package_name">appinventor.ai_attarus18.CalcoloCandele</string>
+    <string name="custom_url_scheme">appinventor.ai_attarus18.CalcoloCandele</string>
+</resources>
