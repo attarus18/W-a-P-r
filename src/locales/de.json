@@ -1,4 +1,3 @@
-
 {
   "navbar": {
     "dashboard": "Dashboard",
@@ -203,8 +202,6 @@
     "trial_plan": "Sie befinden sich im Testzeitraum für den {plan}-Plan. Sie haben noch {days} Tage.",
     "active_plan": "Sie nutzen den {plan}-Plan. Er wird in {days} Tagen erneuert.",
     "manage_subscription_button": "Abonnement verwalten",
-    "stripe_customer_error": "Stripe-Kunden-ID nicht gefunden.",
-    "stripe_portal_error": "Verwaltungsportal konnte nicht geöffnet werden.",
     "subscription_card_title": "Ihr Abonnement",
     "subscription_card_description": "Verwalten Sie Ihren Plan und Ihre Rechnungsdaten.",
     "no_active_subscription": "Sie haben kein aktives Abonnement.",
@@ -222,7 +219,11 @@
     "theme_title": "Anwendungsthema",
     "theme_description": "Wählen Sie zwischen hellem und dunklem Design.",
     "theme_light": "Helles Thema",
-    "theme_dark": "Dunkles Thema"
+    "theme_dark": "Dunkles Thema",
+    "play_management_error": "Die Google Play-Abonnementverwaltung konnte nicht geöffnet werden.",
+    "plan_status_grace_period": "Kulanzzeitraum",
+    "plan_status_on_hold": "Zahlung ausstehend",
+    "plan_status_paused": "Pausiert"
   },
   "currency": {
     "toast_title": "Währung aktualisiert",
@@ -300,7 +301,7 @@
     "login_button": "Anmelden",
     "signup_button": "Registrieren"
   },
-    "pro_feature": {
+  "pro_feature": {
     "title": "Funktion Pro",
     "description": "Diese Funktion ist nur für Benutzer mit einem aktiven Abonnement verfügbar.",
     "instructions": "Upgraden Sie Ihren Plan, um diese und andere leistungsstarke Funktionen freizuschalten und Ihr Geschäft auszubauen.",
@@ -326,24 +327,14 @@
     "error_not_logged_in_title": "Anmeldung erforderlich",
     "error_not_logged_in_desc": "Sie müssen angemeldet sein, um einen Plan zu abonnieren.",
     "error_checkout_title": "Checkout-Fehler",
-    "error_checkout_desc": "Der Zahlungsvorgang konnte nicht gestartet werden. Bitte versuchen Sie es erneut."
+    "error_checkout_desc": "Der Zahlungsvorgang konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+    "android_only_title": "Nur in der Android-App verfügbar",
+    "android_only_description": "Abonnements werden über Google Play aktiviert, nur über die Android-App. Laden Sie die App herunter, um sich zu abonnieren.",
+    "android_only_button": "Android-App herunterladen"
   },
   "subscribe": {
-    "processing": "Ihr Abonnement wird bearbeitet...",
-    "error_title": "Abonnementfehler",
-    "error_user_not_found": "Benutzer nicht gefunden. Bitte melden Sie sich erneut an.",
-    "error_no_session": "Ungültige Zahlungs-Sitzungs-ID.",
-    "error_update_failed": "Ihr Abonnementstatus konnte nicht aktualisiert werden. Bitte kontaktieren Sie den Support.",
-    "success_message": "Weiterleitung...",
     "success_title": "Abonnement aktiviert!",
-    "success_description": "Willkommen an Bord! Ihr Plan ist jetzt aktiv.",
-    "success_card_title": "Herzlichen Glückwunsch!",
-    "success_card_description": "Ihr Abonnement wurde erfolgreich aktiviert.",
-    "cancel_title": "Zahlung abgebrochen",
-    "cancel_description": "Der Zahlungsvorgang wurde unterbrochen.",
-    "cancel_note": "Es wurde keine Belastung vorgenommen. Sie können zurückgehen und es erneut versuchen, wann immer Sie bereit sind.",
-    "cancel_button_retry": "Einen Plan wählen",
-    "cancel_button_dashboard": "Zurück zum Dashboard"
+    "success_description": "Willkommen an Bord! Ihr Plan ist jetzt aktiv."
   },
   "instructions": {
     "title": "Bedienungsanleitung",
@@ -387,7 +378,7 @@
     "settings": {
       "p1": "Im Bereich Einstellungen können Sie Ihre Erfahrung auf WaxPro anpassen.",
       "li1": "Verwalten Sie Ihre Profildaten und melden Sie sich an oder von der App ab.",
-      "li2": "Sehen Sie Ihren Abonnementstatus, verwalten Sie Ihren Plan und Ihre Rechnungsdaten über das Stripe-Portal.",
+      "li2": "Sehen Sie Ihren Abonnementstatus und verwalten Sie Ihren Plan über Google Play (nur in der Android-App verfügbar).",
       "li3": "Wählen Sie zwischen dem hellen und dem dunklen Thema für die Benutzeroberfläche der Anwendung.",
       "li4": "Stellen Sie die Standardsprache und -währung für die gesamte Anwendung ein."
     }

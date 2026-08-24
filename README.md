@@ -1,12 +1,12 @@
 # WaxPro Manager
 
-App di gestione della produzione di candele: calcolo costi, ricette, magazzino, vendite, report e suggerimenti IA sui materiali. Include un piano di abbonamento gestito via Stripe.
+App di gestione della produzione di candele: calcolo costi, ricette, magazzino, vendite, report e suggerimenti IA sui materiali. Include un piano di abbonamento gestito via Google Play Billing (solo app Android, per policy Google Play).
 
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript + Tailwind
 - Supabase (Postgres + Auth) per dati e autenticazione
-- Stripe per gli abbonamenti (checkout hosted + webhook)
+- Google Play Billing per gli abbonamenti (verifica server-side via Play Developer API + notifiche RTDN), tramite il wrapper Capacitor in `android/`
 - Cloudflare Workers (via `@opennextjs/cloudflare`) per l'hosting
 
 Il progetto è stato migrato da Firebase (Firestore + Firebase Auth + Firebase App Hosting) a questo stack per uscire da Firebase Studio, in via di dismissione, e ridurre il lock-in.
@@ -22,14 +22,16 @@ Il progetto è stato migrato da Firebase (Firestore + Firebase Auth + Firebase A
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_ANON_KEY=
    SUPABASE_SERVICE_ROLE_KEY=          # solo server, mai esporre al client
-   STRIPE_SECRET_KEY=
-   STRIPE_WEBHOOK_SECRET=
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-   NEXT_PUBLIC_STRIPE_HOBBY_PRICE_ID=
-   NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=
-   NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID=
+   GOOGLE_PLAY_SERVICE_ACCOUNT_JSON=
+   GOOGLE_PLAY_PACKAGE_NAME=
+   NEXT_PUBLIC_GOOGLE_PLAY_PACKAGE_NAME=
+   PLAY_RTDN_SECRET=
+   GOOGLE_PLAY_HOBBY_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PLAN_ID=
+   GOOGLE_PLAY_PRO_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_PRO_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_PRO_PLAN_ID=
+   GOOGLE_PLAY_ANNUAL_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PRODUCT_ID= / NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PLAN_ID=
    NEXT_PUBLIC_APP_URL=http://localhost:9002
    ```
+   (vedi i commenti in `.env.local` per il dettaglio di ogni variabile)
 3. Setup del database: vedi [supabase/README.md](supabase/README.md) (schema, RLS, disabilitare la conferma email).
 4. Avvia il server di sviluppo:
    ```bash
@@ -37,17 +39,13 @@ Il progetto è stato migrato da Firebase (Firestore + Firebase Auth + Firebase A
    ```
    L'app parte sulla porta **9002**.
 
-## Webhook Stripe in locale
+## Test di Google Play Billing
 
-```bash
-stripe listen --forward-to localhost:9002/api/stripe/webhook
-```
-
-Copia il secret stampato (`whsec_...`) in `STRIPE_WEBHOOK_SECRET`.
+Non è testabile in locale (a differenza del vecchio checkout Stripe): richiede una build Android firmata caricata almeno nel track di test interno di Play Console, con un tester autorizzato. Vedi il workflow `.github/workflows/android-build.yml` per la build/firma automatica, e "Invia notifica di test" in Play Console per simulare un evento RTDN (rinnovo/cancellazione/rimborso).
 
 ## Deploy
 
-Vedi [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) per la procedura completa (Cloudflare Workers, variabili d'ambiente, registrazione del webhook di produzione su Stripe).
+Vedi [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) per la procedura completa (Cloudflare Workers, variabili d'ambiente, collegamento delle Real-time Developer Notifications di Google Play).
 
 ## Note
 

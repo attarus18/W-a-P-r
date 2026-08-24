@@ -1,26 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { NativePurchases, PURCHASE_TYPE } from '@capgo/native-purchases';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { CheckCircle2, Loader2, Zap } from 'lucide-react';
+import { CheckCircle2, Loader2, Zap, Smartphone } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
-import { createCheckoutSession } from '@/lib/stripe/actions';
 import { useToast } from '@/hooks/use-toast';
+
+const PLAY_STORE_LISTING_URL = `https://play.google.com/store/apps/details?id=${process.env.NEXT_PUBLIC_GOOGLE_PLAY_PACKAGE_NAME ?? ''}`;
 
 export default function PricingPage() {
   const { t } = useLanguage();
   const { user } = useUser();
   const [supabase] = useState(() => createClient());
   const { toast } = useToast();
-  const [loadingPriceId, setLoadingPriceId] = useState<string | null>(null);
+  const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
+  const [isNativeApp, setIsNativeApp] = useState(false);
+
+  useEffect(() => {
+    setIsNativeApp(Capacitor.isNativePlatform());
+  }, []);
 
   const plans = [
     {
       name: 'Hobby',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_HOBBY_PRICE_ID!,
+      productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PRODUCT_ID!,
+      planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PLAN_ID!,
       price: 6.99,
       period: t('pricing.month'),
       features: [
@@ -32,7 +41,8 @@ export default function PricingPage() {
     },
     {
       name: 'Pro',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID!,
+      productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PRODUCT_ID!,
+      planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PLAN_ID!,
       price: 9.99,
       period: t('pricing.month'),
       features: [
@@ -44,7 +54,8 @@ export default function PricingPage() {
     },
     {
       name: t('pricing.pro_annual_plan_name'),
-      priceId: process.env.NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID!,
+      productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PRODUCT_ID!,
+      planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PLAN_ID!,
       price: 49.99,
       period: t('pricing.year'),
       features: [
@@ -56,7 +67,7 @@ export default function PricingPage() {
     },
   ];
 
-  const handleCheckout = async (priceId: string) => {
+  const handlePurchase = async (productId: string, planId: string) => {
     if (!user) {
       toast({
         variant: 'destructive',
@@ -66,49 +77,46 @@ export default function PricingPage() {
       return;
     }
 
-    if (!user.email) {
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'User email not found. Cannot proceed with checkout.',
-        });
-        return;
-    }
-
-    setLoadingPriceId(priceId);
+    setLoadingProductId(productId);
 
     try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('stripe_customer_id')
-        .eq('id', user.id)
-        .single();
-
-      // Inviamo gli URL di successo e annullamento basati sull'origine corrente del browser
-      const { url } = await createCheckoutSession({
-        priceId,
-        userId: user.id,
-        email: user.email,
-        stripeCustomerId: profile?.stripe_customer_id ?? undefined,
-        successUrl: `${window.location.origin}/subscribe/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/subscribe/cancel`,
+      // Confermiamo l'acquisto solo dopo la verifica server-side (mai fidarsi
+      // della sola risposta lato client): niente autoAcknowledgePurchases.
+      const transaction = await NativePurchases.purchaseProduct({
+        productIdentifier: productId,
+        planIdentifier: planId,
+        productType: PURCHASE_TYPE.SUBS,
+        autoAcknowledgePurchases: false,
       });
 
-      if (url) {
-        window.location.assign(url);
-      } else {
-        throw new Error("Impossibile generare l'URL di pagamento.");
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/play-billing/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token ?? ''}`,
+        },
+        body: JSON.stringify({ purchaseToken: transaction.purchaseToken }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || t('pricing.error_checkout_desc'));
       }
 
+      toast({
+        title: t('subscribe.success_title'),
+        description: t('subscribe.success_description'),
+      });
     } catch (error: any) {
-      console.error('Stripe checkout error:', error);
+      console.error('Play Billing purchase error:', error);
       toast({
         variant: 'destructive',
         title: t('pricing.error_checkout_title'),
         description: error.message || t('pricing.error_checkout_desc'),
       });
     } finally {
-      setTimeout(() => setLoadingPriceId(null), 5000);
+      setLoadingProductId(null);
     }
   };
 
@@ -121,6 +129,21 @@ export default function PricingPage() {
         </h1>
         <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">{t('pricing.description')}</p>
       </div>
+
+      {!isNativeApp && (
+        <Card className="border-primary bg-primary/5">
+          <CardContent className="flex flex-col items-center gap-3 py-8 text-center">
+            <Smartphone className="h-10 w-10 text-primary" />
+            <p className="font-medium">{t('pricing.android_only_title')}</p>
+            <p className="text-sm text-muted-foreground max-w-md">{t('pricing.android_only_description')}</p>
+            <Button asChild>
+              <a href={PLAY_STORE_LISTING_URL} target="_blank" rel="noopener noreferrer">
+                {t('pricing.android_only_button')}
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {plans.map((plan) => (
@@ -146,10 +169,10 @@ export default function PricingPage() {
             <div className="p-6 pt-0">
               <Button
                 className="w-full"
-                onClick={() => handleCheckout(plan.priceId)}
-                disabled={!!loadingPriceId}
+                onClick={() => handlePurchase(plan.productId, plan.planId)}
+                disabled={!isNativeApp || !!loadingProductId}
               >
-                {loadingPriceId === plan.priceId ? (
+                {loadingProductId === plan.productId ? (
                   <Loader2 className="animate-spin" />
                 ) : (
                   t('pricing.start_trial_button')

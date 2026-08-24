@@ -1,4 +1,3 @@
-
 {
   "navbar": {
     "dashboard": "Tableau de bord",
@@ -203,8 +202,6 @@
     "trial_plan": "Vous êtes en essai pour le plan {plan}. Il vous reste {days} jours.",
     "active_plan": "Vous utilisez le plan {plan}. Il sera renouvelé dans {days} jours.",
     "manage_subscription_button": "Gérer l'abonnement",
-    "stripe_customer_error": "ID client Stripe non trouvé.",
-    "stripe_portal_error": "Impossible d'ouvrir le portail de gestion.",
     "subscription_card_title": "Votre abonnement",
     "subscription_card_description": "Gérez votre plan et vos informations de facturation.",
     "no_active_subscription": "Vous n'avez pas d'abonnement actif.",
@@ -222,7 +219,11 @@
     "theme_title": "Thème de l'application",
     "theme_description": "Choisissez entre un thème clair ou sombre.",
     "theme_light": "Thème Clair",
-    "theme_dark": "Thème Sombre"
+    "theme_dark": "Thème Sombre",
+    "play_management_error": "Impossible d'ouvrir la gestion de l'abonnement Google Play.",
+    "plan_status_grace_period": "Période de grâce",
+    "plan_status_on_hold": "En attente",
+    "plan_status_paused": "En pause"
   },
   "currency": {
     "toast_title": "Devise mise à jour",
@@ -300,7 +301,7 @@
     "login_button": "Connexion",
     "signup_button": "S'inscrire"
   },
-    "pro_feature": {
+  "pro_feature": {
     "title": "Fonctionnalité Pro",
     "description": "Cette fonctionnalité est uniquement disponible pour les utilisateurs avec un abonnement actif.",
     "instructions": "Mettez à niveau votre plan pour débloquer cette fonctionnalité et d'autres fonctionnalités puissantes pour développer votre entreprise.",
@@ -326,70 +327,60 @@
     "error_not_logged_in_title": "Connexion requise",
     "error_not_logged_in_desc": "Vous devez être connecté pour souscrire à un plan.",
     "error_checkout_title": "Erreur de paiement",
-    "error_checkout_desc": "Impossible de lancer le processus de paiement. Veuillez réessayer."
+    "error_checkout_desc": "Impossible de lancer le processus de paiement. Veuillez réessayer.",
+    "android_only_title": "Disponible uniquement dans l'app Android",
+    "android_only_description": "Les abonnements s'activent via Google Play, uniquement depuis l'app Android. Téléchargez l'app pour vous abonner.",
+    "android_only_button": "Télécharger l'app Android"
   },
   "subscribe": {
-    "processing": "Traitement de votre abonnement en cours...",
-    "error_title": "Erreur d'abonnement",
-    "error_user_not_found": "Utilisateur non trouvé. Veuillez vous reconnecter.",
-    "error_no_session": "ID de session de paiement non valide.",
-    "error_update_failed": "Impossible de mettre à jour votre statut d'abonnement. Veuillez contacter le support.",
-    "success_message": "Redirection en cours...",
     "success_title": "Abonnement activé !",
-    "success_description": "Bienvenue à bord ! Votre plan est maintenant actif.",
-    "success_card_title": "Félicitations !",
-    "success_card_description": "Votre abonnement a été activé avec succès.",
-    "cancel_title": "Paiement annulé",
-    "cancel_description": "Le processus de paiement a été interrompu.",
-    "cancel_note": "Aucun frais n'a été appliqué. Vous pouvez revenir en arrière et réessayer quand vous le souhaitez.",
-    "cancel_button_retry": "Choisir un plan",
-    "cancel_button_dashboard": "Retour au tableau de bord"
+    "success_description": "Bienvenue à bord ! Votre plan est maintenant actif."
   },
   "instructions": {
     "title": "Manuel d'instructions",
     "description": "Un guide complet pour tirer le meilleur parti de toutes les fonctionnalités de WaxPro.",
     "sections_title": "Sections de l'application",
     "calculator": {
-        "p1": "Le calculateur de coûts vous permet de déterminer rapidement le coût de production d'une seule bougie. Entrez le coût de chaque composant :",
-        "li1": "Le coût de la cire que vous utilisez.",
-        "li2": "Le coût de la mèche.",
-        "li3": "Le coût du contenant (pot, moule, etc.).",
-        "li4": "Le coût du parfum.",
-        "li5": "Le coût du colorant.",
-        "li6": "Tous les frais d'expédition pour les matériaux.",
-        "p2": "Cliquez sur 'Calculer le total' pour voir le coût final. Vous pouvez utiliser le bouton 'Réinitialiser' pour effacer les champs et 'Partager' pour copier le résultat."
+      "p1": "Le calculateur de coûts vous permet de déterminer rapidement le coût de production d'une seule bougie. Entrez le coût de chaque composant :",
+      "li1": "Le coût de la cire que vous utilisez.",
+      "li2": "Le coût de la mèche.",
+      "li3": "Le coût du contenant (pot, moule, etc.).",
+      "li4": "Le coût du parfum.",
+      "li5": "Le coût du colorant.",
+      "li6": "Tous les frais d'expédition pour les matériaux.",
+      "p2": "Cliquez sur 'Calculer le total' pour voir le coût final. Vous pouvez utiliser le bouton 'Réinitialiser' pour effacer les champs et 'Partager' pour copier le résultat."
     },
     "recipe_calculator": {
-        "p1": "Cet outil est essentiel pour créer des recettes précises. Il vous aide à calculer les bonnes proportions de cire, de parfum et de couleur en fonction du poids total souhaité.",
-        "li1": "Choisissez l'unité de mesure (grammes, onces, etc.).",
-        "li2": "Entrez le poids total de la bougie que vous souhaitez produire.",
-        "li3": "Utilisez le curseur pour définir le pourcentage de parfum.",
-        "li4": "Utilisez le curseur pour définir le pourcentage de couleur.",
-        "p2": "En cliquant sur 'Calculer la recette', l'application vous montrera les quantités exactes de chaque ingrédient.",
-        "p3": "Vous pouvez également entrer le coût par unité de matériau pour calculer le coût total de la recette."
+      "p1": "Cet outil est essentiel pour créer des recettes précises. Il vous aide à calculer les bonnes proportions de cire, de parfum et de couleur en fonction du poids total souhaité.",
+      "li1": "Choisissez l'unité de mesure (grammes, onces, etc.).",
+      "li2": "Entrez le poids total de la bougie que vous souhaitez produire.",
+      "li3": "Utilisez le curseur pour définir le pourcentage de parfum.",
+      "li4": "Utilisez le curseur pour définir le pourcentage de couleur.",
+      "p2": "En cliquant sur 'Calculer la recette', l'application vous montrera les quantités exactes de chaque ingrédient.",
+      "p3": "Vous pouvez également entrer le coût par unité de matériau pour calculer le coût total de la recette."
     },
     "inventory": {
-        "p1": "La section Inventaire est au cœur de votre gestion. Ici, vous pouvez suivre tous vos produits finis. Pour utiliser cette section, vous devez être inscrit.",
-        "p2": "Ajoutez un nouveau produit en spécifiant son nom, sa quantité initiale, son seuil de réapprovisionnement (pour recevoir un avertissement lorsque le stock est bas), son coût de production et son prix de vente.",
-        "p3": "Pour chaque produit, vous pouvez enregistrer une vente ('Vendre'), ajouter un nouveau stock ('Charger') ou gérer un retour ('Retour')."
+      "p1": "La section Inventaire est au cœur de votre gestion. Ici, vous pouvez suivre tous vos produits finis. Pour utiliser cette section, vous devez être inscrit.",
+      "p2": "Ajoutez un nouveau produit en spécifiant son nom, sa quantité initiale, son seuil de réapprovisionnement (pour recevoir un avertissement lorsque le stock est bas), son coût de production et son prix de vente.",
+      "p3": "Pour chaque produit, vous pouvez enregistrer une vente ('Vendre'), ajouter un nouveau stock ('Charger') ou gérer un retour ('Retour')."
     },
     "report": {
-        "p1": "Le rapport financier vous donne un aperçu de vos performances de vente. Vous pouvez filtrer les données par jour, semaine, mois ou année. Les principales fiches indiquent :",
-        "li1": "Le bénéfice total généré sur la période sélectionnée.",
-        "li2": "Le nombre total d'unités vendues.",
-        "li3": "La valeur totale des marchandises actuellement en stock.",
-        "p2": "Le graphique ci-dessous montre l'évolution des bénéfices et des unités vendues dans le temps, vous donnant une vue claire de vos performances. Vous pouvez également exporter un rapport détaillé au format PDF."
+      "p1": "Le rapport financier vous donne un aperçu de vos performances de vente. Vous pouvez filtrer les données par jour, semaine, mois ou année. Les principales fiches indiquent :",
+      "li1": "Le bénéfice total généré sur la période sélectionnée.",
+      "li2": "Le nombre total d'unités vendues.",
+      "li3": "La valeur totale des marchandises actuellement en stock.",
+      "p2": "Le graphique ci-dessous montre l'évolution des bénéfices et des unités vendues dans le temps, vous donnant une vue claire de vos performances. Vous pouvez également exporter un rapport détaillé au format PDF."
     },
     "recipes": {
-        "p1": "L'Archive des recettes vous permet d'enregistrer les recettes calculées dans le Calculateur de recettes, afin de ne pas devoir tout ressaisir à chaque fois que vous refaites la même bougie.",
-        "p2": "Vous pouvez renommer ou supprimer les recettes enregistrées à tout moment. Le plan gratuit inclut 2 recettes enregistrables ; au-delà, un abonnement actif est requis."
+      "p1": "L'Archive des recettes vous permet d'enregistrer les recettes calculées dans le Calculateur de recettes, afin de ne pas devoir tout ressaisir à chaque fois que vous refaites la même bougie.",
+      "p2": "Vous pouvez renommer ou supprimer les recettes enregistrées à tout moment. Le plan gratuit inclut 2 recettes enregistrables ; au-delà, un abonnement actif est requis."
     },
     "settings": {
-        "p1": "Dans la section Paramètres, vous pouvez personnaliser votre expérience sur WaxPro.",
-        "li1": "Gérez les données de votre profil et connectez-vous ou déconnectez-vous de l'application.",
-        "li2": "Consultez l'état de votre abonnement, gérez votre plan et vos informations de facturation via le portail Stripe.",
-        "li3": "Choisissez entre le thème clair et le thème sombre pour l'interface de l'application.",
-        "li4": "Définissez la langue et la devise par défaut pour l'ensemble de l'application."
+      "p1": "Dans la section Paramètres, vous pouvez personnaliser votre expérience sur WaxPro.",
+      "li1": "Gérez les données de votre profil et connectez-vous ou déconnectez-vous de l'application.",
+      "li2": "Consultez l'état de votre abonnement et gérez votre plan via Google Play (disponible uniquement dans l'app Android).",
+      "li3": "Choisissez entre le thème clair et le thème sombre pour l'interface de l'application.",
+      "li4": "Définissez la langue et la devise par défaut pour l'ensemble de l'application."
     }
   }
 }

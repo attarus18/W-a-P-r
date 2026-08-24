@@ -25,7 +25,8 @@ import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
 import { useSubscription } from "@/context/subscription-context";
 import { differenceInDays } from 'date-fns';
-import { createStripePortalSession } from '@/lib/stripe/actions';
+import { Capacitor } from '@capacitor/core';
+import { NativePurchases } from '@capgo/native-purchases';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/settings/theme-toggle';
@@ -46,19 +47,15 @@ export default function SettingsPage() {
   };
 
   const handleManageSubscription = async () => {
-    if (!subscription?.stripeCustomerId) {
-        toast({ variant: 'destructive', title: t('settings.stripe_customer_error') });
+    if (!Capacitor.isNativePlatform()) {
         return;
     }
     setIsPortalLoading(true);
     try {
-        const { url } = await createStripePortalSession({ 
-            stripeCustomerId: subscription.stripeCustomerId,
-            returnUrl: window.location.href
-        });
-        window.location.href = url;
-    } catch(error: any) {
-        toast({ variant: 'destructive', title: t('settings.stripe_portal_error'), description: error.message });
+        await NativePurchases.manageSubscriptions();
+    } catch (error: any) {
+        toast({ variant: 'destructive', title: t('settings.play_management_error'), description: error.message });
+    } finally {
         setIsPortalLoading(false);
     }
   };

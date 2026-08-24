@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { User as AppUser } from '@/lib/data';
 
 interface SubscriptionContextType {
-  subscription: Pick<AppUser, 'subscriptionPlan' | 'subscriptionStatus' | 'subscriptionPeriodEndDate' | 'stripeCustomerId'> | null;
+  subscription: Pick<AppUser, 'subscriptionPlan' | 'subscriptionStatus' | 'subscriptionPeriodEndDate'> | null;
   isSubscriptionLoading: boolean;
   isPro: boolean;
   isTrialing: boolean;
@@ -30,7 +30,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         setIsProfileLoading(true);
         supabase
             .from('profiles')
-            .select('stripe_customer_id, subscription_plan, subscription_status, subscription_period_end_date')
+            .select('subscription_plan, subscription_status, subscription_period_end_date')
             .eq('id', user.id)
             .single()
             .then(({ data }) => {
@@ -40,7 +40,6 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     }, [supabase, user]);
 
     const subscription = useMemo(() => profileRow ? {
-        stripeCustomerId: profileRow.stripe_customer_id,
         subscriptionPlan: profileRow.subscription_plan,
         subscriptionStatus: profileRow.subscription_status,
         subscriptionPeriodEndDate: profileRow.subscription_period_end_date,
@@ -48,7 +47,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
     const isPro = useMemo(() => subscription?.subscriptionStatus === 'active', [subscription]);
     const isTrialing = useMemo(() => subscription?.subscriptionStatus === 'trialing', [subscription]);
-    const hasActiveSubscription = useMemo(() => isPro || isTrialing, [isPro, isTrialing]);
+    // In grace period Google raccomanda di mantenere l'accesso: l'utente ha
+    // solo un problema di pagamento temporaneo, non ha ancora perso l'abbonamento.
+    const isInGracePeriod = useMemo(() => subscription?.subscriptionStatus === 'grace_period', [subscription]);
+    const hasActiveSubscription = useMemo(() => isPro || isTrialing || isInGracePeriod, [isPro, isTrialing, isInGracePeriod]);
 
     const value = {
       subscription,

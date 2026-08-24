@@ -1,4 +1,3 @@
-
 {
   "navbar": {
     "dashboard": "Tablero",
@@ -203,8 +202,6 @@
     "trial_plan": "Está en el período de prueba del plan {plan}. Le quedan {days} días.",
     "active_plan": "Está en el plan {plan}. Se renovará en {days} días.",
     "manage_subscription_button": "Administrar suscripción",
-    "stripe_customer_error": "ID de cliente de Stripe no encontrado.",
-    "stripe_portal_error": "No se pudo abrir el portal de administración.",
     "subscription_card_title": "Su suscripción",
     "subscription_card_description": "Administre su plan y su información de facturación.",
     "no_active_subscription": "No tiene una suscripción activa.",
@@ -222,7 +219,11 @@
     "theme_title": "Tema de la aplicación",
     "theme_description": "Elija entre el tema claro y oscuro.",
     "theme_light": "Tema Claro",
-    "theme_dark": "Tema Oscuro"
+    "theme_dark": "Tema Oscuro",
+    "play_management_error": "No se pudo abrir la administración de suscripciones de Google Play.",
+    "plan_status_grace_period": "Período de gracia",
+    "plan_status_on_hold": "En espera",
+    "plan_status_paused": "En pausa"
   },
   "currency": {
     "toast_title": "Moneda actualizada",
@@ -300,7 +301,7 @@
     "login_button": "Iniciar sesión",
     "signup_button": "Registrarse"
   },
-    "pro_feature": {
+  "pro_feature": {
     "title": "Función Pro",
     "description": "Esta función solo está disponible para usuarios con una suscripción activa.",
     "instructions": "Actualice su plan para desbloquear esta y otras potentes funciones para hacer crecer su negocio.",
@@ -326,24 +327,14 @@
     "error_not_logged_in_title": "Inicio de sesión requerido",
     "error_not_logged_in_desc": "Debe iniciar sesión para suscribirse a un plan.",
     "error_checkout_title": "Error de pago",
-    "error_checkout_desc": "No se pudo iniciar el proceso de pago. Por favor, inténtelo de nuevo."
+    "error_checkout_desc": "No se pudo iniciar el proceso de pago. Por favor, inténtelo de nuevo.",
+    "android_only_title": "Disponible solo en la app de Android",
+    "android_only_description": "Las suscripciones se activan a través de Google Play, solo desde la app de Android. Descargue la app para suscribirse.",
+    "android_only_button": "Descargar la app de Android"
   },
   "subscribe": {
-    "processing": "Procesando su suscripción...",
-    "error_title": "Error de suscripción",
-    "error_user_not_found": "Usuario no encontrado. Por favor, inicie sesión de nuevo.",
-    "error_no_session": "ID de sesión de pago no válido.",
-    "error_update_failed": "No se pudo actualizar el estado de su suscripción. Por favor, póngase en contacto con el soporte.",
-    "success_message": "Redirigiendo...",
     "success_title": "¡Suscripción activada!",
-    "success_description": "¡Bienvenido a bordo! Su plan ya está activo.",
-    "success_card_title": "¡Felicidades!",
-    "success_card_description": "Su suscripción se ha activado correctamente.",
-    "cancel_title": "Pago cancelado",
-    "cancel_description": "El proceso de pago fue interrumpido.",
-    "cancel_note": "No se ha realizado ningún cargo. Puede volver atrás e intentarlo de nuevo cuando esté listo.",
-    "cancel_button_retry": "Elegir un plan",
-    "cancel_button_dashboard": "Volver al tablero"
+    "success_description": "¡Bienvenido a bordo! Su plan ya está activo."
   },
   "instructions": {
     "title": "Manual de instrucciones",
@@ -387,7 +378,7 @@
     "settings": {
       "p1": "En la sección de Ajustes, puede personalizar su experiencia en WaxPro.",
       "li1": "Administre los datos de su perfil e inicie o cierre sesión en la aplicación.",
-      "li2": "Vea el estado de su suscripción, administre su plan y la información de facturación a través del portal de Stripe.",
+      "li2": "Vea el estado de su suscripción y administre su plan a través de Google Play (disponible solo en la app de Android).",
       "li3": "Elija entre el tema claro y oscuro para la interfaz de la aplicación.",
       "li4": "Establezca el idioma y la moneda predeterminados para toda la aplicación."
     }

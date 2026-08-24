@@ -1,4 +1,3 @@
-
 {
   "navbar": {
     "dashboard": "Dashboard",
@@ -203,8 +202,6 @@
     "trial_plan": "Sei in prova per il piano {plan}. Ti rimangono {days} giorni.",
     "active_plan": "Stai usando il piano {plan}. L'abbonamento si rinnoverà tra {days} giorni.",
     "manage_subscription_button": "Gestisci Abbonamento",
-    "stripe_customer_error": "ID cliente Stripe non trovato.",
-    "stripe_portal_error": "Impossibile aprire il portale di gestione.",
     "subscription_card_title": "Il Tuo Abbonamento",
     "subscription_card_description": "Gestisci il tuo piano e i dati di fatturazione.",
     "no_active_subscription": "Non hai nessun abbonamento attivo.",
@@ -222,13 +219,17 @@
     "theme_title": "Tema Applicazione",
     "theme_description": "Scegli tra il tema chiaro e quello scuro.",
     "theme_light": "Tema Chiaro",
-    "theme_dark": "Tema Scuro"
+    "theme_dark": "Tema Scuro",
+    "play_management_error": "Impossibile aprire la gestione abbonamento di Google Play.",
+    "plan_status_grace_period": "Periodo di grazia",
+    "plan_status_on_hold": "In sospeso",
+    "plan_status_paused": "In pausa"
   },
-   "currency": {
+  "currency": {
     "toast_title": "Valuta Aggiornata",
     "toast_description": "Convertito da {old_currency} a {new_currency} con un tasso di {rate}."
   },
-   "report": {
+  "report": {
     "title": "Report Finanziario",
     "description": "Analizza le performance della tua attività.",
     "export_pdf": "Esporta in PDF",
@@ -326,24 +327,14 @@
     "error_not_logged_in_title": "Accesso Richiesto",
     "error_not_logged_in_desc": "Devi effettuare l'accesso per poter sottoscrivere un piano.",
     "error_checkout_title": "Errore Checkout",
-    "error_checkout_desc": "Impossibile avviare il processo di pagamento. Riprova."
+    "error_checkout_desc": "Impossibile avviare il processo di pagamento. Riprova.",
+    "android_only_title": "Disponibile solo nell'app Android",
+    "android_only_description": "Gli abbonamenti si attivano tramite Google Play, solo dall'app Android. Scarica l'app per abbonarti.",
+    "android_only_button": "Scarica l'app Android"
   },
   "subscribe": {
-    "processing": "Elaborazione del tuo abbonamento in corso...",
-    "error_title": "Errore Abbonamento",
-    "error_user_not_found": "Utente non trovato. Effettua nuovamente il login.",
-    "error_no_session": "ID sessione di pagamento non valido.",
-    "error_update_failed": "Impossibile aggiornare il tuo stato di abbonamento. Contatta il supporto.",
-    "success_message": "Redirezionamento in corso...",
     "success_title": "Abbonamento Attivato!",
-    "success_description": "Benvenuto! Il tuo piano è ora attivo.",
-    "success_card_title": "Congratulazioni!",
-    "success_card_description": "Il tuo abbonamento è stato attivato con successo.",
-    "cancel_title": "Pagamento Annullato",
-    "cancel_description": "Il processo di pagamento è stato interrotto.",
-    "cancel_note": "Nessun addebito è stato effettuato. Puoi tornare indietro e riprovare quando vuoi.",
-    "cancel_button_retry": "Scegli un Piano",
-    "cancel_button_dashboard": "Torna alla Dashboard"
+    "success_description": "Benvenuto! Il tuo piano è ora attivo."
   },
   "instructions": {
     "title": "Manuale di Istruzioni",
@@ -387,7 +378,7 @@
     "settings": {
       "p1": "Nella sezione Impostazioni puoi personalizzare la tua esperienza su WaxPro.",
       "li1": "Gestisci i dati del tuo profilo e accedi o esci dall'app.",
-      "li2": "Visualizza lo stato del tuo abbonamento, gestisci il piano e i dati di fatturazione tramite il portale Stripe.",
+      "li2": "Visualizza lo stato del tuo abbonamento e gestisci il piano tramite Google Play (disponibile solo nell'app Android).",
       "li3": "Scegli tra il tema chiaro e scuro per l'interfaccia dell'applicazione.",
       "li4": "Imposta la lingua e la valuta predefinite per l'intera applicazione."
     }

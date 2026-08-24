@@ -5,10 +5,9 @@ export type User = {
   email: string;
   languagePreference?: string;
   currencyPreference?: string;
-  // Stripe fields
-  stripeCustomerId?: string;
+  // Campi abbonamento (Google Play Billing)
   subscriptionPlan?: 'hobby' | 'pro' | 'annual';
-  subscriptionStatus?: 'trialing' | 'active' | 'canceled' | 'incomplete';
+  subscriptionStatus?: 'trialing' | 'active' | 'canceled' | 'incomplete' | 'grace_period' | 'on_hold' | 'paused';
   subscriptionPeriodEndDate?: string; // ISO date string
 };
 
