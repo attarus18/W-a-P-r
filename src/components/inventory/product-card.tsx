@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Product } from '@/lib/data';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Bell, Minus, Plus, MoreVertical, Pencil, Trash2, BarChart2, Truck } from 'lucide-react';
+import { Bell, Minus, Plus, MoreVertical, Pencil, Trash2, BarChart2, Truck, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -30,50 +30,112 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import EditProductDialog from './edit-product-dialog';
 import { useCurrency } from '@/context/currency-context';
 import { useProducts } from '@/context/product-context';
+import { useUser } from '@/context/auth-context';
 
 interface ProductCardProps {
   product: Product;
 }
 
+type UndoEntry = {
+  type: 'sell' | 'load' | 'return';
+  previousQuantity: number;
+  saleId?: string;
+};
+
+// Numero massimo di azioni annullabili in sequenza per singolo prodotto.
+const MAX_UNDO_HISTORY = 20;
+
 export default function ProductCard({ product }: ProductCardProps) {
-  const { updateProduct, deleteProduct, recordSale } = useProducts();
+  const { updateProduct, deleteProduct, recordSale, deleteSale, recordReturn } = useProducts();
+  const { user } = useUser();
   const [quantity, setQuantity] = useState(product.quantity);
   const [loadAmount, setLoadAmount] = useState(1);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [undoHistory, setUndoHistory] = useState<UndoEntry[]>([]);
   const isLowStock = quantity <= product.reorderThreshold;
   const { t } = useLanguage();
   const { formatCurrency } = useCurrency();
 
-  const handleSell = () => {
+  // Lo storico è legato a utente + prodotto, cosi' sopravvive ai refresh
+  // ma non si mescola tra account diversi sullo stesso dispositivo.
+  const undoStorageKey = `waxpro_undo_${user?.id ?? 'guest'}_${product.id}`;
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(undoStorageKey);
+      setUndoHistory(stored ? JSON.parse(stored) : []);
+    } catch {
+      setUndoHistory([]);
+    }
+  }, [undoStorageKey]);
+
+  const pushUndoEntry = (entry: UndoEntry) => {
+    setUndoHistory(prev => {
+      const next = [...prev, entry].slice(-MAX_UNDO_HISTORY);
+      localStorage.setItem(undoStorageKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const clearUndoHistory = () => {
+    setUndoHistory([]);
+    localStorage.removeItem(undoStorageKey);
+  };
+
+  const handleSell = async () => {
     if (quantity > 0) {
+      const previousQuantity = quantity;
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      
+
       const updatedProduct = { ...product, quantity: newQuantity };
       updateProduct(updatedProduct);
-      
-      recordSale({
+
+      const saleId = await recordSale({
         productId: product.id,
         quantity: 1,
         salePrice: product.sellPrice,
         productionCost: product.productionCost,
         timestamp: new Date().toISOString(),
       });
+
+      pushUndoEntry({ type: 'sell', previousQuantity, saleId });
     }
   };
 
   const handleLoad = () => {
+    const previousQuantity = quantity;
     const newQuantity = quantity + Number(loadAmount);
     setQuantity(newQuantity);
     updateProduct({ ...product, quantity: newQuantity });
+    pushUndoEntry({ type: 'load', previousQuantity });
     setLoadAmount(1);
   };
-  
+
   const handleReturn = () => {
+    const previousQuantity = quantity;
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    // TODO: Aggiungere logica per la gestione dei resi
     updateProduct({ ...product, quantity: newQuantity });
+    recordReturn({ productId: product.id, quantity: 1, timestamp: new Date().toISOString() });
+    pushUndoEntry({ type: 'return', previousQuantity });
+  };
+
+  const handleUndo = () => {
+    if (undoHistory.length === 0) return;
+    const entry = undoHistory[undoHistory.length - 1];
+
+    setQuantity(entry.previousQuantity);
+    updateProduct({ ...product, quantity: entry.previousQuantity });
+    if (entry.type === 'sell' && entry.saleId) {
+      deleteSale(entry.saleId);
+    }
+
+    setUndoHistory(prev => {
+      const next = prev.slice(0, -1);
+      localStorage.setItem(undoStorageKey, JSON.stringify(next));
+      return next;
+    });
   };
 
   const handleUpdate = (updatedValues: Omit<Product, 'id' | 'timestamp' >) => {
@@ -82,6 +144,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     if(updatedValues.quantity) {
         setQuantity(updatedValues.quantity)
     }
+    // Una modifica manuale rompe la catena delle quantita' precedenti:
+    // lo storico di undo non sarebbe piu' affidabile.
+    clearUndoHistory();
     setIsEditDialogOpen(false);
   }
 
@@ -97,6 +162,16 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <Bell className="h-4 w-4" />
             </div>
             )}
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={handleUndo}
+                disabled={undoHistory.length === 0}
+                title={undoHistory.length > 0 ? `${t('product_card.undo_button')} (${undoHistory.length})` : t('product_card.undo_button')}
+            >
+                <Undo2 className="h-4 w-4" />
+            </Button>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -134,7 +209,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                             <AlertDialogCancel>{t('settings.alert_cancel')}</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => deleteProduct(product.id)} className={cn(buttonVariants({ variant: "destructive" }))}>{t('product_card.delete_button')}</AlertDialogAction>
+                            <AlertDialogAction onClick={() => { clearUndoHistory(); deleteProduct(product.id); }} className={cn(buttonVariants({ variant: "destructive" }))}>{t('product_card.delete_button')}</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

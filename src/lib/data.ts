@@ -46,3 +46,11 @@ export type Sale = {
   productionCost: number;
   timestamp: string;
 };
+
+export type Return = {
+  id: string;
+  userId: string;
+  productId: string;
+  quantity: number;
+  timestamp: string;
+};

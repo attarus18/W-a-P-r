@@ -3,10 +3,10 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useProducts, useSales } from '@/context/product-context';
+import { useProducts, useSales, useReturns } from '@/context/product-context';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useLanguage } from '@/context/language-context';
-import { TrendingUp, Package, Undo, Printer, LineChart, Calendar as CalendarIcon, Warehouse, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TrendingUp, Package, Undo, Printer, LineChart, Calendar as CalendarIcon, Warehouse, Loader2, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { useCurrency } from '@/context/currency-context';
 import { startOfDay, startOfWeek, startOfMonth, startOfYear, endOfDay, endOfWeek, endOfMonth, endOfYear, addDays, addWeeks, addMonths, addYears, differenceInCalendarDays, format } from 'date-fns';
 import { enUS, it, es, fr, de } from 'date-fns/locale';
@@ -38,6 +38,7 @@ export default function ReportPage() {
     const { formatCurrency, convert, currency } = useCurrency();
     const { products, isLoading: productsLoading } = useProducts();
     const { sales, isLoading: salesLoading } = useSales();
+    const { returns, isLoading: returnsLoading } = useReturns();
     const { subscription, isSubscriptionLoading, hasActiveSubscription } = useSubscription();
 
     const [timeRange, setTimeRange] = useState<TimeRange>('month');
@@ -81,7 +82,15 @@ export default function ReportPage() {
         setIsCalendarOpen(false);
     };
 
-    const { filteredSales, chartData, periodLabel, canGoNext } = useMemo(() => {
+    const periodTitleKey = {
+        day: 'report.pdf.title_daily',
+        week: 'report.pdf.title_weekly',
+        month: 'report.pdf.title_monthly',
+        year: 'report.pdf.title_yearly',
+        custom: 'report.pdf.title_custom',
+    }[timeRange];
+
+    const { filteredSales, periodRange, chartData, periodLabel, canGoNext } = useMemo(() => {
         const now = new Date();
         let startDate: Date;
         let endDate: Date;
@@ -156,19 +165,71 @@ export default function ReportPage() {
 
         const isCurrentPeriod = startDate <= now && now <= endDate;
 
-        return { filteredSales: filtered, chartData: chart, periodLabel: label, canGoNext: !isCurrentPeriod };
+        return { filteredSales: filtered, periodRange: { startDate, endDate }, chartData: chart, periodLabel: label, canGoNext: !isCurrentPeriod };
 
     }, [sales, timeRange, anchorDate, customRange, convert, dateLocale]);
 
+    const filteredReturns = useMemo(() => {
+        return returns.filter(ret => {
+            const returnDate = new Date(ret.timestamp);
+            return returnDate >= periodRange.startDate && returnDate <= periodRange.endDate;
+        });
+    }, [returns, periodRange]);
 
     const reportData = useMemo(() => {
-        return filteredSales.reduce((acc, s) => {
+        const base = filteredSales.reduce((acc, s) => {
             acc.totalProfit += (s.salePrice - s.productionCost) * s.quantity;
             acc.totalSold += s.quantity;
             return acc;
         }, { totalProfit: 0, totalSold: 0 });
-    }, [filteredSales]);
-    
+        const totalReturned = filteredReturns.reduce((acc, r) => acc + r.quantity, 0);
+        return { ...base, totalReturned };
+    }, [filteredSales, filteredReturns]);
+
+    const bestSeller = useMemo(() => {
+        const soldByProduct = new Map<string, { sold: number; profit: number }>();
+        filteredSales.forEach(sale => {
+            const entry = soldByProduct.get(sale.productId) || { sold: 0, profit: 0 };
+            entry.sold += sale.quantity;
+            entry.profit += (sale.salePrice - sale.productionCost) * sale.quantity;
+            soldByProduct.set(sale.productId, entry);
+        });
+
+        let bestId: string | null = null;
+        let bestStats = { sold: 0, profit: 0 };
+        soldByProduct.forEach((stats, productId) => {
+            if (stats.sold > bestStats.sold) {
+                bestId = productId;
+                bestStats = stats;
+            }
+        });
+
+        if (!bestId) return null;
+        const product = products.find(p => p.id === bestId);
+        return { name: product?.name ?? '—', sold: bestStats.sold, profit: bestStats.profit };
+    }, [filteredSales, products]);
+
+    const mostReturnedProduct = useMemo(() => {
+        const returnedByProduct = new Map<string, number>();
+        filteredReturns.forEach(ret => {
+            returnedByProduct.set(ret.productId, (returnedByProduct.get(ret.productId) || 0) + ret.quantity);
+        });
+
+        let worstId: string | null = null;
+        let worstQty = 0;
+        returnedByProduct.forEach((qty, productId) => {
+            if (qty > worstQty) {
+                worstId = productId;
+                worstQty = qty;
+            }
+        });
+
+        if (!worstId) return null;
+        const product = products.find(p => p.id === worstId);
+        return { name: product?.name ?? '—', returned: worstQty };
+    }, [filteredReturns, products]);
+
+
     const { perProductStats, grandTotalProfit, grandTotalStock } = useMemo(() => {
         const stats = new Map<string, ProductStat>();
         let totalProfit = 0;
@@ -183,6 +244,12 @@ export default function ReportPage() {
             stats.set(sale.productId, stat);
         });
 
+        returns.forEach(ret => {
+            const stat = stats.get(ret.productId) || { sold: 0, profit: 0, returned: 0 };
+            stat.returned += ret.quantity;
+            stats.set(ret.productId, stat);
+        });
+
         const totalStock = products.reduce((acc, p) => acc + p.quantity, 0);
 
         return {
@@ -190,7 +257,7 @@ export default function ReportPage() {
             grandTotalProfit: totalProfit,
             grandTotalStock: totalStock,
         };
-    }, [products, sales]);
+    }, [products, sales, returns]);
 
     const handlePrint = async () => {
         setIsPrinting(true);
@@ -203,6 +270,7 @@ export default function ReportPage() {
 
             // Colors & Fonts
             const primaryColor = '#f97316';
+            const soldColor = '#0ea5e9';
             const textColor = '#111827';
             const mutedColor = '#6b7280';
             const borderColor = '#e5e7eb';
@@ -224,38 +292,177 @@ export default function ReportPage() {
             doc.setFontSize(10);
             doc.setTextColor(mutedColor);
             doc.text(t('report.pdf.inventory_report').toUpperCase(), pageWidth / 2, y, { align: 'center', charSpace: 1 });
-            y += 30;
+            y += 18;
 
-            // --- SUMMARY CARDS ---
-            const cardWidth = (pageWidth / 2) - margin - 5;
-            const cardHeight = 55;
+            // --- PERIOD ---
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(textColor);
+            doc.text(t(periodTitleKey).toUpperCase(), pageWidth / 2, y, { align: 'center' });
+            y += 14;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(mutedColor);
+            doc.text(periodLabel, pageWidth / 2, y, { align: 'center' });
+            y += 25;
 
-            // Card 1: Total Profit
-            doc.setDrawColor(primaryColor);
-            doc.setLineWidth(1);
-            doc.roundedRect(margin, y, cardWidth, cardHeight, 8, 8, 'S');
-            doc.setFontSize(9);
+            // --- PERIOD SUMMARY CARDS ---
+            const summaryCardWidth = (pageWidth - (margin * 2) - 10) / 2;
+            const summaryCardHeight = 50;
+            const summaryCards = [
+                { title: t('report.total_profit'), value: formatCurrencyForPdf(reportData.totalProfit), highlight: true },
+                { title: t('report.total_sold'), value: `${reportData.totalSold}`, highlight: false },
+                { title: t('report.total_returned'), value: `${reportData.totalReturned}`, highlight: false },
+                { title: t('report.total_stock'), value: `${grandTotalStock} PZ`, highlight: false },
+            ];
+
+            summaryCards.forEach((card, index) => {
+                const col = index % 2;
+                const row = Math.floor(index / 2);
+                const cardX = margin + col * (summaryCardWidth + 10);
+                const cardY = y + row * (summaryCardHeight + 10);
+
+                if (card.highlight) {
+                    doc.setDrawColor(primaryColor);
+                    doc.setLineWidth(1);
+                    doc.roundedRect(cardX, cardY, summaryCardWidth, summaryCardHeight, 8, 8, 'S');
+                } else {
+                    doc.setDrawColor(borderColor);
+                    doc.setFillColor(lightBgColor);
+                    doc.roundedRect(cardX, cardY, summaryCardWidth, summaryCardHeight, 8, 8, 'FD');
+                }
+
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(mutedColor);
+                doc.text(card.title.toUpperCase(), cardX + 10, cardY + 16);
+
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(textColor);
+                doc.text(card.value, cardX + 10, cardY + 36);
+            });
+
+            y += (summaryCardHeight + 10) * 2 + 10;
+
+            // --- BEST SELLER & MOST RETURNED ---
+            const highlightBoxWidth = (pageWidth - (margin * 2) - 10) / 2;
+            const highlightBoxHeight = 45;
+            if (y + highlightBoxHeight > pageHeight - margin) {
+                doc.addPage();
+                y = margin;
+            }
+
+            const drawHighlightBox = (x: number, title: string, name: string | undefined, metricValue: string) => {
+                doc.setFillColor(totalRowBgColor);
+                doc.roundedRect(x, y, highlightBoxWidth, highlightBoxHeight, 8, 8, 'F');
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(mutedColor);
+                doc.text(title.toUpperCase(), x + 12, y + 16);
+
+                if (name) {
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(textColor);
+                    doc.text(name, x + 12, y + 34);
+
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(primaryColor);
+                    doc.text(metricValue, x + highlightBoxWidth - 12, y + 34, { align: 'right' });
+                } else {
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(mutedColor);
+                    doc.text(t('report.no_data_for_period'), x + 12, y + 34);
+                }
+            };
+
+            drawHighlightBox(
+                margin,
+                t('report.pdf.best_seller_title'),
+                bestSeller?.name,
+                bestSeller ? `${bestSeller.sold} ${t('report.pdf.units_sold')}` : ''
+            );
+            drawHighlightBox(
+                margin + highlightBoxWidth + 10,
+                t('report.pdf.most_returned_title'),
+                mostReturnedProduct?.name,
+                mostReturnedProduct ? `${mostReturnedProduct.returned} ${t('report.pdf.units_returned')}` : ''
+            );
+
+            y += highlightBoxHeight + 20;
+
+            // --- PERFORMANCE CHART ---
+            const chartSectionHeight = 170;
+            if (y + chartSectionHeight > pageHeight - margin) {
+                doc.addPage();
+                y = margin;
+            }
+
+            doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(mutedColor);
-            doc.text(t('report.pdf.total_cumulative_profit').toUpperCase(), margin + 10, y + 18);
-            doc.setFontSize(20);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(textColor);
-            doc.text(formatCurrencyForPdf(grandTotalProfit), margin + 10, y + 38);
+            doc.text(t('report.performance_title').toUpperCase(), margin, y);
 
-            // Card 2: Total Stock
-            doc.setDrawColor(borderColor);
-            doc.setFillColor(lightBgColor);
-            doc.roundedRect(pageWidth - margin - cardWidth, y, cardWidth, cardHeight, 8, 8, 'FD');
-            doc.setFontSize(9);
-            doc.setFont('helvetica', 'bold');
+            // Legend
+            doc.setFillColor(primaryColor);
+            doc.rect(pageWidth - margin - 150, y - 8, 8, 8, 'F');
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
             doc.setTextColor(mutedColor);
-            doc.text(t('report.pdf.total_stock_pieces').toUpperCase(), pageWidth - margin - cardWidth + 10, y + 18);
-            doc.setFontSize(20);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(textColor);
-            doc.text(`${grandTotalStock} PZ`, pageWidth - margin - cardWidth + 10, y + 38);
-            y += cardHeight + 25;
+            doc.text(t('report.profit_legend'), pageWidth - margin - 138, y);
+            doc.setFillColor(soldColor);
+            doc.rect(pageWidth - margin - 70, y - 8, 8, 8, 'F');
+            doc.text(t('report.sold_legend'), pageWidth - margin - 58, y);
+
+            y += 15;
+
+            if (chartData.length === 0) {
+                doc.setFillColor(lightBgColor);
+                doc.roundedRect(margin, y, pageWidth - (margin * 2), 60, 8, 8, 'F');
+                doc.setFontSize(9);
+                doc.setTextColor(mutedColor);
+                doc.text(t('report.no_data_for_period'), pageWidth / 2, y + 33, { align: 'center' });
+                y += 75;
+            } else {
+                const chartWidth = pageWidth - (margin * 2);
+                const chartHeight = 110;
+                const chartTop = y;
+                const chartBottom = chartTop + chartHeight;
+
+                doc.setDrawColor(borderColor);
+                doc.line(margin, chartBottom, pageWidth - margin, chartBottom);
+
+                const maxProfit = Math.max(...chartData.map(d => d.profit), 0) || 1;
+                const maxSold = Math.max(...chartData.map(d => d.sold), 0) || 1;
+
+                const groupWidth = chartWidth / chartData.length;
+                const barWidth = Math.min(14, groupWidth * 0.32);
+                const labelStep = Math.ceil(chartData.length / 15);
+
+                chartData.forEach((d, index) => {
+                    const groupCenter = margin + groupWidth * index + groupWidth / 2;
+                    const profitBarHeight = Math.max((d.profit / maxProfit) * (chartHeight - 10), 0);
+                    const soldBarHeight = Math.max((d.sold / maxSold) * (chartHeight - 10), 0);
+
+                    doc.setFillColor(primaryColor);
+                    doc.rect(groupCenter - barWidth - 1, chartBottom - profitBarHeight, barWidth, profitBarHeight, 'F');
+
+                    doc.setFillColor(soldColor);
+                    doc.rect(groupCenter + 1, chartBottom - soldBarHeight, barWidth, soldBarHeight, 'F');
+
+                    if (index % labelStep === 0) {
+                        doc.setFontSize(7);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setTextColor(mutedColor);
+                        doc.text(d.name, groupCenter, chartBottom + 10, { align: 'center' });
+                    }
+                });
+
+                y = chartBottom + 25;
+            }
 
             // --- TABLE ---
             const tableHeaderY = y;
@@ -364,9 +571,29 @@ export default function ReportPage() {
         }
     };
 
+    const handleShare = () => {
+        const lines = [
+            `${t(periodTitleKey)} - ${periodLabel}`,
+            `${t('report.total_profit')}: ${formatCurrency(reportData.totalProfit)}`,
+            `${t('report.total_sold')}: ${reportData.totalSold}`,
+            `${t('report.total_returned')}: ${reportData.totalReturned}`,
+        ];
+        if (bestSeller) {
+            lines.push(`${t('report.pdf.best_seller_title')}: ${bestSeller.name} (${bestSeller.sold} ${t('report.pdf.units_sold')})`);
+        }
+        if (mostReturnedProduct) {
+            lines.push(`${t('report.pdf.most_returned_title')}: ${mostReturnedProduct.name} (${mostReturnedProduct.returned} ${t('report.pdf.units_returned')})`);
+        }
+        navigator.clipboard.writeText(lines.join('\n'));
+        toast({
+            title: t('report.share_toast_title'),
+            description: t('report.share_toast_description'),
+        });
+    };
+
     const noData = sales.length === 0;
 
-    if (isSubscriptionLoading || salesLoading || productsLoading) {
+    if (isSubscriptionLoading || salesLoading || productsLoading || returnsLoading) {
         return (
             <div className="flex items-center justify-center h-[60vh]">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -389,19 +616,25 @@ export default function ReportPage() {
                     <h1 className="text-3xl font-bold tracking-tight">{t('report.title')}</h1>
                     <p className="text-muted-foreground">{t('report.description')}</p>
                 </div>
-                <Button onClick={handlePrint} variant="outline" disabled={noData || isPrinting}>
-                    {isPrinting ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t('report.generating_pdf')}
-                        </>
-                    ) : (
-                        <>
-                            <Printer className="mr-2 h-4 w-4" />
-                            {t('report.export_pdf')}
-                        </>
-                    )}
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button onClick={handleShare} variant="outline" disabled={noData}>
+                        <Share2 className="mr-2 h-4 w-4" />
+                        {t('report.share_button')}
+                    </Button>
+                    <Button onClick={handlePrint} variant="outline" disabled={noData || isPrinting}>
+                        {isPrinting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                {t('report.generating_pdf')}
+                            </>
+                        ) : (
+                            <>
+                                <Printer className="mr-2 h-4 w-4" />
+                                {t('report.export_pdf')}
+                            </>
+                        )}
+                    </Button>
+                </div>
             </div>
             
              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
@@ -502,8 +735,8 @@ export default function ReportPage() {
                                 <Undo className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">N/A</div>
-                                <p className="text-xs text-muted-foreground">{t('report.returned_subtitle')}</p>
+                                <div className="text-2xl font-bold">{reportData.totalReturned}</div>
+                                <p className="text-xs text-muted-foreground">{t('report.returned_subtitle_period')}</p>
                             </CardContent>
                         </Card>
                          <Card>

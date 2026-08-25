@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect } from 'react';
-import type { Product, Sale, WithId } from '@/lib/data';
+import type { Product, Sale, Return, WithId } from '@/lib/data';
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
 
@@ -10,7 +10,9 @@ interface ProductContextType {
   addProduct: (product: Omit<Product, 'id' | 'timestamp' | 'userId'>) => void;
   updateProduct: (updatedProduct: WithId<Product>) => void;
   deleteProduct: (productId: string) => void;
-  recordSale: (sale: Omit<Sale, 'id' | 'userId'>) => void;
+  recordSale: (sale: Omit<Sale, 'id' | 'userId'>) => Promise<string | undefined>;
+  deleteSale: (saleId: string) => void;
+  recordReturn: (returnEntry: Omit<Return, 'id' | 'userId'>) => Promise<string | undefined>;
   isLoading: boolean;
 }
 
@@ -19,8 +21,14 @@ interface SalesContextType {
   isLoading: boolean;
 }
 
+interface ReturnsContextType {
+  returns: WithId<Return>[];
+  isLoading: boolean;
+}
+
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
+const ReturnsContext = createContext<ReturnsContextType | undefined>(undefined);
 
 function rowToProduct(row: any): WithId<Product> {
   return {
@@ -47,6 +55,16 @@ function rowToSale(row: any): WithId<Sale> {
   };
 }
 
+function rowToReturn(row: any): WithId<Return> {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    productId: row.product_id,
+    quantity: row.quantity,
+    timestamp: row.created_at,
+  };
+}
+
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const [supabase] = useState(() => createClient());
@@ -57,8 +75,10 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const [remoteProducts, setRemoteProducts] = useState<WithId<Product>[]>([]);
   const [remoteSales, setRemoteSales] = useState<WithId<Sale>[]>([]);
+  const [remoteReturns, setRemoteReturns] = useState<WithId<Return>[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [salesLoading, setSalesLoading] = useState(true);
+  const [returnsLoading, setReturnsLoading] = useState(true);
 
   const refetchProducts = useCallback(async () => {
     if (!user) return;
@@ -80,22 +100,36 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     setRemoteSales((data ?? []).map(rowToSale));
   }, [supabase, user]);
 
+  const refetchReturns = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('returns')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at');
+    setRemoteReturns((data ?? []).map(rowToReturn));
+  }, [supabase, user]);
+
   useEffect(() => {
     if (!user) {
       setProductsLoading(false);
       setSalesLoading(false);
+      setReturnsLoading(false);
       return;
     }
     setProductsLoading(true);
     setSalesLoading(true);
-    Promise.all([refetchProducts(), refetchSales()]).finally(() => {
+    setReturnsLoading(true);
+    Promise.all([refetchProducts(), refetchSales(), refetchReturns()]).finally(() => {
       setProductsLoading(false);
       setSalesLoading(false);
+      setReturnsLoading(false);
     });
-  }, [user, refetchProducts, refetchSales]);
+  }, [user, refetchProducts, refetchSales, refetchReturns]);
 
   const products = user ? remoteProducts : localProducts;
   const sales = user ? remoteSales : [];
+  const returns = user ? remoteReturns : [];
 
   const addProduct = useCallback((newProduct: Omit<Product, 'id' | 'timestamp' | 'userId'>) => {
     if (user) {
@@ -140,23 +174,48 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user, supabase, refetchProducts]);
 
-  const recordSale = useCallback((newSale: Omit<Sale, 'id' | 'userId'>) => {
+  const recordSale = useCallback(async (newSale: Omit<Sale, 'id' | 'userId'>) => {
     if (user) {
-      supabase.from('sales').insert({
+      const { data } = await supabase.from('sales').insert({
         user_id: user.id,
         product_id: newSale.productId,
         quantity: newSale.quantity,
         sale_price: newSale.salePrice,
         production_cost: newSale.productionCost,
-      }).then(() => refetchSales());
+      }).select('id').single();
+      refetchSales();
+      return data?.id as string | undefined;
     }
     // Nessun-op per gli ospiti, come nella versione Firestore.
+    return undefined;
   }, [user, supabase, refetchSales]);
 
+  const deleteSale = useCallback((saleId: string) => {
+    if (user) {
+      supabase.from('sales').delete().eq('id', saleId).then(() => refetchSales());
+    }
+  }, [user, supabase, refetchSales]);
+
+  const recordReturn = useCallback(async (newReturn: Omit<Return, 'id' | 'userId'>) => {
+    if (user) {
+      const { data } = await supabase.from('returns').insert({
+        user_id: user.id,
+        product_id: newReturn.productId,
+        quantity: newReturn.quantity,
+      }).select('id').single();
+      refetchReturns();
+      return data?.id as string | undefined;
+    }
+    // Nessun-op per gli ospiti, come per le vendite.
+    return undefined;
+  }, [user, supabase, refetchReturns]);
+
   return (
-    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, recordSale, isLoading: productsLoading }}>
+    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, recordSale, deleteSale, recordReturn, isLoading: productsLoading }}>
         <SalesContext.Provider value={{ sales, isLoading: salesLoading }}>
-            {children}
+            <ReturnsContext.Provider value={{ returns, isLoading: returnsLoading }}>
+                {children}
+            </ReturnsContext.Provider>
         </SalesContext.Provider>
     </ProductContext.Provider>
   );
@@ -174,6 +233,14 @@ export const useSales = (): SalesContextType => {
     const context = useContext(SalesContext);
     if (context === undefined) {
         throw new Error('useSales must be used within a ProductProvider');
+    }
+    return context;
+}
+
+export const useReturns = (): ReturnsContextType => {
+    const context = useContext(ReturnsContext);
+    if (context === undefined) {
+        throw new Error('useReturns must be used within a ProductProvider');
     }
     return context;
 }
