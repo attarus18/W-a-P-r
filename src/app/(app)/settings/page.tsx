@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "@/context/language-context";
 import { useCurrency } from "@/context/currency-context";
-import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings } from "lucide-react";
+import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings, Trash2 } from "lucide-react";
 import { useUser, useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
@@ -40,10 +40,49 @@ export default function SettingsPage() {
   const { subscription, hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const { toast } = useToast();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+  const [isEmptyingInventory, setIsEmptyingInventory] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push('/login');
+  };
+
+  const callAccountApi = async (path: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session?.access_token ?? ''}` },
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || t('settings.danger_zone_generic_error'));
+    }
+  };
+
+  const handleEmptyInventory = async () => {
+    setIsEmptyingInventory(true);
+    try {
+      await callAccountApi('/api/account/empty-inventory');
+      toast({ title: t('settings.empty_inventory_success') });
+      window.location.reload();
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('settings.empty_inventory_error'), description: error.message });
+      setIsEmptyingInventory(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      await callAccountApi('/api/account/delete-everything');
+      await supabase.auth.signOut();
+      router.push('/login');
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('settings.delete_account_error'), description: error.message });
+      setIsDeletingAccount(false);
+    }
   };
 
   const handleManageSubscription = async () => {
@@ -219,7 +258,7 @@ export default function SettingsPage() {
               <CardTitle className="text-destructive">{t('settings.danger_zone_title')}</CardTitle>
               <CardDescription>{t('settings.danger_zone_description')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button variant="destructive">{t('settings.empty_inventory_button')}</Button>
@@ -232,11 +271,54 @@ export default function SettingsPage() {
                     </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                    <AlertDialogCancel>{t('settings.alert_cancel')}</AlertDialogCancel>
-                    <AlertDialogAction>{t('settings.alert_continue')}</AlertDialogAction>
+                    <AlertDialogCancel disabled={isEmptyingInventory}>{t('settings.alert_cancel')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleEmptyInventory} disabled={isEmptyingInventory}>
+                        {isEmptyingInventory ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {t('settings.alert_continue')}
+                    </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <div className="border-t pt-4">
+              <AlertDialog onOpenChange={(open) => { if (!open) setDeleteConfirmText(''); }}>
+                <AlertDialogTrigger asChild>
+                    <Button variant="destructive">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {t('settings.delete_account_button')}
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>{t('settings.delete_account_title')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        {t('settings.delete_account_description')}
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="space-y-2">
+                        <Label htmlFor="delete-account-confirm">
+                            {t('settings.delete_account_confirm_label', { word: t('settings.delete_account_confirm_word') })}
+                        </Label>
+                        <Input
+                            id="delete-account-confirm"
+                            value={deleteConfirmText}
+                            onChange={(e) => setDeleteConfirmText(e.target.value)}
+                            autoComplete="off"
+                        />
+                    </div>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel disabled={isDeletingAccount}>{t('settings.alert_cancel')}</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={handleDeleteAccount}
+                        disabled={isDeletingAccount || deleteConfirmText !== t('settings.delete_account_confirm_word')}
+                    >
+                        {isDeletingAccount ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        {t('settings.alert_continue')}
+                    </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </CardContent>
       </Card>
     </div>
