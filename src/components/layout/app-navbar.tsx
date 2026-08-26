@@ -29,7 +29,10 @@ export default function AppNavbar() {
   ];
 
   return (
-    <header className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t print:hidden">
+    <header
+      className="fixed left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t print:hidden"
+      style={{ bottom: 'var(--admob-banner-offset, 0px)' }}
+    >
         <nav className="container flex items-center justify-around h-16 max-w-screen-2xl">
             <TooltipProvider>
                 {navItems.map((item) => (
