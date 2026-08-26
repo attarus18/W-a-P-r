@@ -37,6 +37,7 @@ export default function PricingPage() {
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
         t('pricing.features.recipe_archive'),
+        t('pricing.features.no_ads'),
       ],
     },
     {
@@ -50,6 +51,7 @@ export default function PricingPage() {
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
         t('pricing.features.recipe_archive'),
+        t('pricing.features.no_ads'),
       ],
     },
     {
@@ -63,6 +65,7 @@ export default function PricingPage() {
         t('pricing.features.inventory'),
         t('pricing.features.reports'),
         t('pricing.features.recipe_archive'),
+        t('pricing.features.no_ads'),
       ],
     },
   ];
