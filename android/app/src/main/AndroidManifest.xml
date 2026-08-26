@@ -25,11 +25,10 @@
 
         </activity>
 
-        <!-- AdMob: ID di test Google, DA SOSTITUIRE con l'App ID reale
-             (console AdMob -> App) prima di pubblicare la build. -->
+        <!-- AdMob App ID, app "WAX PRO" -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-4870944787959973~1857899465" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
