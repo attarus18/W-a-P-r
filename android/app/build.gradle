@@ -16,8 +16,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         // La release Kodular pubblicata ha versionCode 7 (versionName 7.1):
         // deve restare piu' alto ad ogni nuova release caricata su Play Console.
-        versionCode 10
-        versionName "10.0"
+        versionCode 11
+        versionName "11.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
