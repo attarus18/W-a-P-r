@@ -30,11 +30,19 @@ export default function AdmobBanner() {
       if (cancelled) return;
 
       if (hasActiveSubscription) {
-        if (isShowingRef.current) {
+        // Chiamiamo removeBanner() sempre, non solo se isShowingRef.current:
+        // dopo un location.reload() (es. subito dopo un acquisto) il modulo
+        // JS riparte da zero e isShowingRef torna false, ma la view nativa
+        // del banner sopravvive al reload della sola pagina web e resta
+        // visibile -- nascondendo anche la navbar sotto di se'. removeBanner()
+        // su un banner gia' assente e' un no-op innocuo lato plugin.
+        try {
           await AdMob.removeBanner();
-          isShowingRef.current = false;
-          document.documentElement.style.setProperty('--admob-banner-offset', '0px');
+        } catch {
+          // nessun banner da rimuovere: va bene cosi'.
         }
+        isShowingRef.current = false;
+        document.documentElement.style.setProperty('--admob-banner-offset', '0px');
         return;
       }
 
