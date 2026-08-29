@@ -13,6 +13,14 @@ let sdkInitialized = false;
 export default function AdmobBanner() {
   const { isSubscriptionLoading, hasActiveSubscription } = useSubscription();
   const isShowingRef = useRef(false);
+  // Letto dentro il listener SizeChanged (registrato una sola volta, sotto),
+  // che altrimenti vedrebbe sempre il valore di hasActiveSubscription della
+  // prima render: senza questo ref un evento SizeChanged residuo emesso
+  // dall'SDK durante removeBanner() puo' arrivare DOPO che abbiamo gia'
+  // azzerato l'offset e riscriverci sopra un valore vecchio, facendo
+  // sparire la navbar in modo intermittente per un utente abbonato.
+  const hasActiveSubscriptionRef = useRef(hasActiveSubscription);
+  hasActiveSubscriptionRef.current = hasActiveSubscription;
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform() || isSubscriptionLoading) return;
@@ -70,6 +78,7 @@ export default function AdmobBanner() {
     (async () => {
       const { AdMob, BannerAdPluginEvents } = await import('@capacitor-community/admob');
       const registered = await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size) => {
+        if (hasActiveSubscriptionRef.current) return;
         document.documentElement.style.setProperty('--admob-banner-offset', `${size.height}px`);
       });
       if (cancelled) {
