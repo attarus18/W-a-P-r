@@ -17,7 +17,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { useUser } from '@/context/auth-context';
 import AccessDenied from '@/components/auth/access-denied';
 import jsPDF from 'jspdf';
-import { savePdf } from '@/lib/pdf-utils';
+import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { useToast } from '@/hooks/use-toast';
 import { useSubscription } from '@/context/subscription-context';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
@@ -283,6 +283,12 @@ export default function ReportPage() {
             };
 
             // --- HEADER ---
+            const logoDataUrl = await getPdfLogoDataUrl();
+            if (logoDataUrl) {
+                const logoSize = 32;
+                doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - logoSize / 2, y, logoSize, logoSize);
+                y += logoSize + 8;
+            }
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(24);
             doc.setTextColor(primaryColor);

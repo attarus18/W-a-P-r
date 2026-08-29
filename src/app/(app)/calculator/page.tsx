@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useCurrency } from '@/context/currency-context';
 import jsPDF from 'jspdf';
-import { savePdf } from '@/lib/pdf-utils';
+import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { format } from 'date-fns';
 import { enUS, it, es, fr, de } from 'date-fns/locale';
 
@@ -94,6 +94,12 @@ export default function CalculatorPage() {
         const mutedColor = '#6b7280';
 
         // --- HEADER ---
+        const logoDataUrl = await getPdfLogoDataUrl();
+        if (logoDataUrl) {
+            const logoSize = 32;
+            doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - logoSize / 2, y, logoSize, logoSize);
+            y += logoSize + 8;
+        }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
         doc.setTextColor(primaryColor);

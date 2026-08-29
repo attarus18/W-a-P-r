@@ -12,7 +12,7 @@ import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
-import { savePdf } from '@/lib/pdf-utils';
+import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
@@ -134,6 +134,12 @@ ${t('recipe_calculator.result_title')}:
         const lightBgColor = '#f9fafb';
   
         // --- HEADER ---
+        const logoDataUrl = await getPdfLogoDataUrl();
+        if (logoDataUrl) {
+            const logoSize = 10; // doc in unit 'mm' (default jsPDF), a differenza delle altre pagine in 'px'
+            doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - logoSize / 2, y, logoSize, logoSize);
+            y += logoSize + 4;
+        }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
         doc.setTextColor(primaryColor);

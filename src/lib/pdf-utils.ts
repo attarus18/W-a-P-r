@@ -11,6 +11,34 @@ declare global {
   }
 }
 
+let cachedLogoDataUrl: string | null | undefined;
+
+/**
+ * Logo per l'intestazione dei PDF, caricato una sola volta da /public/logo.png
+ * e convertito in data URL (jsPDF.addImage vuole i dati gia' pronti, non un
+ * URL da risolvere in modo asincrono al momento del disegno). Ritorna null se
+ * il fetch fallisce, cosi' chi chiama puo' semplicemente saltare il logo
+ * invece di far fallire l'intera esportazione del PDF.
+ */
+export async function getPdfLogoDataUrl(): Promise<string | null> {
+  if (cachedLogoDataUrl !== undefined) return cachedLogoDataUrl;
+  try {
+    const res = await fetch('/logo.png');
+    if (!res.ok) throw new Error(`logo fetch failed: ${res.status}`);
+    const blob = await res.blob();
+    cachedLogoDataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+  } catch (err) {
+    console.error('Impossibile caricare il logo per il PDF:', err);
+    cachedLogoDataUrl = null;
+  }
+  return cachedLogoDataUrl;
+}
+
 /**
  * La WebView Android (usata dall'app Kodular) non gestiva i download di
  * file a meno che l'app nativa non registrasse un DownloadListener: sia
