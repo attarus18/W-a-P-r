@@ -131,6 +131,16 @@ export default function PricingPage() {
         title: t('subscribe.success_title'),
         description: t('subscribe.success_description'),
       });
+
+      // Il contesto abbonamento (subscription-context) e' caricato una sola
+      // volta al login e non si aggiorna da solo dopo un acquisto: senza
+      // questo reload l'utente vedeva ancora tutti i piani acquistabili per
+      // qualche istante e poteva finire per sottoscriverne un secondo prima
+      // che l'app si accorgesse del primo. Teniamo i bottoni disabilitati
+      // (non resettiamo loadingProductId) fino al reload, cosi' non si puo'
+      // cliccare altro nel frattempo.
+      setTimeout(() => window.location.reload(), 1500);
+      return;
     } catch (error: any) {
       console.error('Play Billing purchase error:', error);
       toast({
@@ -138,7 +148,6 @@ export default function PricingPage() {
         title: t('pricing.error_checkout_title'),
         description: error.message || t('pricing.error_checkout_desc'),
       });
-    } finally {
       setLoadingProductId(null);
     }
   };
