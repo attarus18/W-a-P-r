@@ -358,6 +358,9 @@
     "error_not_logged_in_desc": "Devi effettuare l'accesso per poter sottoscrivere un piano.",
     "error_checkout_title": "Errore Checkout",
     "error_checkout_desc": "Impossibile avviare il processo di pagamento. Riprova.",
+    "error_already_subscribed_title": "Abbonamento già attivo",
+    "error_already_subscribed_desc": "Hai già un piano attivo. Annullalo dalle impostazioni prima di sottoscriverne un altro.",
+    "already_subscribed_notice": "Hai già un abbonamento attivo. Per passare a un altro piano, annulla prima quello attuale.",
     "android_only_title": "Disponibile solo nell'app Android",
     "android_only_description": "Gli abbonamenti si attivano tramite Google Play, solo dall'app Android. Scarica l'app per abbonarti.",
     "android_only_button": "Scarica l'app Android"

@@ -358,6 +358,9 @@
     "error_not_logged_in_desc": "Vous devez être connecté pour souscrire à un plan.",
     "error_checkout_title": "Erreur de paiement",
     "error_checkout_desc": "Impossible de lancer le processus de paiement. Veuillez réessayer.",
+    "error_already_subscribed_title": "Abonnement déjà actif",
+    "error_already_subscribed_desc": "Vous avez déjà un plan actif. Annulez-le dans les paramètres avant d'en souscrire un autre.",
+    "already_subscribed_notice": "Vous avez déjà un abonnement actif. Pour changer de plan, annulez d'abord celui en cours.",
     "android_only_title": "Disponible uniquement dans l'app Android",
     "android_only_description": "Les abonnements s'activent via Google Play, uniquement depuis l'app Android. Téléchargez l'app pour vous abonner.",
     "android_only_button": "Télécharger l'app Android"

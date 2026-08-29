@@ -8,14 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { CheckCircle2, Loader2, Zap, Smartphone } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useUser } from '@/context/auth-context';
+import { useSubscription } from '@/context/subscription-context';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 const PLAY_STORE_LISTING_URL = `https://play.google.com/store/apps/details?id=${process.env.NEXT_PUBLIC_GOOGLE_PLAY_PACKAGE_NAME ?? ''}`;
 
 export default function PricingPage() {
   const { t } = useLanguage();
   const { user } = useUser();
+  const { subscription, hasActiveSubscription } = useSubscription();
   const [supabase] = useState(() => createClient());
   const { toast } = useToast();
   const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
@@ -28,6 +31,7 @@ export default function PricingPage() {
   const plans = [
     {
       name: 'Hobby',
+      planKey: 'hobby',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PLAN_ID!,
       price: 6.99,
@@ -42,6 +46,7 @@ export default function PricingPage() {
     },
     {
       name: 'Pro',
+      planKey: 'pro',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PLAN_ID!,
       price: 9.99,
@@ -56,6 +61,7 @@ export default function PricingPage() {
     },
     {
       name: t('pricing.pro_annual_plan_name'),
+      planKey: 'annual',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PLAN_ID!,
       price: 49.99,
@@ -76,6 +82,20 @@ export default function PricingPage() {
         variant: 'destructive',
         title: t('pricing.error_not_logged_in_title'),
         description: t('pricing.error_not_logged_in_desc'),
+      });
+      return;
+    }
+
+    // Google Play non impedisce l'acquisto di piu' abbonamenti diversi in
+    // parallelo (hobby/pro/annual sono prodotti separati, non base plan
+    // dello stesso abbonamento): blocchiamo qui per evitare doppi addebiti.
+    // I bottoni sono gia' disabilitati in UI, questo e' un controllo di
+    // sicurezza in piu' nel caso lo stato risultasse non aggiornato.
+    if (hasActiveSubscription) {
+      toast({
+        variant: 'destructive',
+        title: t('pricing.error_already_subscribed_title'),
+        description: t('pricing.error_already_subscribed_desc'),
       });
       return;
     }
@@ -148,6 +168,17 @@ export default function PricingPage() {
         </Card>
       )}
 
+      {hasActiveSubscription && (
+        <Card className="border-primary bg-primary/5">
+          <CardContent className="flex flex-col items-center gap-3 py-6 text-center">
+            <p className="font-medium">{t('pricing.already_subscribed_notice')}</p>
+            <Button asChild variant="outline">
+              <Link href="/settings">{t('settings.manage_subscription_button')}</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {plans.map((plan) => (
           <Card key={plan.name} className="flex flex-col">
@@ -170,17 +201,23 @@ export default function PricingPage() {
               </ul>
             </CardContent>
             <div className="p-6 pt-0">
-              <Button
-                className="w-full"
-                onClick={() => handlePurchase(plan.productId, plan.planId)}
-                disabled={!isNativeApp || !!loadingProductId}
-              >
-                {loadingProductId === plan.productId ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  t('pricing.start_trial_button')
-                )}
-              </Button>
+              {subscription?.subscriptionPlan === plan.planKey && hasActiveSubscription ? (
+                <Button className="w-full" variant="outline" disabled>
+                  {t('settings.current_plan')}
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={() => handlePurchase(plan.productId, plan.planId)}
+                  disabled={!isNativeApp || !!loadingProductId || hasActiveSubscription}
+                >
+                  {loadingProductId === plan.productId ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    t('pricing.start_trial_button')
+                  )}
+                </Button>
+              )}
             </div>
           </Card>
         ))}

@@ -358,6 +358,9 @@
     "error_not_logged_in_desc": "You must be logged in to subscribe to a plan.",
     "error_checkout_title": "Checkout Error",
     "error_checkout_desc": "Could not initiate the payment process. Please try again.",
+    "error_already_subscribed_title": "Subscription already active",
+    "error_already_subscribed_desc": "You already have an active plan. Cancel it in settings before subscribing to another one.",
+    "already_subscribed_notice": "You already have an active subscription. To switch plans, cancel your current one first.",
     "android_only_title": "Android app only",
     "android_only_description": "Subscriptions are activated through Google Play, only from the Android app. Download the app to subscribe.",
     "android_only_button": "Download the Android app"

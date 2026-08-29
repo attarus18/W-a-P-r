@@ -358,6 +358,9 @@
     "error_not_logged_in_desc": "Debe iniciar sesión para suscribirse a un plan.",
     "error_checkout_title": "Error de pago",
     "error_checkout_desc": "No se pudo iniciar el proceso de pago. Por favor, inténtelo de nuevo.",
+    "error_already_subscribed_title": "Suscripción ya activa",
+    "error_already_subscribed_desc": "Ya tienes un plan activo. Cancélalo en los ajustes antes de suscribirte a otro.",
+    "already_subscribed_notice": "Ya tienes una suscripción activa. Para cambiar de plan, cancela primero la actual.",
     "android_only_title": "Disponible solo en la app de Android",
     "android_only_description": "Las suscripciones se activan a través de Google Play, solo desde la app de Android. Descargue la app para suscribirse.",
     "android_only_button": "Descargar la app de Android"

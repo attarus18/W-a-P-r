@@ -358,6 +358,9 @@
     "error_not_logged_in_desc": "Sie müssen angemeldet sein, um einen Plan zu abonnieren.",
     "error_checkout_title": "Checkout-Fehler",
     "error_checkout_desc": "Der Zahlungsvorgang konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+    "error_already_subscribed_title": "Abonnement bereits aktiv",
+    "error_already_subscribed_desc": "Sie haben bereits einen aktiven Plan. Kündigen Sie ihn in den Einstellungen, bevor Sie einen anderen abonnieren.",
+    "already_subscribed_notice": "Sie haben bereits ein aktives Abonnement. Um den Plan zu wechseln, kündigen Sie zuerst den aktuellen.",
     "android_only_title": "Nur in der Android-App verfügbar",
     "android_only_description": "Abonnements werden über Google Play aktiviert, nur über die Android-App. Laden Sie die App herunter, um sich zu abonnieren.",
     "android_only_button": "Android-App herunterladen"
