@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Flame, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/context/language-context";
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -81,9 +81,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center mb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <Flame className="h-7 w-7" />
-                </div>
+                <img src="/logo.png" alt="WaxPro" className="h-16 w-16 rounded-full" />
             </div>
           <CardTitle className="text-2xl">{t('signup.title')}</CardTitle>
           <CardDescription>{t('signup.description')}</CardDescription>
