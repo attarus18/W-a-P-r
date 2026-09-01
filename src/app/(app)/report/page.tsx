@@ -286,7 +286,7 @@ export default function ReportPage() {
             const logoDataUrl = await getPdfLogoDataUrl();
             if (logoDataUrl) {
                 const logoSize = 32;
-                doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - logoSize / 2, y, logoSize, logoSize);
+                doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
                 y += logoSize + 8;
             }
             doc.setFont('helvetica', 'bold');
