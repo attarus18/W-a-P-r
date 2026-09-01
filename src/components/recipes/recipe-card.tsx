@@ -102,7 +102,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         )}
       </CardContent>
       <CardFooter className="p-4 pt-0 text-xs text-muted-foreground">
-        {recipe.totalWeight} {recipe.unit} · {recipe.fragrancePct}% {t('recipe_calculator.fragrance_label').toLowerCase()} · {recipe.colorPct}% {t('recipe_calculator.color_label').toLowerCase()}
+        {t(`recipe_calculator.wax_${recipe.waxType}`)} · {recipe.totalWeight} {recipe.unit} · {recipe.fragrancePct}% {t('recipe_calculator.fragrance_label').toLowerCase()} · {recipe.colorPct}% {t('recipe_calculator.color_label').toLowerCase()}
       </CardFooter>
     </Card>
   );

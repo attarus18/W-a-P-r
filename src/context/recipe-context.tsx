@@ -4,6 +4,7 @@ import React, { createContext, useState, useContext, ReactNode, useCallback, use
 import type { Recipe, WithId } from '@/lib/data';
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
+import { DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
 
 interface RecipeContextType {
   recipes: WithId<Recipe>[];
@@ -22,6 +23,7 @@ function rowToRecipe(row: any): WithId<Recipe> {
     name: row.name,
     totalWeight: row.total_weight,
     unit: row.unit,
+    waxType: (row.wax_type as WaxType) ?? DEFAULT_WAX_TYPE,
     fragrancePct: row.fragrance_pct,
     colorPct: row.color_pct,
     waxAmount: row.wax_amount,
@@ -71,6 +73,7 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         name: newRecipe.name,
         total_weight: newRecipe.totalWeight,
         unit: newRecipe.unit,
+        wax_type: newRecipe.waxType,
         fragrance_pct: newRecipe.fragrancePct,
         color_pct: newRecipe.colorPct,
         wax_amount: newRecipe.waxAmount,
@@ -95,6 +98,7 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         name: updatedRecipe.name,
         total_weight: updatedRecipe.totalWeight,
         unit: updatedRecipe.unit,
+        wax_type: updatedRecipe.waxType,
         fragrance_pct: updatedRecipe.fragrancePct,
         color_pct: updatedRecipe.colorPct,
         wax_amount: updatedRecipe.waxAmount,

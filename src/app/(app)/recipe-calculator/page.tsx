@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer, BookMarked } from 'lucide-react';
+import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer, BookMarked, Layers } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -17,6 +17,7 @@ import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
 import { FREE_RECIPE_LIMIT } from '@/lib/constants';
+import { WAX_TYPES, WAX_FRAGRANCE_PROFILES, DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
 
 type FormValues = {
   totalWeight: number;
@@ -32,7 +33,8 @@ type RecipeResult = {
 export default function RecipeCalculatorPage() {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [fragrance, setFragrance] = useState(5);
+  const [waxType, setWaxType] = useState<WaxType>(DEFAULT_WAX_TYPE);
+  const [fragrance, setFragrance] = useState(WAX_FRAGRANCE_PROFILES[DEFAULT_WAX_TYPE].default);
   const [color, setColor] = useState(1);
   const [result, setResult] = useState<RecipeResult | null>(null);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
@@ -59,9 +61,16 @@ export default function RecipeCalculatorPage() {
     });
   };
 
+  const handleWaxTypeChange = (value: WaxType) => {
+    setWaxType(value);
+    const profile = WAX_FRAGRANCE_PROFILES[value];
+    setFragrance(prev => Math.min(Math.max(prev, profile.min), profile.max));
+  };
+
   const handleReset = () => {
     form.reset();
-    setFragrance(5);
+    setWaxType(DEFAULT_WAX_TYPE);
+    setFragrance(WAX_FRAGRANCE_PROFILES[DEFAULT_WAX_TYPE].default);
     setColor(1);
     setResult(null);
   };
@@ -90,6 +99,7 @@ export default function RecipeCalculatorPage() {
       notes: notes || undefined,
       totalWeight,
       unit,
+      waxType,
       fragrancePct: fragrance,
       colorPct: color,
       waxAmount: result.wax,
@@ -107,6 +117,7 @@ export default function RecipeCalculatorPage() {
     if (result) {
       const shareText = `
 ${t('recipe_calculator.result_title')}:
+- ${t('recipe_calculator.wax_type_label')}: ${t(`recipe_calculator.wax_${waxType}`)}
 - ${t('suggestion_card.wax')}: ${result.wax} ${unit}
 - ${t('recipe_calculator.fragrance_amount')}: ${result.fragrance} ${unit}
 - ${t('suggestion_card.color')}: ${result.color} ${unit}
@@ -137,7 +148,7 @@ ${t('recipe_calculator.result_title')}:
         const logoDataUrl = await getPdfLogoDataUrl();
         if (logoDataUrl) {
             const logoSize = 10; // doc in unit 'mm' (default jsPDF), a differenza delle altre pagine in 'px'
-            doc.addImage(logoDataUrl, 'PNG', pageWidth / 2 - logoSize / 2, y, logoSize, logoSize);
+            doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
             y += logoSize + 4;
         }
         doc.setFont('helvetica', 'bold');
@@ -159,6 +170,7 @@ ${t('recipe_calculator.result_title')}:
         y += 15;
   
         const details = [
+          `${t('recipe_calculator.wax_type_label')}: ${t(`recipe_calculator.wax_${waxType}`)}`,
           `${t('recipe_calculator.total_weight_label', { unit })}: ${totalWeight} ${unit}`,
           `${t('recipe_calculator.fragrance_label')}: ${fragrance}%`,
           `${t('recipe_calculator.color_label')}: ${color}%`,
@@ -229,6 +241,19 @@ ${t('recipe_calculator.result_title')}:
             <CardTitle>{t('recipe_calculator.form_title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="waxType" className="flex items-center gap-2"><Layers className="h-4 w-4" />{t('recipe_calculator.wax_type_label')}</Label>
+                <Select value={waxType} onValueChange={(value) => handleWaxTypeChange(value as WaxType)}>
+                    <SelectTrigger id="waxType">
+                        <SelectValue placeholder={t('recipe_calculator.wax_type_placeholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {WAX_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>{t(`recipe_calculator.wax_${type}`)}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="unit" className="flex items-center gap-2"><Scale className="h-4 w-4" />{t('recipe_calculator.unit_label')}</Label>
@@ -258,11 +283,18 @@ ${t('recipe_calculator.result_title')}:
               <Slider
                 id="fragrancePercentage"
                 min={0}
-                max={20}
+                max={WAX_FRAGRANCE_PROFILES[waxType].max}
                 step={0.5}
                 value={[fragrance]}
                 onValueChange={(value) => setFragrance(value[0])}
               />
+              <p className="text-xs text-muted-foreground">
+                {t('recipe_calculator.fragrance_hint', {
+                  wax: t(`recipe_calculator.wax_${waxType}`),
+                  min: WAX_FRAGRANCE_PROFILES[waxType].min,
+                  max: WAX_FRAGRANCE_PROFILES[waxType].max,
+                })}
+              </p>
             </div>
             
             <div className="space-y-4">
@@ -296,6 +328,10 @@ ${t('recipe_calculator.result_title')}:
             <CardDescription>{t('recipe_calculator.result_description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+             <div className="flex justify-between items-center text-lg">
+                <span className="flex items-center gap-2 text-muted-foreground"><Layers className="h-5 w-5" /> {t('recipe_calculator.wax_type_label')}:</span>
+                <span className="font-bold text-primary">{t(`recipe_calculator.wax_${waxType}`)}</span>
+            </div>
              <div className="flex justify-between items-center text-lg">
                 <span className="flex items-center gap-2 text-muted-foreground"><Flame className="h-5 w-5" /> {t('suggestion_card.wax')}:</span>
                 <span className="font-bold text-primary">{result.wax} {unit}</span>

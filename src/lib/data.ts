@@ -1,3 +1,5 @@
+import type { WaxType } from '@/lib/wax-types';
+
 export type WithId<T> = T & { id: string };
 
 export type User = {
@@ -28,6 +30,7 @@ export type Recipe = {
   name: string;
   totalWeight: number;
   unit: 'g' | 'oz' | 'kg' | 'lb';
+  waxType: WaxType;
   fragrancePct: number;
   colorPct: number;
   waxAmount: number;
