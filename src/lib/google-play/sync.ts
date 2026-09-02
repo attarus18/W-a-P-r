@@ -54,16 +54,33 @@ async function applyUpdate(
   const plan = mapProductIdToPlan(lineItem.productId);
 
   const supabase = createServiceRoleClient();
+
+  // Google non espone uno stato "in prova" dedicato: SUBSCRIPTION_STATE_ACTIVE
+  // copre sia i 7 giorni gratuiti che i cicli gia' pagati. Registriamo quindi
+  // noi il primo timestamp di sincronizzazione (mai sovrascritto in seguito)
+  // cosi' il client puo' calcolare "e' ancora in prova" da solo. Vedi
+  // migrazione 20260902120000_subscription_trial_tracking.sql.
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('subscription_started_at')
+    .eq(matchColumn, matchValue)
+    .maybeSingle();
+
+  const updatePayload: Record<string, unknown> = {
+    subscription_plan: plan,
+    subscription_status: status,
+    subscription_period_end_date: lineItem.expiryTime ?? null,
+    play_purchase_token: purchaseToken,
+    play_product_id: lineItem.productId,
+    play_order_id: purchase.latestOrderId ?? null,
+  };
+  if (!existingProfile?.subscription_started_at) {
+    updatePayload.subscription_started_at = new Date().toISOString();
+  }
+
   const { data, error } = await supabase
     .from('profiles')
-    .update({
-      subscription_plan: plan,
-      subscription_status: status,
-      subscription_period_end_date: lineItem.expiryTime ?? null,
-      play_purchase_token: purchaseToken,
-      play_product_id: lineItem.productId,
-      play_order_id: purchase.latestOrderId ?? null,
-    })
+    .update(updatePayload)
     .eq(matchColumn, matchValue)
     .select('id');
 

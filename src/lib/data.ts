@@ -11,6 +11,7 @@ export type User = {
   subscriptionPlan?: 'hobby' | 'pro' | 'annual';
   subscriptionStatus?: 'trialing' | 'active' | 'canceled' | 'incomplete' | 'grace_period' | 'on_hold' | 'paused';
   subscriptionPeriodEndDate?: string; // ISO date string
+  subscriptionStartedAt?: string; // ISO date string, prima sincronizzazione dell'acquisto
 };
 
 export type Product = {
