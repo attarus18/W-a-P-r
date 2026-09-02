@@ -437,6 +437,10 @@
       "li2": "View your subscription status and manage your plan through Google Play (available only in the Android app).",
       "li3": "Choose between the light and dark theme for the application interface.",
       "li4": "Set the default language and currency for the entire application."
+    },
+    "support": {
+      "p1": "Have an issue or a question? Go to Settings and tap \"Contact Support\".",
+      "p2": "A form will open with your email already filled in: write your request and tap Send. After sending you'll see a confirmation message letting you know it was delivered to our team; we'll reply by email as soon as possible."
     }
   }
 }

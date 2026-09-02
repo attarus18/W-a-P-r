@@ -437,6 +437,10 @@
       "li2": "Sehen Sie Ihren Abonnementstatus und verwalten Sie Ihren Plan über Google Play (nur in der Android-App verfügbar).",
       "li3": "Wählen Sie zwischen dem hellen und dem dunklen Thema für die Benutzeroberfläche der Anwendung.",
       "li4": "Stellen Sie die Standardsprache und -währung für die gesamte Anwendung ein."
+    },
+    "support": {
+      "p1": "Haben Sie ein Problem oder eine Frage? Gehen Sie zu Einstellungen und tippen Sie auf \"Support Kontaktieren\".",
+      "p2": "Ein Formular öffnet sich mit Ihrer bereits eingetragenen E-Mail: Schreiben Sie Ihre Anfrage und tippen Sie auf Senden. Nach dem Senden sehen Sie eine Bestätigung, dass die Anfrage an unser Team übermittelt wurde; wir antworten Ihnen so schnell wie möglich per E-Mail."
     }
   }
 }

@@ -437,6 +437,10 @@
       "li2": "Consultez l'état de votre abonnement et gérez votre plan via Google Play (disponible uniquement dans l'app Android).",
       "li3": "Choisissez entre le thème clair et le thème sombre pour l'interface de l'application.",
       "li4": "Définissez la langue et la devise par défaut pour l'ensemble de l'application."
+    },
+    "support": {
+      "p1": "Un problème ou une question ? Allez dans Paramètres et appuyez sur \"Contacter l'Assistance\".",
+      "p2": "Un formulaire s'ouvrira avec votre email déjà rempli : écrivez votre demande et appuyez sur Envoyer. Après l'envoi, un message de confirmation vous indiquera qu'elle a été transmise à notre équipe ; nous vous répondrons par email dès que possible."
     }
   }
 }

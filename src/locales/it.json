@@ -437,6 +437,10 @@
       "li2": "Visualizza lo stato del tuo abbonamento e gestisci il piano tramite Google Play (disponibile solo nell'app Android).",
       "li3": "Scegli tra il tema chiaro e scuro per l'interfaccia dell'applicazione.",
       "li4": "Imposta la lingua e la valuta predefinite per l'intera applicazione."
+    },
+    "support": {
+      "p1": "Hai un problema o una domanda? Vai su Impostazioni e clicca su \"Contatta l'Assistenza\".",
+      "p2": "Si aprirà un modulo con la tua email già inserita: scrivi la tua richiesta e clicca su Invia. Dopo l'invio vedrai un messaggio di conferma che ti avvisa che la richiesta è stata consegnata al nostro team; ti risponderemo via email il prima possibile."
     }
   }
 }

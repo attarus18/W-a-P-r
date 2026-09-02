@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen } from 'lucide-react';
+import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen, LifeBuoy } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export default function InstructionsPage() {
@@ -124,6 +124,19 @@ export default function InstructionsPage() {
                   <li><strong>{t('settings.theme_title')}:</strong> {t('instructions.settings.li3')}</li>
                    <li><strong>{t('settings.preferences_title')}:</strong> {t('instructions.settings.li4')}</li>
                 </ul>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-7">
+              <AccordionTrigger>
+                <div className="flex items-center gap-2">
+                    <LifeBuoy className="h-5 w-5 text-primary" />
+                    {t('navbar.support')}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="prose prose-sm dark:prose-invert max-w-none">
+                <p>{t('instructions.support.p1')}</p>
+                <p>{t('instructions.support.p2')}</p>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

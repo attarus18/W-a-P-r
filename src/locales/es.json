@@ -437,6 +437,10 @@
       "li2": "Vea el estado de su suscripción y administre su plan a través de Google Play (disponible solo en la app de Android).",
       "li3": "Elija entre el tema claro y oscuro para la interfaz de la aplicación.",
       "li4": "Establezca el idioma y la moneda predeterminados para toda la aplicación."
+    },
+    "support": {
+      "p1": "¿Tienes un problema o una pregunta? Ve a Ajustes y toca \"Contactar con Soporte\".",
+      "p2": "Se abrirá un formulario con tu correo ya completado: escribe tu solicitud y toca Enviar. Tras el envío verás un mensaje de confirmación que te avisa de que ha sido entregada a nuestro equipo; te responderemos por correo lo antes posible."
     }
   }
 }
