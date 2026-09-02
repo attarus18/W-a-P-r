@@ -54,9 +54,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div className="text-center">
-        <div className="flex items-center justify-center gap-3">
-          <img src="/logo.png" alt="WaxPro" className="h-12 w-12 rounded-full" />
-          <h1 className="text-5xl font-bold text-primary tracking-wider">WAX PRO</h1>
+        <div className="flex items-center justify-center gap-2">
+          <img src="/logo.png" alt="WaxPro" className="h-10 w-10 rounded-full flex-shrink-0" />
+          <h1 className="text-3xl sm:text-4xl font-bold text-primary tracking-wider whitespace-nowrap">WAX PRO</h1>
         </div>
         <p className="text-muted-foreground mt-2">{t('dashboard.welcome_subtitle')}</p>
       </div>
