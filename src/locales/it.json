@@ -8,7 +8,8 @@
     "recipes": "Ricette",
     "settings": "Impostazioni",
     "logout": "Logout",
-    "instructions": "Istruzioni"
+    "instructions": "Istruzioni",
+    "support": "Assistenza"
   },
   "login": {
     "title": "Benvenuto in WaxPro",
@@ -247,6 +248,19 @@
     "plan_status_grace_period": "Periodo di grazia",
     "plan_status_on_hold": "In sospeso",
     "plan_status_paused": "In pausa"
+  },
+  "support": {
+    "title": "Assistenza",
+    "description": "Hai un problema o una domanda? Scrivici e ti risponderemo il prima possibile.",
+    "message_label": "La tua richiesta",
+    "message_placeholder": "Descrivi il problema o la domanda...",
+    "send_button": "Invia Richiesta",
+    "success_title": "Richiesta inviata!",
+    "success_description": "Il tuo messaggio è stato consegnato al nostro team di assistenza. Ti risponderemo via email il prima possibile.",
+    "close_button": "Chiudi",
+    "error_title": "Invio non riuscito",
+    "error_description": "Impossibile inviare la richiesta. Riprova più tardi.",
+    "settings_button": "Contatta l'Assistenza"
   },
   "currency": {
     "toast_title": "Valuta Aggiornata",
