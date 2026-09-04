@@ -20,7 +20,12 @@ const config: CapacitorConfig = {
       launchAutoHide: true,
       backgroundColor: '#ffffffff',
       androidSplashResourceName: 'splash',
-      androidScaleType: 'CENTER_CROP',
+      // CENTER_CROP ritaglia per riempire lo schermo: su schermi piu' "alti"
+      // dell'immagine tagliava via la scritta WAX PRO in basso, che ha meno
+      // margine del logo in alto. FIT_CENTER mostra l'immagine intera senza
+      // ritagli; lo sfondo del margine e' bianco come lo sfondo della splash,
+      // quindi non si vede alcuna cornice.
+      androidScaleType: 'FIT_CENTER',
       splashFullScreen: true,
       splashImmersive: true,
       showSpinner: false,
