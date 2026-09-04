@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { LanguageProvider } from '@/context/language-context';
 import { AuthProvider } from '@/context/auth-context';
 import { ThemeProvider } from '@/context/theme-provider';
+import NativeSplashScreen from '@/components/native-splash-screen';
 
 export const metadata: Metadata = {
   title: 'WaxPro Manager',
@@ -30,6 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NativeSplashScreen />
           <AuthProvider>
             <LanguageProvider>
               {children}
