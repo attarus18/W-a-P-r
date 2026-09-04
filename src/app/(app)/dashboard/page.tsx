@@ -58,7 +58,7 @@ export default function DashboardPage() {
           <img src="/logo.png" alt="WaxPro" className="h-10 w-10 rounded-full flex-shrink-0" />
           <h1 className="text-3xl sm:text-4xl font-bold text-primary tracking-wider whitespace-nowrap">WAX PRO</h1>
         </div>
-        <p className="text-muted-foreground mt-2">{t('dashboard.welcome_subtitle')}</p>
+        <p className="text-muted-foreground mt-2 max-w-xs mx-auto">{t('dashboard.welcome_subtitle')}</p>
       </div>
 
       <div>

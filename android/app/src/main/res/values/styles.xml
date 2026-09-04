@@ -16,7 +16,20 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+    <!--
+      Theme.SplashScreen (androidx.core:core-splashscreen) e' l'API splash
+      di Android 12+: accetta solo un colore di sfondo + una piccola icona
+      centrata (windowSplashScreenBackground/windowSplashScreenAnimatedIcon),
+      MAI un bitmap a tutto schermo via android:background, e richiede una
+      chiamata a SplashScreen.installSplashScreen() in MainActivity che
+      questo progetto non ha mai fatto. Risultato: splash.png (logo + WAX
+      PRO) non veniva mai mostrato. Torniamo al meccanismo classico -- tema
+      con sfondo statico -- che funziona identico su tutte le versioni
+      Android senza codice Java aggiuntivo.
+    -->
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:background">@drawable/splash</item>
     </style>
 </resources>
