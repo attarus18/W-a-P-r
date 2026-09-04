@@ -22,9 +22,9 @@
       centrata (windowSplashScreenBackground/windowSplashScreenAnimatedIcon),
       MAI un bitmap a tutto schermo via android:background, e richiede una
       chiamata a SplashScreen.installSplashScreen() in MainActivity che
-      questo progetto non ha mai fatto. Risultato: splash.png (logo + WAX
-      PRO) non veniva mai mostrato. Torniamo al meccanismo classico -- tema
-      con sfondo statico -- che funziona identico su tutte le versioni
+      questo progetto non ha mai fatto. Risultato: splash.png (logo e WAX
+      PRO) non veniva mai mostrato. Torniamo al meccanismo classico, tema
+      con sfondo statico, che funziona identico su tutte le versioni
       Android senza codice Java aggiuntivo.
     -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.AppCompat.DayNight.NoActionBar">
