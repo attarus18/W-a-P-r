@@ -6,6 +6,7 @@ import AdmobBanner from "@/components/admob-banner";
 import { CurrencyProvider } from "@/context/currency-context";
 import { ProductProvider } from "@/context/product-context";
 import { RecipeProvider } from "@/context/recipe-context";
+import { MaterialsProvider } from "@/context/materials-context";
 import { SubscriptionProvider } from "@/context/subscription-context";
 
 // Radix's Dialog/DropdownMenu/AlertDialog primitives each lock
@@ -40,16 +41,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SubscriptionProvider>
       <ProductProvider>
         <RecipeProvider>
-          <CurrencyProvider>
-            <main
-              className="p-4 sm:p-6 lg:p-8 pb-20"
-              style={{ paddingBottom: 'calc(5rem + var(--admob-banner-offset, 0px))' }}
-            >
-              {children}
-            </main>
-            <AppNavbar />
-            <AdmobBanner />
-          </CurrencyProvider>
+          <MaterialsProvider>
+            <CurrencyProvider>
+              <main
+                className="p-4 sm:p-6 lg:p-8 pb-20"
+                style={{ paddingBottom: 'calc(5rem + var(--admob-banner-offset, 0px))' }}
+              >
+                {children}
+              </main>
+              <AppNavbar />
+              <AdmobBanner />
+            </CurrencyProvider>
+          </MaterialsProvider>
         </RecipeProvider>
       </ProductProvider>
     </SubscriptionProvider>

@@ -6,10 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
-import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2, Package, Tag, MoreHorizontal } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2, Package, Tag, MoreHorizontal, Boxes } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useCurrency } from '@/context/currency-context';
+import { useMaterials } from '@/context/materials-context';
+import MaterialsDialog from '@/components/calculator/materials-dialog';
+import { convertWeight, convertVolume, type WeightUnit, type VolumeUnit } from '@/lib/units';
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { format } from 'date-fns';
@@ -19,10 +23,12 @@ const localeMap = { en: enUS, it, es, fr, de };
 
 type FormValues = {
   nomeProdotto: string;
-  cera: number;
-  stoppino: number;
+  ceraQty: number;
+  ceraUnit: WeightUnit;
+  stoppinoQty: number;
   contenitore: number;
-  fragranza: number;
+  fragranzaQty: number;
+  fragranzaUnit: VolumeUnit;
   colore: number;
   spedizione: number;
   packaging: number;
@@ -31,13 +37,15 @@ type FormValues = {
 };
 
 export default function CalculatorPage() {
-  const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, reset, getValues, watch, setValue, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       nomeProdotto: '',
-      cera: 0,
-      stoppino: 0,
+      ceraQty: 0,
+      ceraUnit: 'g',
+      stoppinoQty: 0,
       contenitore: 0,
-      fragranza: 0,
+      fragranzaQty: 0,
+      fragranzaUnit: 'ml',
       colore: 0,
       spedizione: 0,
       packaging: 0,
@@ -51,11 +59,29 @@ export default function CalculatorPage() {
   const { toast } = useToast();
   const { t, language } = useLanguage();
   const { formatCurrency, currency } = useCurrency();
+  const { materials } = useMaterials();
   const dateLocale = localeMap[language] || enUS;
 
+  const ceraUnit = watch('ceraUnit');
+  const fragranzaUnit = watch('fragranzaUnit');
+
+  const getWaxCost = (qty: number, unit: WeightUnit) => {
+    if (!materials.wax) return 0;
+    return convertWeight(Number(qty) || 0, unit, materials.wax.unit as WeightUnit) * materials.wax.price;
+  };
+  const getWickCost = (qty: number) => {
+    if (!materials.wick) return 0;
+    return (Number(qty) || 0) * materials.wick.price;
+  };
+  const getFragranceCost = (qty: number, unit: VolumeUnit) => {
+    if (!materials.fragrance) return 0;
+    return convertVolume(Number(qty) || 0, unit, materials.fragrance.unit as VolumeUnit) * materials.fragrance.price;
+  };
+
   const onSubmit: SubmitHandler<FormValues> = data => {
-    const { nomeProdotto, ...costFields } = data;
-    const cost = Object.values(costFields).reduce((acc, value) => acc + (Number(value) || 0), 0);
+    const { nomeProdotto, ceraQty, ceraUnit, stoppinoQty, fragranzaQty, fragranzaUnit, ...flatCostFields } = data;
+    const flatCost = Object.values(flatCostFields).reduce((acc, value) => acc + (Number(value) || 0), 0);
+    const cost = flatCost + getWaxCost(ceraQty, ceraUnit) + getWickCost(stoppinoQty) + getFragranceCost(fragranzaQty, fragranzaUnit);
     setTotalCost(cost);
     setProductName(nomeProdotto);
   };
@@ -135,10 +161,10 @@ export default function CalculatorPage() {
         y += 15;
 
         const costs = [
-            { label: t('calculator.wax_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.cera },
-            { label: t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.stoppino },
+            { label: `${t('calculator.wax_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.ceraQty} ${t(`materials.unit_${formValues.ceraUnit}`)})`, value: getWaxCost(formValues.ceraQty, formValues.ceraUnit) },
+            { label: `${t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.stoppinoQty})`, value: getWickCost(formValues.stoppinoQty) },
             { label: t('calculator.container_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.contenitore },
-            { label: t('calculator.fragrance_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.fragranza },
+            { label: `${t('calculator.fragrance_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.fragranzaQty} ${t(`materials.unit_${formValues.fragranzaUnit}`)})`, value: getFragranceCost(formValues.fragranzaQty, formValues.fragranzaUnit) },
             { label: t('calculator.color_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.colore },
             { label: t('calculator.shipping_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.spedizione },
             { label: t('calculator.packaging_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.packaging },
@@ -196,9 +222,17 @@ export default function CalculatorPage() {
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
-        <p className="text-muted-foreground">{t('calculator.description')}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
+          <p className="text-muted-foreground">{t('calculator.description')}</p>
+        </div>
+        <MaterialsDialog>
+          <Button type="button" variant="outline" size="sm" className="shrink-0">
+            <Boxes className="mr-2 h-4 w-4" />
+            {t('materials.button_label')}
+          </Button>
+        </MaterialsDialog>
       </div>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -210,10 +244,69 @@ export default function CalculatorPage() {
               <Label htmlFor="nomeProdotto">{t('calculator.product_name_label')}</Label>
               <Input id="nomeProdotto" type="text" {...register('nomeProdotto')} />
             </div>
-            <InputField id="cera" label={t('calculator.wax_cost_label', { currency: currency.symbol })} icon={Flame} />
-            <InputField id="stoppino" label={t('calculator.wick_cost_label', { currency: currency.symbol })} icon={Combine} />
+
+            <div className="space-y-2">
+              <Label htmlFor="ceraQty">{t('calculator.wax_qty_label')}</Label>
+              <div className="flex gap-2">
+                <div className="relative flex items-center flex-1">
+                  <Flame className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} />
+                </div>
+                <Select value={ceraUnit} onValueChange={(v) => setValue('ceraUnit', v as WeightUnit)}>
+                  <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="g">{t('materials.unit_g')}</SelectItem>
+                    <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
+                    <SelectItem value="oz">{t('materials.unit_oz')}</SelectItem>
+                    <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {materials.wax ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getWaxCost(watch('ceraQty'), ceraUnit))}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="stoppinoQty">{t('calculator.wick_qty_label')}</Label>
+              <div className="relative flex items-center">
+                <Combine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input id="stoppinoQty" type="number" step="1" className="pl-10" {...register('stoppinoQty')} />
+              </div>
+              {materials.wick ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getWickCost(watch('stoppinoQty')))}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+              )}
+            </div>
+
             <InputField id="contenitore" label={t('calculator.container_cost_label', { currency: currency.symbol })} icon={GlassWater} />
-            <InputField id="fragranza" label={t('calculator.fragrance_cost_label', { currency: currency.symbol })} icon={Droplets} />
+
+            <div className="space-y-2">
+              <Label htmlFor="fragranzaQty">{t('calculator.fragrance_qty_label')}</Label>
+              <div className="flex gap-2">
+                <div className="relative flex items-center flex-1">
+                  <Droplets className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} />
+                </div>
+                <Select value={fragranzaUnit} onValueChange={(v) => setValue('fragranzaUnit', v as VolumeUnit)}>
+                  <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ml">{t('materials.unit_ml')}</SelectItem>
+                    <SelectItem value="l">{t('materials.unit_l')}</SelectItem>
+                    <SelectItem value="fl_oz">{t('materials.unit_fl_oz')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {materials.fragrance ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getFragranceCost(watch('fragranzaQty'), fragranzaUnit))}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+              )}
+            </div>
+
             <InputField id="colore" label={t('calculator.color_cost_label', { currency: currency.symbol })} icon={Palette} />
             <InputField id="spedizione" label={t('calculator.shipping_cost_label', { currency: currency.symbol })} icon={Truck} />
             <InputField id="packaging" label={t('calculator.packaging_cost_label', { currency: currency.symbol })} icon={Package} />
