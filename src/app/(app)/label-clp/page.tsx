@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Printer, Loader2, TriangleAlert, FileSearch } from 'lucide-react';
+import { Printer, Loader2, TriangleAlert, FileSearch, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useMaterials } from '@/context/materials-context';
@@ -41,6 +41,77 @@ export default function LabelClpPage() {
   const [rectWidthMm, setRectWidthMm] = useState(80);
   const [rectHeightMm, setRectHeightMm] = useState(50);
   const [circleDiameterMm, setCircleDiameterMm] = useState(40);
+
+  // Posizione/scala del contenuto scelte a mano trascinando con un dito e
+  // "pizzicando" con due nell'anteprima; finche' l'utente non tocca
+  // l'anteprima, il PDF continua a centrare e ridimensionare tutto da solo.
+  const [manualScale, setManualScale] = useState(1);
+  const [offsetMm, setOffsetMm] = useState({ x: 0, y: 0 });
+  const [hasManualPosition, setHasManualPosition] = useState(false);
+  const stagePointers = useRef(new Map<number, { x: number; y: number }>());
+  const gestureStart = useRef<{ dist: number; scale: number; x: number; y: number; offsetX: number; offsetY: number } | null>(null);
+
+  const shapeWidthMm = labelShape === 'circle' ? circleDiameterMm : rectWidthMm;
+  const shapeHeightMm = labelShape === 'circle' ? circleDiameterMm : rectHeightMm;
+  const pxPerMm = useMemo(() => {
+    const maxDim = Math.max(shapeWidthMm, shapeHeightMm, 1);
+    return Math.min(4, 260 / maxDim);
+  }, [shapeWidthMm, shapeHeightMm]);
+
+  const clampScale = (value: number) => Math.min(2.5, Math.max(0.3, value));
+
+  const handleStagePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    (e.currentTarget).setPointerCapture(e.pointerId);
+    stagePointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    setHasManualPosition(true);
+    if (stagePointers.current.size === 2) {
+      const pts = Array.from(stagePointers.current.values());
+      gestureStart.current = {
+        dist: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y),
+        scale: manualScale,
+        x: 0,
+        y: 0,
+        offsetX: offsetMm.x,
+        offsetY: offsetMm.y,
+      };
+    } else {
+      gestureStart.current = { dist: 0, scale: manualScale, x: e.clientX, y: e.clientY, offsetX: offsetMm.x, offsetY: offsetMm.y };
+    }
+  };
+
+  const handleStagePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!stagePointers.current.has(e.pointerId) || !gestureStart.current) return;
+    stagePointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (stagePointers.current.size === 2) {
+      const pts = Array.from(stagePointers.current.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const ratio = dist / (gestureStart.current.dist || 1);
+      setManualScale(clampScale(gestureStart.current.scale * ratio));
+    } else if (stagePointers.current.size === 1) {
+      const dx = (e.clientX - gestureStart.current.x) / pxPerMm;
+      const dy = (e.clientY - gestureStart.current.y) / pxPerMm;
+      setOffsetMm({ x: gestureStart.current.offsetX + dx, y: gestureStart.current.offsetY + dy });
+    }
+  };
+
+  const handleStagePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    stagePointers.current.delete(e.pointerId);
+    gestureStart.current = null;
+  };
+
+  const handleStageWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    setHasManualPosition(true);
+    setManualScale((prev) => clampScale(prev - e.deltaY * 0.01));
+  };
+
+  const resetPosition = () => {
+    setHasManualPosition(false);
+    setManualScale(1);
+    setOffsetMm({ x: 0, y: 0 });
+  };
 
   const { register, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -240,18 +311,33 @@ export default function LabelClpPage() {
         return y - startY;
       };
 
-      // Prova a inserire tutto a piena scala, poi rimpicciolisce testo e
-      // interlinee finche' il contenuto non entra nell'area disponibile.
-      const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
-      let chosenScale = candidateScales[candidateScales.length - 1];
-      let usedHeight = 0;
-      for (const candidate of candidateScales) {
-        usedHeight = renderLabel(candidate, 'measure', 0, 0);
-        if (usedHeight <= availableHeight) {
-          chosenScale = candidate;
-          break;
+      let chosenScale: number;
+      let offsetXpx: number;
+      let offsetYpx: number;
+
+      if (hasManualPosition) {
+        // L'utente ha gia' trascinato/pizzicato l'anteprima: usa esattamente
+        // quella posizione e scala invece di ricalcolarle da zero.
+        chosenScale = manualScale;
+        offsetXpx = offsetMm.x * MM_TO_PX;
+        offsetYpx = offsetMm.y * MM_TO_PX;
+      } else {
+        // Prova a inserire tutto a piena scala, poi rimpicciolisce testo e
+        // interlinee finche' il contenuto non entra nell'area disponibile.
+        const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
+        chosenScale = candidateScales[candidateScales.length - 1];
+        for (const candidate of candidateScales) {
+          const h = renderLabel(candidate, 'measure', 0, 0);
+          if (h <= availableHeight) {
+            chosenScale = candidate;
+            break;
+          }
         }
+        offsetXpx = 0;
+        offsetYpx = 0;
       }
+
+      const usedHeight = renderLabel(chosenScale, 'measure', 0, 0);
       const overflow = usedHeight > availableHeight;
 
       const shapeX = (pageWidth - shapeWidthPx) / 2;
@@ -267,10 +353,8 @@ export default function LabelClpPage() {
       }
       doc.setLineDashPattern([], 0);
 
-      const contentStartX = isCircle ? shapeX + (shapeWidthPx - contentWidth) / 2 : shapeX + innerPadding;
-      const contentStartY = usedHeight <= availableHeight
-        ? shapeY + (shapeHeightPx - usedHeight) / 2
-        : shapeY + innerPadding;
+      const contentStartX = shapeX + shapeWidthPx / 2 + offsetXpx - contentWidth / 2;
+      const contentStartY = shapeY + shapeHeightPx / 2 + offsetYpx - usedHeight / 2;
 
       renderLabel(chosenScale, 'draw', contentStartX, contentStartY);
 
@@ -500,63 +584,98 @@ export default function LabelClpPage() {
         <Card className="lg:sticky lg:top-6">
           <CardHeader>
             <CardTitle>{t('label_clp.preview_title')}</CardTitle>
-            <CardDescription>{t('label_clp.preview_description')}</CardDescription>
+            <CardDescription>{t('label_clp.position_hint')}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="rounded-lg border bg-card p-4 space-y-3 text-sm">
-              <div>
-                <p className="font-bold text-base">{values.productName || t('label_clp.preview_placeholder_name')}</p>
-                <p className="text-muted-foreground text-xs">
-                  {[
-                    values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
-                    t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
-                  ].filter(Boolean).join(' · ')}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between border-t pt-3">
-                <span className="text-xs text-muted-foreground">{t('label_clp.net_weight_label')}</span>
-                <span className="font-semibold">{values.netWeight || 0} g</span>
-              </div>
-
-              {selectedPictograms.length > 0 && (
-                <div className="border-t pt-3 space-y-2">
-                  <span className="font-bold text-xs">{t('label_clp.warning_label')}</span>
-                  <div className="flex gap-2 flex-wrap">
-                    {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={36} />)}
-                  </div>
-                </div>
-              )}
-
-              {values.hPhrases && (
-                <div className="border-t pt-3">
-                  <p className="font-bold text-xs mb-1">{t('label_clp.h_phrases_label')}</p>
-                  <p className="text-xs whitespace-pre-line">{values.hPhrases}</p>
-                </div>
-              )}
-
-              {values.pPhrases && (
+          <CardContent className="flex flex-col items-center gap-4">
+            <div
+              className="relative mx-auto shrink-0"
+              style={{
+                width: shapeWidthMm * pxPerMm,
+                height: shapeHeightMm * pxPerMm,
+                borderRadius: labelShape === 'circle' ? '50%' : '6px',
+                border: '2px dashed #9ca3af',
+                background: '#ffffff',
+                touchAction: 'none',
+                cursor: 'grab',
+              }}
+              onPointerDown={handleStagePointerDown}
+              onPointerMove={handleStagePointerMove}
+              onPointerUp={handleStagePointerUp}
+              onPointerCancel={handleStagePointerUp}
+              onWheel={handleStageWheel}
+            >
+              <div
+                className="absolute space-y-1 select-none"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  width: shapeWidthMm * pxPerMm * (labelShape === 'circle' ? 0.68 : 0.85),
+                  transform: `translate(${offsetMm.x * pxPerMm}px, ${offsetMm.y * pxPerMm}px) translate(-50%, -50%) scale(${manualScale})`,
+                  transformOrigin: 'center center',
+                  color: '#111827',
+                }}
+              >
                 <div>
-                  <p className="font-bold text-xs mb-1">{t('label_clp.p_phrases_label')}</p>
-                  <p className="text-xs whitespace-pre-line">{values.pPhrases}</p>
+                  <p className="font-bold text-[11px] leading-tight">{values.productName || t('label_clp.preview_placeholder_name')}</p>
+                  <p className="text-[8px] leading-tight" style={{ color: '#6b7280' }}>
+                    {[
+                      values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
+                      t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
+                    ].filter(Boolean).join(' · ')}
+                  </p>
                 </div>
-              )}
 
-              {values.allergens && (
-                <p className="text-xs"><span className="font-semibold">{t('label_clp.allergens_label')}:</span> {values.allergens}</p>
-              )}
-
-              {values.ufiCode && (
-                <p className="text-xs font-mono">UFI: {values.ufiCode}</p>
-              )}
-
-              {(values.companyName || values.companyAddress || values.companyEmail) && (
-                <div className="border-t pt-3 text-xs text-muted-foreground">
-                  {values.companyName && <p className="font-semibold text-foreground">{values.companyName}</p>}
-                  {values.companyAddress && <p>{values.companyAddress}</p>}
-                  {values.companyEmail && <p>{values.companyEmail}</p>}
+                <div className="flex items-center justify-between text-[8px]" style={{ color: '#6b7280' }}>
+                  <span>{t('label_clp.net_weight_label')}</span>
+                  <span className="font-semibold" style={{ color: '#111827' }}>{values.netWeight || 0} g</span>
                 </div>
-              )}
+
+                {selectedPictograms.length > 0 && (
+                  <div className="space-y-1">
+                    <span className="font-bold text-[8px]">{t('label_clp.warning_label')}</span>
+                    <div className="flex gap-1 flex-wrap">
+                      {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
+                    </div>
+                  </div>
+                )}
+
+                {values.hPhrases && (
+                  <p className="text-[7px] leading-tight whitespace-pre-line">{values.hPhrases}</p>
+                )}
+
+                {values.pPhrases && (
+                  <p className="text-[7px] leading-tight whitespace-pre-line">{values.pPhrases}</p>
+                )}
+
+                {values.allergens && (
+                  <p className="text-[7px] leading-tight">{t('label_clp.allergens_label')}: {values.allergens}</p>
+                )}
+
+                {values.ufiCode && (
+                  <p className="text-[7px] font-mono">UFI: {values.ufiCode}</p>
+                )}
+
+                {(values.companyName || values.companyAddress || values.companyEmail) && (
+                  <div className="text-[7px] leading-tight" style={{ color: '#6b7280' }}>
+                    {values.companyName && <p className="font-semibold" style={{ color: '#111827' }}>{values.companyName}</p>}
+                    {values.companyAddress && <p>{values.companyAddress}</p>}
+                    {values.companyEmail && <p>{values.companyEmail}</p>}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" size="icon" onClick={() => { setHasManualPosition(true); setManualScale((s) => clampScale(s - 0.1)); }}>
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button type="button" variant="outline" size="icon" onClick={() => { setHasManualPosition(true); setManualScale((s) => clampScale(s + 0.1)); }}>
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button type="button" variant="ghost" size="sm" onClick={resetPosition}>
+                <RotateCcw className="mr-2 h-4 w-4" />
+                {t('label_clp.reset_position')}
+              </Button>
             </div>
           </CardContent>
         </Card>

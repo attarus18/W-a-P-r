@@ -141,6 +141,8 @@
     "rect_height_label": "Altezza (mm)",
     "diameter_label": "Diametro (mm)",
     "overflow_warning": "Il contenuto è troppo lungo per queste dimensioni: alcune informazioni potrebbero risultare molto piccole o tagliate. Prova con un formato più grande.",
+    "position_hint": "Trascina con un dito per spostare l'etichetta, pizzica con due dita (o Ctrl+rotellina) per ridimensionarla.",
+    "reset_position": "Reimposta posizione",
     "form_title": "Dati Etichetta",
     "product_name_label": "Nome Prodotto",
     "net_weight_label": "Peso Netto (g)",

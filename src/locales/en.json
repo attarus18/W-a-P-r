@@ -141,6 +141,8 @@
     "rect_height_label": "Height (mm)",
     "diameter_label": "Diameter (mm)",
     "overflow_warning": "The content is too long for these dimensions: some information may be very small or cut off. Try a larger size.",
+    "position_hint": "Drag with one finger to move the label, pinch with two fingers (or Ctrl+scroll) to resize it.",
+    "reset_position": "Reset position",
     "form_title": "Label Data",
     "product_name_label": "Product Name",
     "net_weight_label": "Net Weight (g)",
