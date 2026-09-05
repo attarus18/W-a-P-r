@@ -1,12 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2, Package, Tag, MoreHorizontal, Boxes } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
@@ -62,8 +72,18 @@ export default function CalculatorPage() {
   const { materials } = useMaterials();
   const dateLocale = localeMap[language] || enUS;
 
+  const [materialsDialogOpen, setMaterialsDialogOpen] = useState(false);
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const hasRemindedRef = useRef(false);
+
   const ceraUnit = watch('ceraUnit');
   const fragranzaUnit = watch('fragranzaUnit');
+
+  const remindIfNotConfigured = (isConfigured: boolean) => {
+    if (hasRemindedRef.current || isConfigured) return;
+    hasRemindedRef.current = true;
+    setReminderOpen(true);
+  };
 
   const getWaxCost = (qty: number, unit: WeightUnit) => {
     if (!materials.wax) return 0;
@@ -230,7 +250,7 @@ export default function CalculatorPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
             <CardTitle>{t('calculator.form_title')}</CardTitle>
-            <MaterialsDialog>
+            <MaterialsDialog open={materialsDialogOpen} onOpenChange={setMaterialsDialogOpen}>
               <Button type="button" variant="outline" size="sm" className="shrink-0">
                 <Boxes className="mr-2 h-4 w-4" />
                 {t('materials.button_label')}
@@ -248,7 +268,7 @@ export default function CalculatorPage() {
               <div className="flex gap-2">
                 <div className="relative flex items-center flex-1 min-w-0">
                   <Flame className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} />
+                  <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} onFocus={() => remindIfNotConfigured(!!materials.wax)} />
                 </div>
                 <Select value={ceraUnit} onValueChange={(v) => setValue('ceraUnit', v as WeightUnit)}>
                   <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
@@ -271,7 +291,7 @@ export default function CalculatorPage() {
               <Label htmlFor="stoppinoQty">{t('calculator.wick_qty_label')}</Label>
               <div className="relative flex items-center">
                 <Combine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="stoppinoQty" type="number" step="1" className="pl-10" {...register('stoppinoQty')} />
+                <Input id="stoppinoQty" type="number" step="1" className="pl-10" {...register('stoppinoQty')} onFocus={() => remindIfNotConfigured(!!materials.wick)} />
               </div>
               {materials.wick ? (
                 <p className="text-xs text-muted-foreground">{formatCurrency(getWickCost(watch('stoppinoQty')))}</p>
@@ -287,7 +307,7 @@ export default function CalculatorPage() {
               <div className="flex gap-2">
                 <div className="relative flex items-center flex-1 min-w-0">
                   <Droplets className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} />
+                  <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} onFocus={() => remindIfNotConfigured(!!materials.fragrance)} />
                 </div>
                 <Select value={fragranzaUnit} onValueChange={(v) => setValue('fragranzaUnit', v as VolumeUnit)}>
                   <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
@@ -343,6 +363,21 @@ export default function CalculatorPage() {
           </CardFooter>
         </Card>
       )}
+
+      <AlertDialog open={reminderOpen} onOpenChange={setReminderOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('materials.reminder_title')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('materials.reminder_description')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('materials.reminder_dismiss')}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => setMaterialsDialogOpen(true)}>
+              {t('materials.reminder_confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

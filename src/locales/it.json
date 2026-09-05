@@ -99,7 +99,11 @@
     "save_button": "Salva",
     "not_configured_hint": "Imposta il prezzo in \"Costo Materiali\" per calcolare il costo",
     "toast_saved_title": "Prezzi materiali salvati",
-    "toast_error_title": "Errore nel salvataggio dei prezzi"
+    "toast_error_title": "Errore nel salvataggio dei prezzi",
+    "reminder_title": "Prezzi materiali non impostati",
+    "reminder_description": "Non hai ancora impostato i prezzi dei materiali: il costo di cera, stoppino e fragranza non verrà calcolato finché non lo fai. Vuoi impostarli ora?",
+    "reminder_confirm": "Imposta ora",
+    "reminder_dismiss": "Continua comunque"
   },
   "recipe_calculator": {
     "title": "Calcolatore Ricette Candele",

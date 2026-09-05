@@ -99,7 +99,11 @@
     "save_button": "Enregistrer",
     "not_configured_hint": "Configurez le prix dans « Coût des matériaux » pour calculer le coût",
     "toast_saved_title": "Prix des matériaux enregistrés",
-    "toast_error_title": "Erreur lors de l'enregistrement des prix"
+    "toast_error_title": "Erreur lors de l'enregistrement des prix",
+    "reminder_title": "Prix des matériaux non configurés",
+    "reminder_description": "Vous n'avez pas encore configuré les prix de vos matériaux : le coût de la cire, de la mèche et du parfum ne sera pas calculé tant que vous ne l'aurez pas fait. Voulez-vous les configurer maintenant ?",
+    "reminder_confirm": "Configurer maintenant",
+    "reminder_dismiss": "Continuer quand même"
   },
   "recipe_calculator": {
     "title": "Calculateur de recette de bougie",

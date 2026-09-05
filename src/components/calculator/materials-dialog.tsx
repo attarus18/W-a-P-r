@@ -23,15 +23,19 @@ import { useToast } from '@/hooks/use-toast';
 
 interface MaterialsDialogProps {
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export default function MaterialsDialog({ children }: MaterialsDialogProps) {
+export default function MaterialsDialog({ children, open: controlledOpen, onOpenChange }: MaterialsDialogProps) {
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const { materials, saveMaterials } = useMaterials();
   const { toast } = useToast();
 
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
   const [isSaving, setIsSaving] = useState(false);
 
   const [waxPrice, setWaxPrice] = useState('0');

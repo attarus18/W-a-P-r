@@ -99,7 +99,11 @@
     "save_button": "Speichern",
     "not_configured_hint": "Legen Sie den Preis unter \"Materialkosten\" fest, um die Kosten zu berechnen",
     "toast_saved_title": "Materialpreise gespeichert",
-    "toast_error_title": "Fehler beim Speichern der Preise"
+    "toast_error_title": "Fehler beim Speichern der Preise",
+    "reminder_title": "Materialpreise nicht festgelegt",
+    "reminder_description": "Sie haben Ihre Materialpreise noch nicht festgelegt: Die Kosten für Wachs, Docht und Duft werden erst berechnet, wenn Sie dies tun. Jetzt festlegen?",
+    "reminder_confirm": "Jetzt festlegen",
+    "reminder_dismiss": "Trotzdem fortfahren"
   },
   "recipe_calculator": {
     "title": "Kerzenrezept-Rechner",

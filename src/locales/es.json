@@ -99,7 +99,11 @@
     "save_button": "Guardar",
     "not_configured_hint": "Configura el precio en \"Costo de materiales\" para calcular el costo",
     "toast_saved_title": "Precios de materiales guardados",
-    "toast_error_title": "Error al guardar los precios"
+    "toast_error_title": "Error al guardar los precios",
+    "reminder_title": "Precios de materiales no configurados",
+    "reminder_description": "Aún no has configurado los precios de tus materiales: el costo de la cera, la mecha y la fragancia no se calculará hasta que lo hagas. ¿Quieres configurarlos ahora?",
+    "reminder_confirm": "Configurar ahora",
+    "reminder_dismiss": "Continuar de todos modos"
   },
   "recipe_calculator": {
     "title": "Calculadora de recetas de velas",

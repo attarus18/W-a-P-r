@@ -99,7 +99,11 @@
     "save_button": "Save",
     "not_configured_hint": "Set the price in \"Materials Cost\" to calculate the cost",
     "toast_saved_title": "Material prices saved",
-    "toast_error_title": "Error saving prices"
+    "toast_error_title": "Error saving prices",
+    "reminder_title": "Material prices not set",
+    "reminder_description": "You haven't set your material prices yet: the cost of wax, wick, and fragrance won't be calculated until you do. Set them now?",
+    "reminder_confirm": "Set now",
+    "reminder_dismiss": "Continue anyway"
   },
   "recipe_calculator": {
     "title": "Candle Recipe Calculator",
