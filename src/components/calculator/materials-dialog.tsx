@@ -43,6 +43,8 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
   const [wickPrice, setWickPrice] = useState('0');
   const [fragrancePrice, setFragrancePrice] = useState('0');
   const [fragranceUnit, setFragranceUnit] = useState<'ml' | 'l' | 'fl_oz'>('ml');
+  const [colorPrice, setColorPrice] = useState('0');
+  const [colorUnit, setColorUnit] = useState<'g' | 'oz'>('g');
 
   useEffect(() => {
     if (!open) return;
@@ -51,6 +53,8 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
     setWickPrice(String(materials.wick?.price ?? 0));
     setFragrancePrice(String(materials.fragrance?.price ?? 0));
     setFragranceUnit((materials.fragrance?.unit as 'ml' | 'l' | 'fl_oz') ?? 'ml');
+    setColorPrice(String(materials.color?.price ?? 0));
+    setColorUnit((materials.color?.unit as 'g' | 'oz') ?? 'g');
   }, [open, materials]);
 
   const handleSave = async () => {
@@ -60,6 +64,7 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
         { materialType: 'wax', unit: waxUnit, price: parseFloat(waxPrice) || 0 },
         { materialType: 'wick', unit: 'piece', price: parseFloat(wickPrice) || 0 },
         { materialType: 'fragrance', unit: fragranceUnit, price: parseFloat(fragrancePrice) || 0 },
+        { materialType: 'color', unit: colorUnit, price: parseFloat(colorPrice) || 0 },
       ]);
       toast({ title: t('materials.toast_saved_title') });
       setOpen(false);
@@ -134,6 +139,28 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
                   <SelectItem value="ml">{t('materials.unit_ml')}</SelectItem>
                   <SelectItem value="l">{t('materials.unit_l')}</SelectItem>
                   <SelectItem value="fl_oz">{t('materials.unit_fl_oz')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="color-price">{t('materials.color_label', { currency: currency.symbol })}</Label>
+            <div className="flex gap-2">
+              <Input
+                id="color-price"
+                type="number"
+                step="0.01"
+                min="0"
+                value={colorPrice}
+                onChange={(e) => setColorPrice(e.target.value)}
+                className="flex-1 min-w-0"
+              />
+              <Select value={colorUnit} onValueChange={(v) => setColorUnit(v as 'g' | 'oz')}>
+                <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="g">{t('materials.unit_g')}</SelectItem>
+                  <SelectItem value="oz">{t('materials.unit_oz')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -39,7 +39,8 @@ type FormValues = {
   contenitore: number;
   fragranzaQty: number;
   fragranzaUnit: VolumeUnit;
-  colore: number;
+  coloreQty: number;
+  coloreUnit: WeightUnit;
   spedizione: number;
   packaging: number;
   etichette: number;
@@ -56,7 +57,8 @@ export default function CalculatorPage() {
       contenitore: 0,
       fragranzaQty: 0,
       fragranzaUnit: 'ml',
-      colore: 0,
+      coloreQty: 0,
+      coloreUnit: 'g',
       spedizione: 0,
       packaging: 0,
       etichette: 0,
@@ -78,6 +80,7 @@ export default function CalculatorPage() {
 
   const ceraUnit = watch('ceraUnit');
   const fragranzaUnit = watch('fragranzaUnit');
+  const coloreUnit = watch('coloreUnit');
 
   const remindIfNotConfigured = (isConfigured: boolean) => {
     if (hasRemindedRef.current || isConfigured) return;
@@ -97,11 +100,19 @@ export default function CalculatorPage() {
     if (!materials.fragrance) return 0;
     return convertVolume(Number(qty) || 0, unit, materials.fragrance.unit as VolumeUnit) * materials.fragrance.price;
   };
+  const getColorCost = (qty: number, unit: WeightUnit) => {
+    if (!materials.color) return 0;
+    return convertWeight(Number(qty) || 0, unit, materials.color.unit as WeightUnit) * materials.color.price;
+  };
 
   const onSubmit: SubmitHandler<FormValues> = data => {
-    const { nomeProdotto, ceraQty, ceraUnit, stoppinoQty, fragranzaQty, fragranzaUnit, ...flatCostFields } = data;
+    const { nomeProdotto, ceraQty, ceraUnit, stoppinoQty, fragranzaQty, fragranzaUnit, coloreQty, coloreUnit, ...flatCostFields } = data;
     const flatCost = Object.values(flatCostFields).reduce((acc, value) => acc + (Number(value) || 0), 0);
-    const cost = flatCost + getWaxCost(ceraQty, ceraUnit) + getWickCost(stoppinoQty) + getFragranceCost(fragranzaQty, fragranzaUnit);
+    const cost = flatCost
+      + getWaxCost(ceraQty, ceraUnit)
+      + getWickCost(stoppinoQty)
+      + getFragranceCost(fragranzaQty, fragranzaUnit)
+      + getColorCost(coloreQty, coloreUnit);
     setTotalCost(cost);
     setProductName(nomeProdotto);
   };
@@ -184,7 +195,7 @@ export default function CalculatorPage() {
             { label: `${t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.stoppinoQty})`, value: getWickCost(formValues.stoppinoQty) },
             { label: t('calculator.container_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.contenitore },
             { label: `${t('calculator.fragrance_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.fragranzaQty} ${t(`materials.unit_${formValues.fragranzaUnit}`)})`, value: getFragranceCost(formValues.fragranzaQty, formValues.fragranzaUnit) },
-            { label: t('calculator.color_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.colore },
+            { label: `${t('calculator.color_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.coloreQty} ${t(`materials.unit_${formValues.coloreUnit}`)})`, value: getColorCost(formValues.coloreQty, formValues.coloreUnit) },
             { label: t('calculator.shipping_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.spedizione },
             { label: t('calculator.packaging_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.packaging },
             { label: t('calculator.labels_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.etichette },
@@ -250,7 +261,7 @@ export default function CalculatorPage() {
           <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
             <CardTitle>{t('calculator.form_title')}</CardTitle>
             <MaterialsDialog open={materialsDialogOpen} onOpenChange={setMaterialsDialogOpen}>
-              <Button type="button" variant="outline" size="sm" className="shrink-0">
+              <Button type="button" size="sm" className="shrink-0">
                 <Boxes className="mr-2 h-4 w-4" />
                 {t('materials.button_label')}
               </Button>
@@ -324,7 +335,29 @@ export default function CalculatorPage() {
               )}
             </div>
 
-            <InputField id="colore" label={t('calculator.color_cost_label', { currency: currency.symbol })} icon={Palette} />
+            <div className="space-y-2">
+              <Label htmlFor="coloreQty">{t('calculator.color_qty_label')}</Label>
+              <div className="flex gap-2">
+                <div className="relative flex items-center flex-1 min-w-0">
+                  <Palette className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input id="coloreQty" type="number" step="0.01" className="pl-10" {...register('coloreQty')} onFocus={() => remindIfNotConfigured(!!materials.color)} />
+                </div>
+                <Select value={coloreUnit} onValueChange={(v) => setValue('coloreUnit', v as WeightUnit)}>
+                  <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="g">{t('materials.unit_g')}</SelectItem>
+                    <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
+                    <SelectItem value="oz">{t('materials.unit_oz')}</SelectItem>
+                    <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {materials.color ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getColorCost(watch('coloreQty'), coloreUnit))}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+              )}
+            </div>
             <InputField id="spedizione" label={t('calculator.shipping_cost_label', { currency: currency.symbol })} icon={Truck} />
             <InputField id="packaging" label={t('calculator.packaging_cost_label', { currency: currency.symbol })} icon={Package} />
             <InputField id="etichette" label={t('calculator.labels_cost_label', { currency: currency.symbol })} icon={Tag} />

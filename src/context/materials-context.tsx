@@ -4,7 +4,7 @@ import React, { createContext, useState, useContext, ReactNode, useCallback, use
 import { useUser } from '@/context/auth-context';
 import { createClient } from '@/lib/supabase/client';
 
-export type MaterialType = 'wax' | 'wick' | 'fragrance';
+export type MaterialType = 'wax' | 'wick' | 'fragrance' | 'color';
 
 export interface MaterialPrice {
   materialType: MaterialType;
