@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen, LifeBuoy } from 'lucide-react';
+import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen, LifeBuoy, FileWarning } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export default function InstructionsPage() {
@@ -61,6 +61,26 @@ export default function InstructionsPage() {
                 </ul>
                 <p>{t('instructions.recipe_calculator.p2')}</p>
                 <p>{t('instructions.recipe_calculator.p3')}</p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-clp">
+              <AccordionTrigger>
+                <div className="flex items-center gap-2">
+                    <FileWarning className="h-5 w-5 text-primary" />
+                    {t('navbar.label_clp')}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="prose prose-sm dark:prose-invert max-w-none">
+                <p>{t('instructions.label_clp.p1')}</p>
+                <ul>
+                  <li>{t('instructions.label_clp.li1')}</li>
+                  <li>{t('instructions.label_clp.li2')}</li>
+                  <li>{t('instructions.label_clp.li3')}</li>
+                  <li>{t('instructions.label_clp.li4')}</li>
+                  <li>{t('instructions.label_clp.li5')}</li>
+                </ul>
+                <p>{t('instructions.label_clp.p2')}</p>
               </AccordionContent>
             </AccordionItem>
 

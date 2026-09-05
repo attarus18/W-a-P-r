@@ -53,6 +53,8 @@
       "settings": "Passen Sie Ihre Konto- und App-Einstellungen an.",
       "instructions": "Lesen Sie das Handbuch, um zu erfahren, wie Sie WaxPro am besten nutzen."
     },
+    "clp_button_badge": "PRO",
+    "clp_button_description": "Erstellen Sie das CLP-Sicherheitsetikett für Ihre Kerzen und exportieren Sie es als druckfertiges PDF.",
     "register_title": "Registrieren Sie sich, um Daten zu speichern",
     "register_description": "Erstellen Sie ein Konto, um Ihre Daten dauerhaft zu speichern."
   },
@@ -473,6 +475,7 @@
       "inventory": "Inventarverwaltung",
       "reports": "Erweiterte Berichte",
       "recipe_archive": "Unbegrenztes Rezeptarchiv",
+      "clp_label": "CLP-Etiketten-Generator",
       "no_ads": "Keine Werbung"
     },
     "start_trial_button": "7-tägige kostenlose Testversion starten",
@@ -505,6 +508,15 @@
       "li5": "Die Kosten für den Farbstoff.",
       "li6": "Eventuelle Versandkosten für Materialien.",
       "p2": "Klicken Sie auf 'Gesamt berechnen', um die Endkosten zu sehen. Sie können die 'Zurücksetzen'-Schaltfläche verwenden, um die Felder zu leeren, und 'Teilen', um das Ergebnis zu kopieren."
+    },
+    "label_clp": {
+      "p1": "Im Bereich CLP-Etikett können Sie das vorgeschriebene Sicherheitsetikett für Duftkerzen erstellen und als PDF exportieren, fertig zum Ausschneiden und Aufkleben auf das Produkt. Diese Funktion ist kostenpflichtigen Plänen vorbehalten.",
+      "li1": "Wählen Sie Form (rechteckig oder rund) und Größe: Die Vorschau aktualisiert sich live, und Sie können mit zwei Fingern ziehen oder zoomen, um den Inhalt manuell zu positionieren.",
+      "li2": "Geben Sie Produktname, Nettogewicht, Wachsart und Duftanteil ein.",
+      "li3": "Wählen Sie die Gefahrenpiktogramme aus und übertragen Sie die H- und P-Sätze sowie die Allergene aus dem Sicherheitsdatenblatt (SDB) Ihres Dufts: Die Seite zeigt Ihnen genau, wo Sie diese finden.",
+      "li4": "Falls vorhanden, geben Sie den UFI-Code und Ihre Firmendaten ein.",
+      "li5": "Exportieren Sie als PDF: Der Text passt sich automatisch an die gewählte Größe an, mit einer gestrichelten Schnittlinie.",
+      "p2": "WaxPro stellt nur das Werkzeug zum Erstellen des Etiketts bereit: Die Richtigkeit der eingegebenen Daten und die Konformität des fertigen Etiketts liegen weiterhin in Ihrer Verantwortung."
     },
     "recipe_calculator": {
       "p1": "Dieses Werkzeug ist unerlässlich für die Erstellung präziser Rezepte. Es hilft Ihnen, die richtigen Proportionen von Wachs, Duft und Farbe basierend auf dem gewünschten Gesamtgewicht zu berechnen.",

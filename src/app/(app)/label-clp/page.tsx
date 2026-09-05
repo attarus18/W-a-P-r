@@ -12,6 +12,10 @@ import { Printer, Loader2, TriangleAlert, FileSearch, ZoomIn, ZoomOut, RotateCcw
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useMaterials } from '@/context/materials-context';
+import { useUser } from '@/context/auth-context';
+import { useSubscription } from '@/context/subscription-context';
+import AccessDenied from '@/components/auth/access-denied';
+import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
 import { GhsPictogram, getGhsPictogramDataUrl, GHS_PICTOGRAM_TYPES, type GhsPictogramType } from '@/lib/ghs-pictograms';
 import { drawArcTextTop } from '@/lib/pdf-arc-text';
 import { wrapTextToCircle } from '@/lib/circle-text-wrap';
@@ -36,6 +40,8 @@ export default function LabelClpPage() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const { waxVariants } = useMaterials();
+  const { user } = useUser();
+  const { hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const [isPrinting, setIsPrinting] = useState(false);
   const [selectedPictograms, setSelectedPictograms] = useState<GhsPictogramType[]>([]);
   const [waxSelectMode, setWaxSelectMode] = useState('other');
@@ -638,6 +644,22 @@ export default function LabelClpPage() {
       setIsPrinting(false);
     }
   };
+
+  if (isSubscriptionLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <AccessDenied featureName={t('navbar.label_clp')} />;
+  }
+
+  if (!hasActiveSubscription) {
+    return <ProFeatureDialog />;
+  }
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">

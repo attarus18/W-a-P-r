@@ -53,6 +53,8 @@
       "settings": "Personnalisez les paramètres de votre compte et de l'application.",
       "instructions": "Consultez le manuel pour apprendre à utiliser au mieux WaxPro."
     },
+    "clp_button_badge": "PRO",
+    "clp_button_description": "Créez l'étiquette de sécurité CLP pour vos bougies et exportez-la en PDF prête à imprimer.",
     "register_title": "Inscrivez-vous pour sauvegarder les données",
     "register_description": "Créez un compte pour sauvegarder vos données de manière permanente."
   },
@@ -473,6 +475,7 @@
       "inventory": "Gestion de l'inventaire",
       "reports": "Rapports avancés",
       "recipe_archive": "Archive de recettes illimitée",
+      "clp_label": "Générateur d'Étiquettes CLP",
       "no_ads": "Sans publicité"
     },
     "start_trial_button": "Commencer l'essai gratuit de 7 jours",
@@ -505,6 +508,15 @@
       "li5": "Le coût du colorant.",
       "li6": "Tous les frais d'expédition pour les matériaux.",
       "p2": "Cliquez sur 'Calculer le total' pour voir le coût final. Vous pouvez utiliser le bouton 'Réinitialiser' pour effacer les champs et 'Partager' pour copier le résultat."
+    },
+    "label_clp": {
+      "p1": "La section Étiquette CLP vous permet de créer l'étiquette de sécurité obligatoire pour les bougies parfumées et de l'exporter en PDF, prête à découper et à coller sur le produit. Cette fonctionnalité est réservée aux plans payants.",
+      "li1": "Choisissez la forme (rectangulaire ou circulaire) et la taille : l'aperçu se met à jour en direct, et vous pouvez glisser ou pincer avec deux doigts pour positionner le contenu manuellement.",
+      "li2": "Saisissez le nom du produit, le poids net, le type de cire et le pourcentage de parfum.",
+      "li3": "Sélectionnez les pictogrammes de danger et recopiez les mentions H et P ainsi que les allergènes depuis la Fiche de Données de Sécurité (FDS) de votre parfum : la page vous indique exactement où les trouver.",
+      "li4": "Si disponible, saisissez le code UFI et les informations de votre entreprise.",
+      "li5": "Exportez en PDF : le texte s'adapte automatiquement à la taille choisie, avec un contour en pointillés prêt à découper.",
+      "p2": "WaxPro fournit uniquement l'outil pour composer l'étiquette : l'exactitude des données saisies et la conformité de l'étiquette finale restent de votre responsabilité."
     },
     "recipe_calculator": {
       "p1": "Cet outil est essentiel pour créer des recettes précises. Il vous aide à calculer les bonnes proportions de cire, de parfum et de couleur en fonction du poids total souhaité.",

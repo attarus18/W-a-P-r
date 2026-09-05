@@ -53,6 +53,8 @@
       "settings": "Customize your account and app settings.",
       "instructions": "Check the manual to learn how to best use WaxPro."
     },
+    "clp_button_badge": "PRO",
+    "clp_button_description": "Create the CLP safety label for your candles and export it as a ready-to-print PDF.",
     "register_title": "Sign up to save data",
     "register_description": "Create an account to save your data permanently."
   },
@@ -473,6 +475,7 @@
       "inventory": "Inventory Management",
       "reports": "Advanced Reports",
       "recipe_archive": "Unlimited Recipe Archive",
+      "clp_label": "CLP Label Generator",
       "no_ads": "No ads"
     },
     "start_trial_button": "Start 7-Day Free Trial",
@@ -505,6 +508,15 @@
       "li5": "The cost of the colorant.",
       "li6": "Any shipping costs for materials.",
       "p2": "Click 'Calculate Total' to see the final cost. You can use the 'Reset' button to clear the fields and 'Share' to copy the result."
+    },
+    "label_clp": {
+      "p1": "The CLP Label section lets you create the mandatory safety label for scented candles and export it as a PDF, ready to cut out and stick on the product. This feature is reserved for paid plans.",
+      "li1": "Choose the shape (rectangle or circle) and size: the preview updates live, and you can drag or pinch with two fingers to position the content by hand.",
+      "li2": "Enter the product name, net weight, wax type, and fragrance percentage.",
+      "li3": "Select the hazard pictograms and copy the H and P phrases and allergens from your fragrance's Safety Data Sheet (SDS) — the page shows you exactly where to find them.",
+      "li4": "If available, enter the UFI code and your company details.",
+      "li5": "Export to PDF: the text automatically scales to fit the chosen size, with a dashed outline ready to cut.",
+      "p2": "WaxPro only provides the tool to compose the label: the accuracy of the data you enter and the compliance of the final label remain your responsibility."
     },
     "recipe_calculator": {
       "p1": "This tool is essential for creating precise recipes. It helps you calculate the correct proportions of wax, fragrance, and color based on the desired total weight.",

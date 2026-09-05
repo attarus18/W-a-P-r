@@ -53,6 +53,8 @@
       "settings": "Personalice la configuración de su cuenta y de la aplicación.",
       "instructions": "Consulte el manual para aprender a usar WaxPro de la mejor manera."
     },
+    "clp_button_badge": "PRO",
+    "clp_button_description": "Crea la etiqueta de seguridad CLP para tus velas y expórtala en PDF lista para imprimir.",
     "register_title": "Regístrese para guardar los datos",
     "register_description": "Cree una cuenta para guardar sus datos de forma permanente."
   },
@@ -473,6 +475,7 @@
       "inventory": "Gestión de inventario",
       "reports": "Informes avanzados",
       "recipe_archive": "Archivo de recetas ilimitado",
+      "clp_label": "Generador de Etiquetas CLP",
       "no_ads": "Sin anuncios"
     },
     "start_trial_button": "Iniciar prueba gratuita de 7 días",
@@ -505,6 +508,15 @@
       "li5": "El costo del colorante.",
       "li6": "Cualquier costo de envío de materiales.",
       "p2": "Haga clic en 'Calcular total' para ver el costo final. Puede usar el botón 'Reiniciar' para borrar los campos y 'Compartir' para copiar el resultado."
+    },
+    "label_clp": {
+      "p1": "La sección Etiqueta CLP te permite crear la etiqueta de seguridad obligatoria para velas perfumadas y exportarla en PDF, lista para recortar y pegar en el producto. Esta función está reservada para los planes de pago.",
+      "li1": "Elige la forma (rectangular o circular) y el tamaño: la vista previa se actualiza en vivo, y puedes arrastrar o pellizcar con dos dedos para posicionar el contenido manualmente.",
+      "li2": "Introduce el nombre del producto, el peso neto, el tipo de cera y el porcentaje de fragancia.",
+      "li3": "Selecciona los pictogramas de peligro y copia las frases H y P y los alérgenos de la Ficha de Datos de Seguridad (FDS) de tu fragancia: la página te indica exactamente dónde encontrarlos.",
+      "li4": "Si está disponible, introduce el código UFI y los datos de tu empresa.",
+      "li5": "Exporta a PDF: el texto se adapta automáticamente al tamaño elegido, con un contorno punteado listo para recortar.",
+      "p2": "WaxPro solo proporciona la herramienta para componer la etiqueta: la exactitud de los datos introducidos y el cumplimiento de la etiqueta final siguen siendo tu responsabilidad."
     },
     "recipe_calculator": {
       "p1": "Esta herramienta es esencial para crear recetas precisas. Le ayuda a calcular las proporciones correctas de cera, fragancia y color según el peso total deseado.",

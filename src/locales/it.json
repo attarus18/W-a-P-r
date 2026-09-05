@@ -53,6 +53,8 @@
       "settings": "Personalizza le impostazioni del tuo account e dell'app.",
       "instructions": "Consulta il manuale per scoprire come usare al meglio WaxPro."
     },
+    "clp_button_badge": "PRO",
+    "clp_button_description": "Crea l'etichetta di sicurezza CLP per le tue candele ed esportala in PDF pronta da stampare.",
     "register_title": "Registrati per salvare i dati",
     "register_description": "Crea un account per salvare i tuoi dati in modo permanente."
   },
@@ -473,6 +475,7 @@
       "inventory": "Gestione Magazzino",
       "reports": "Report Avanzati",
       "recipe_archive": "Archivio Ricette Illimitato",
+      "clp_label": "Generatore Etichette CLP",
       "no_ads": "Nessuna pubblicità"
     },
     "start_trial_button": "Inizia Prova Gratuita di 7 Giorni",
@@ -505,6 +508,15 @@
       "li5": "Il costo del colorante.",
       "li6": "Eventuali costi di spedizione per i materiali.",
       "p2": "Clicca su 'Calcola Totale' per vedere il costo finale. Puoi usare il pulsante 'Reset' per azzerare i campi e 'Condividi' per copiare il risultato."
+    },
+    "label_clp": {
+      "p1": "La sezione Etichetta CLP ti permette di creare l'etichetta di sicurezza obbligatoria per le candele profumate e di esportarla in PDF, pronta da ritagliare e incollare sul prodotto. È una funzionalità riservata ai piani a pagamento.",
+      "li1": "Scegli forma (rettangolare o circolare) e dimensioni: l'anteprima si aggiorna dal vivo e puoi trascinare o pizzicare con due dita per posizionare il contenuto a mano.",
+      "li2": "Inserisci nome prodotto, peso netto, tipo di cera e percentuale di fragranza.",
+      "li3": "Seleziona i pittogrammi di pericolo e copia le frasi H e P e gli allergeni dalla Scheda Dati di Sicurezza (SDS) della tua fragranza: trovi indicato dove cercarli direttamente nella pagina.",
+      "li4": "Se disponibile, inserisci il codice UFI e i dati della tua azienda.",
+      "li5": "Esporta in PDF: il testo si adatta automaticamente alle dimensioni scelte, con un contorno tratteggiato pronto da ritagliare.",
+      "p2": "WaxPro fornisce solo lo strumento per comporre l'etichetta: la correttezza dei dati inseriti e la conformità dell'etichetta finale restano sotto la tua responsabilità."
     },
     "recipe_calculator": {
       "p1": "Questo strumento è essenziale per creare ricette precise. Ti aiuta a calcolare le giuste proporzioni di cera, fragranza e colore in base al peso totale desiderato.",
