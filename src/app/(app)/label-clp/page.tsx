@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Printer, Loader2, TriangleAlert } from 'lucide-react';
+import { Printer, Loader2, TriangleAlert, FileSearch } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useMaterials } from '@/context/materials-context';
@@ -235,6 +235,20 @@ export default function LabelClpPage() {
       <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 flex gap-3 items-start">
         <TriangleAlert className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
         <p className="text-sm text-muted-foreground">{t('label_clp.disclaimer')}</p>
+      </div>
+
+      <div className="rounded-lg border border-input bg-card p-4 flex gap-3 items-start">
+        <FileSearch className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+        <div className="text-sm text-muted-foreground space-y-1">
+          <p className="font-medium text-foreground">{t('label_clp.sds_guide_title')}</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>{t('label_clp.sds_guide_pictograms')}</li>
+            <li>{t('label_clp.sds_guide_h_phrases')}</li>
+            <li>{t('label_clp.sds_guide_p_phrases')}</li>
+            <li>{t('label_clp.sds_guide_allergens')}</li>
+            <li>{t('label_clp.sds_guide_ufi')}</li>
+          </ul>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
