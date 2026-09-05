@@ -331,7 +331,7 @@ export default function CalculatorPage() {
           <CardContent>
             <p className="text-4xl font-bold text-primary">{formatCurrency(totalCost)}</p>
           </CardContent>
-          <CardFooter className="justify-center gap-4">
+          <CardFooter className="flex-wrap justify-center gap-4">
             <Button variant="outline" onClick={handleShare}>
               <Share2 className="mr-2 h-4 w-4" />
               {t('calculator.share_button')}
