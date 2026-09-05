@@ -33,8 +33,10 @@ const localeMap = { en: enUS, it, es, fr, de };
 
 type FormValues = {
   nomeProdotto: string;
+  ceraVariantId: string;
   ceraQty: number;
   ceraUnit: WeightUnit;
+  stoppinoVariantId: string;
   stoppinoQty: number;
   contenitore: number;
   fragranzaQty: number;
@@ -51,8 +53,10 @@ export default function CalculatorPage() {
   const { register, handleSubmit, reset, getValues, watch, setValue, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       nomeProdotto: '',
+      ceraVariantId: '',
       ceraQty: 0,
       ceraUnit: 'g',
+      stoppinoVariantId: '',
       stoppinoQty: 0,
       contenitore: 0,
       fragranzaQty: 0,
@@ -71,7 +75,7 @@ export default function CalculatorPage() {
   const { toast } = useToast();
   const { t, language } = useLanguage();
   const { formatCurrency, currency } = useCurrency();
-  const { materials } = useMaterials();
+  const { waxVariants, wickVariants, fragrance, color } = useMaterials();
   const dateLocale = localeMap[language] || enUS;
 
   const [materialsDialogOpen, setMaterialsDialogOpen] = useState(false);
@@ -81,6 +85,8 @@ export default function CalculatorPage() {
   const ceraUnit = watch('ceraUnit');
   const fragranzaUnit = watch('fragranzaUnit');
   const coloreUnit = watch('coloreUnit');
+  const ceraVariantId = watch('ceraVariantId');
+  const stoppinoVariantId = watch('stoppinoVariantId');
 
   const remindIfNotConfigured = (isConfigured: boolean) => {
     if (hasRemindedRef.current || isConfigured) return;
@@ -88,29 +94,31 @@ export default function CalculatorPage() {
     setReminderOpen(true);
   };
 
-  const getWaxCost = (qty: number, unit: WeightUnit) => {
-    if (!materials.wax) return 0;
-    return convertWeight(Number(qty) || 0, unit, materials.wax.unit as WeightUnit) * materials.wax.price;
+  const getWaxCost = (variantId: string, qty: number, unit: WeightUnit) => {
+    const variant = waxVariants.find((v) => v.id === variantId);
+    if (!variant) return 0;
+    return convertWeight(Number(qty) || 0, unit, variant.unit as WeightUnit) * variant.price;
   };
-  const getWickCost = (qty: number) => {
-    if (!materials.wick) return 0;
-    return (Number(qty) || 0) * materials.wick.price;
+  const getWickCost = (variantId: string, qty: number) => {
+    const variant = wickVariants.find((v) => v.id === variantId);
+    if (!variant) return 0;
+    return (Number(qty) || 0) * variant.price;
   };
   const getFragranceCost = (qty: number, unit: VolumeUnit) => {
-    if (!materials.fragrance) return 0;
-    return convertVolume(Number(qty) || 0, unit, materials.fragrance.unit as VolumeUnit) * materials.fragrance.price;
+    if (!fragrance) return 0;
+    return convertVolume(Number(qty) || 0, unit, fragrance.unit as VolumeUnit) * fragrance.price;
   };
   const getColorCost = (qty: number, unit: WeightUnit) => {
-    if (!materials.color) return 0;
-    return convertWeight(Number(qty) || 0, unit, materials.color.unit as WeightUnit) * materials.color.price;
+    if (!color) return 0;
+    return convertWeight(Number(qty) || 0, unit, color.unit as WeightUnit) * color.price;
   };
 
   const onSubmit: SubmitHandler<FormValues> = data => {
-    const { nomeProdotto, ceraQty, ceraUnit, stoppinoQty, fragranzaQty, fragranzaUnit, coloreQty, coloreUnit, ...flatCostFields } = data;
+    const { nomeProdotto, ceraVariantId, ceraQty, ceraUnit, stoppinoVariantId, stoppinoQty, fragranzaQty, fragranzaUnit, coloreQty, coloreUnit, ...flatCostFields } = data;
     const flatCost = Object.values(flatCostFields).reduce((acc, value) => acc + (Number(value) || 0), 0);
     const cost = flatCost
-      + getWaxCost(ceraQty, ceraUnit)
-      + getWickCost(stoppinoQty)
+      + getWaxCost(ceraVariantId, ceraQty, ceraUnit)
+      + getWickCost(stoppinoVariantId, stoppinoQty)
       + getFragranceCost(fragranzaQty, fragranzaUnit)
       + getColorCost(coloreQty, coloreUnit);
     setTotalCost(cost);
@@ -190,9 +198,12 @@ export default function CalculatorPage() {
         doc.text(t('calculator.form_title').toUpperCase(), margin, y);
         y += 15;
 
+        const selectedWax = waxVariants.find((v) => v.id === formValues.ceraVariantId);
+        const selectedWick = wickVariants.find((v) => v.id === formValues.stoppinoVariantId);
+
         const costs = [
-            { label: `${t('calculator.wax_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.ceraQty} ${t(`materials.unit_${formValues.ceraUnit}`)})`, value: getWaxCost(formValues.ceraQty, formValues.ceraUnit) },
-            { label: `${t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.stoppinoQty})`, value: getWickCost(formValues.stoppinoQty) },
+            { label: `${t('calculator.wax_cost_label', { currency: '' }).replace(' ()', '').trim()}${selectedWax ? ` ${selectedWax.name}` : ''} (${formValues.ceraQty} ${t(`materials.unit_${formValues.ceraUnit}`)})`, value: getWaxCost(formValues.ceraVariantId, formValues.ceraQty, formValues.ceraUnit) },
+            { label: `${t('calculator.wick_cost_label', { currency: '' }).replace(' ()', '').trim()}${selectedWick ? ` ${selectedWick.name}` : ''} (${formValues.stoppinoQty})`, value: getWickCost(formValues.stoppinoVariantId, formValues.stoppinoQty) },
             { label: t('calculator.container_cost_label', { currency: '' }).replace(' ()', '').trim(), value: formValues.contenitore },
             { label: `${t('calculator.fragrance_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.fragranzaQty} ${t(`materials.unit_${formValues.fragranzaUnit}`)})`, value: getFragranceCost(formValues.fragranzaQty, formValues.fragranzaUnit) },
             { label: `${t('calculator.color_cost_label', { currency: '' }).replace(' ()', '').trim()} (${formValues.coloreQty} ${t(`materials.unit_${formValues.coloreUnit}`)})`, value: getColorCost(formValues.coloreQty, formValues.coloreUnit) },
@@ -274,11 +285,47 @@ export default function CalculatorPage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="ceraVariantId">{t('calculator.wax_type_label')}</Label>
+              <Select
+                value={ceraVariantId}
+                onValueChange={(v) => setValue('ceraVariantId', v)}
+                onOpenChange={(isOpen) => { if (isOpen) remindIfNotConfigured(waxVariants.length > 0); }}
+              >
+                <SelectTrigger id="ceraVariantId" disabled={waxVariants.length === 0}>
+                  <SelectValue placeholder={t('calculator.select_wax_placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {waxVariants.map((v) => (
+                    <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="stoppinoVariantId">{t('calculator.wick_type_label')}</Label>
+              <Select
+                value={stoppinoVariantId}
+                onValueChange={(v) => setValue('stoppinoVariantId', v)}
+                onOpenChange={(isOpen) => { if (isOpen) remindIfNotConfigured(wickVariants.length > 0); }}
+              >
+                <SelectTrigger id="stoppinoVariantId" disabled={wickVariants.length === 0}>
+                  <SelectValue placeholder={t('calculator.select_wick_placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {wickVariants.map((v) => (
+                    <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="ceraQty">{t('calculator.wax_qty_label')}</Label>
               <div className="flex gap-2">
                 <div className="relative flex items-center flex-1 min-w-0">
                   <Flame className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} onFocus={() => remindIfNotConfigured(!!materials.wax)} />
+                  <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} />
                 </div>
                 <Select value={ceraUnit} onValueChange={(v) => setValue('ceraUnit', v as WeightUnit)}>
                   <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
@@ -290,10 +337,10 @@ export default function CalculatorPage() {
                   </SelectContent>
                 </Select>
               </div>
-              {materials.wax ? (
-                <p className="text-xs text-muted-foreground">{formatCurrency(getWaxCost(watch('ceraQty'), ceraUnit))}</p>
+              {ceraVariantId ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getWaxCost(ceraVariantId, watch('ceraQty'), ceraUnit))}</p>
               ) : (
-                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+                <p className="text-xs text-muted-foreground">{t('materials.select_type_hint')}</p>
               )}
             </div>
 
@@ -301,12 +348,12 @@ export default function CalculatorPage() {
               <Label htmlFor="stoppinoQty">{t('calculator.wick_qty_label')}</Label>
               <div className="relative flex items-center">
                 <Combine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input id="stoppinoQty" type="number" step="1" className="pl-10" {...register('stoppinoQty')} onFocus={() => remindIfNotConfigured(!!materials.wick)} />
+                <Input id="stoppinoQty" type="number" step="1" className="pl-10" {...register('stoppinoQty')} />
               </div>
-              {materials.wick ? (
-                <p className="text-xs text-muted-foreground">{formatCurrency(getWickCost(watch('stoppinoQty')))}</p>
+              {stoppinoVariantId ? (
+                <p className="text-xs text-muted-foreground">{formatCurrency(getWickCost(stoppinoVariantId, watch('stoppinoQty')))}</p>
               ) : (
-                <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
+                <p className="text-xs text-muted-foreground">{t('materials.select_type_hint')}</p>
               )}
             </div>
 
@@ -317,7 +364,7 @@ export default function CalculatorPage() {
               <div className="flex gap-2">
                 <div className="relative flex items-center flex-1 min-w-0">
                   <Droplets className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} onFocus={() => remindIfNotConfigured(!!materials.fragrance)} />
+                  <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} onFocus={() => remindIfNotConfigured(!!fragrance)} />
                 </div>
                 <Select value={fragranzaUnit} onValueChange={(v) => setValue('fragranzaUnit', v as VolumeUnit)}>
                   <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
@@ -328,7 +375,7 @@ export default function CalculatorPage() {
                   </SelectContent>
                 </Select>
               </div>
-              {materials.fragrance ? (
+              {fragrance ? (
                 <p className="text-xs text-muted-foreground">{formatCurrency(getFragranceCost(watch('fragranzaQty'), fragranzaUnit))}</p>
               ) : (
                 <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
@@ -340,7 +387,7 @@ export default function CalculatorPage() {
               <div className="flex gap-2">
                 <div className="relative flex items-center flex-1 min-w-0">
                   <Palette className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input id="coloreQty" type="number" step="0.01" className="pl-10" {...register('coloreQty')} onFocus={() => remindIfNotConfigured(!!materials.color)} />
+                  <Input id="coloreQty" type="number" step="0.01" className="pl-10" {...register('coloreQty')} onFocus={() => remindIfNotConfigured(!!color)} />
                 </div>
                 <Select value={coloreUnit} onValueChange={(v) => setValue('coloreUnit', v as WeightUnit)}>
                   <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
@@ -352,7 +399,7 @@ export default function CalculatorPage() {
                   </SelectContent>
                 </Select>
               </div>
-              {materials.color ? (
+              {color ? (
                 <p className="text-xs text-muted-foreground">{formatCurrency(getColorCost(watch('coloreQty'), coloreUnit))}</p>
               ) : (
                 <p className="text-xs text-muted-foreground">{t('materials.not_configured_hint')}</p>
