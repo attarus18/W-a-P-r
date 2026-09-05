@@ -84,6 +84,17 @@ export const MaterialsProvider = ({ children }: { children: ReactNode }) => {
     refetch().finally(() => setIsLoading(false));
   }, [user, refetch]);
 
+  // Al login, azzera qualsiasi bozza da ospite inserita in questa stessa
+  // scheda: senza questo, riappare dopo un logout successivo perche' lo
+  // stato locale non viene mai svuotato al cambio di account.
+  useEffect(() => {
+    if (!user) return;
+    setLocalWax([]);
+    setLocalWick([]);
+    setLocalFragrance(undefined);
+    setLocalColor(undefined);
+  }, [user]);
+
   const waxVariants = user ? remoteWax : localWax;
   const wickVariants = user ? remoteWick : localWick;
   const fragrance = user ? remoteFragrance : localFragrance;
