@@ -222,22 +222,20 @@ export default function CalculatorPage() {
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
-          <p className="text-muted-foreground">{t('calculator.description')}</p>
-        </div>
-        <MaterialsDialog>
-          <Button type="button" variant="outline" size="sm" className="shrink-0">
-            <Boxes className="mr-2 h-4 w-4" />
-            {t('materials.button_label')}
-          </Button>
-        </MaterialsDialog>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
+        <p className="text-muted-foreground">{t('calculator.description')}</p>
       </div>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <CardHeader>
+          <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
             <CardTitle>{t('calculator.form_title')}</CardTitle>
+            <MaterialsDialog>
+              <Button type="button" variant="outline" size="sm" className="shrink-0">
+                <Boxes className="mr-2 h-4 w-4" />
+                {t('materials.button_label')}
+              </Button>
+            </MaterialsDialog>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2 sm:col-span-2">
@@ -248,12 +246,12 @@ export default function CalculatorPage() {
             <div className="space-y-2">
               <Label htmlFor="ceraQty">{t('calculator.wax_qty_label')}</Label>
               <div className="flex gap-2">
-                <div className="relative flex items-center flex-1">
+                <div className="relative flex items-center flex-1 min-w-0">
                   <Flame className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input id="ceraQty" type="number" step="0.01" className="pl-10" {...register('ceraQty')} />
                 </div>
                 <Select value={ceraUnit} onValueChange={(v) => setValue('ceraUnit', v as WeightUnit)}>
-                  <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="g">{t('materials.unit_g')}</SelectItem>
                     <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
@@ -287,12 +285,12 @@ export default function CalculatorPage() {
             <div className="space-y-2">
               <Label htmlFor="fragranzaQty">{t('calculator.fragrance_qty_label')}</Label>
               <div className="flex gap-2">
-                <div className="relative flex items-center flex-1">
+                <div className="relative flex items-center flex-1 min-w-0">
                   <Droplets className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input id="fragranzaQty" type="number" step="0.01" className="pl-10" {...register('fragranzaQty')} />
                 </div>
                 <Select value={fragranzaUnit} onValueChange={(v) => setValue('fragranzaUnit', v as VolumeUnit)}>
-                  <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="ml">{t('materials.unit_ml')}</SelectItem>
                     <SelectItem value="l">{t('materials.unit_l')}</SelectItem>

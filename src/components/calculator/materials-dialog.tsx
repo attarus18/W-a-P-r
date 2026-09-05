@@ -88,10 +88,10 @@ export default function MaterialsDialog({ children }: MaterialsDialogProps) {
                 min="0"
                 value={waxPrice}
                 onChange={(e) => setWaxPrice(e.target.value)}
-                className="flex-1"
+                className="flex-1 min-w-0"
               />
               <Select value={waxUnit} onValueChange={(v) => setWaxUnit(v as 'kg' | 'lb')}>
-                <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
                   <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
@@ -122,10 +122,10 @@ export default function MaterialsDialog({ children }: MaterialsDialogProps) {
                 min="0"
                 value={fragrancePrice}
                 onChange={(e) => setFragrancePrice(e.target.value)}
-                className="flex-1"
+                className="flex-1 min-w-0"
               />
               <Select value={fragranceUnit} onValueChange={(v) => setFragranceUnit(v as 'ml' | 'l' | 'fl_oz')}>
-                <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ml">{t('materials.unit_ml')}</SelectItem>
                   <SelectItem value="l">{t('materials.unit_l')}</SelectItem>
