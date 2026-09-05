@@ -14,7 +14,7 @@ import { useLanguage } from '@/context/language-context';
 import { useMaterials } from '@/context/materials-context';
 import { GhsPictogram, getGhsPictogramDataUrl, GHS_PICTOGRAM_TYPES, type GhsPictogramType } from '@/lib/ghs-pictograms';
 import jsPDF from 'jspdf';
-import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
+import { savePdf } from '@/lib/pdf-utils';
 
 type FormValues = {
   productName: string;
@@ -68,27 +68,9 @@ export default function LabelClpPage() {
       const margin = 30;
       let y = margin;
 
-      const primaryColor = '#f97316';
       const textColor = '#111827';
       const mutedColor = '#6b7280';
       const lineColor = '#e5e7eb';
-
-      // --- HEADER ---
-      const logoSize = 34;
-      const logoDataUrl = await getPdfLogoDataUrl();
-      const titleX = logoDataUrl ? margin + logoSize + 12 : margin;
-      if (logoDataUrl) {
-        doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
-      }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(30);
-      doc.setTextColor(primaryColor);
-      doc.text('WAX PRO', titleX, y + 20, { charSpace: 2 });
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.setTextColor(mutedColor);
-      doc.text(t('label_clp.title').toUpperCase(), titleX, y + 32, { charSpace: 1 });
-      y += logoSize + 24;
 
       // --- PRODUCT NAME & SUBTITLE ---
       doc.setFont('helvetica', 'bold');
