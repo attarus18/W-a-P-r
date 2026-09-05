@@ -145,22 +145,21 @@ ${t('recipe_calculator.result_title')}:
         const lightBgColor = '#f9fafb';
   
         // --- HEADER ---
+        const logoSize = 12; // doc in unit 'mm' (default jsPDF), a differenza delle altre pagine in 'px'
         const logoDataUrl = await getPdfLogoDataUrl();
+        const titleX = logoDataUrl ? margin + logoSize + 4 : margin;
         if (logoDataUrl) {
-            const logoSize = 10; // doc in unit 'mm' (default jsPDF), a differenza delle altre pagine in 'px'
             doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
-            y += logoSize + 4;
         }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
         doc.setTextColor(primaryColor);
-        doc.text('WAX PRO', pageWidth / 2, y, { align: 'center', charSpace: 2 });
-        y += 15;
+        doc.text('WAX PRO', titleX, y + 7, { charSpace: 2 });
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(mutedColor);
-        doc.text(t('recipe_calculator.title').toUpperCase(), pageWidth / 2, y, { align: 'center', charSpace: 1 });
-        y += 30;
+        doc.text(t('recipe_calculator.title').toUpperCase(), titleX, y + 12, { charSpace: 1 });
+        y += logoSize + 8;
   
         // --- RECIPE DETAILS ---
         doc.setFontSize(11);

@@ -140,22 +140,21 @@ export default function CalculatorPage() {
         const mutedColor = '#6b7280';
 
         // --- HEADER ---
+        const logoSize = 34;
         const logoDataUrl = await getPdfLogoDataUrl();
+        const titleX = logoDataUrl ? margin + logoSize + 12 : margin;
         if (logoDataUrl) {
-            const logoSize = 32;
             doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
-            y += logoSize + 8;
         }
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(24);
+        doc.setFontSize(30);
         doc.setTextColor(primaryColor);
-        doc.text('WAX PRO', pageWidth / 2, y, { align: 'center', charSpace: 2 });
-        y += 15;
+        doc.text('WAX PRO', titleX, y + 20, { charSpace: 2 });
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(mutedColor);
-        doc.text(t('calculator.title').toUpperCase(), pageWidth / 2, y, { align: 'center', charSpace: 1 });
-        y += 30;
+        doc.text(t('calculator.title').toUpperCase(), titleX, y + 32, { charSpace: 1 });
+        y += logoSize + 16;
 
         const formValues = getValues();
 
@@ -204,7 +203,7 @@ export default function CalculatorPage() {
         y += 15;
 
         // --- TOTAL COST ---
-        doc.setFillColor(primaryColor);
+        doc.setFillColor('#000000');
         doc.rect(margin, y, pageWidth - (margin * 2), 50, 'F');
         
         y += 20;
