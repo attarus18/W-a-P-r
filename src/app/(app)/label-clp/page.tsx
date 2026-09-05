@@ -533,7 +533,10 @@ export default function LabelClpPage() {
           offsetXpx = offsetMm.x * MM_TO_PX;
           offsetYpx = offsetMm.y * MM_TO_PX;
         } else {
-          const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
+          // Cerca la scala piu' grande che ci sta: cosi' un'etichetta grande
+          // con poco contenuto usa un testo proporzionalmente piu' grande
+          // invece di restare pinnato piccolo indipendentemente dal diametro.
+          const candidateScales = [2, 1.75, 1.5, 1.25, 1, 0.9, 0.8, 0.7, 0.6, 0.5];
           chosenScale = candidateScales[candidateScales.length - 1];
           for (const candidate of candidateScales) {
             const bottomY = renderCircularLabel(candidate, 'measure', 0, 0, radius);
@@ -580,9 +583,13 @@ export default function LabelClpPage() {
         offsetXpx = offsetMm.x * MM_TO_PX;
         offsetYpx = offsetMm.y * MM_TO_PX;
       } else {
-        // Prova a inserire tutto a piena scala, poi rimpicciolisce testo e
-        // interlinee finche' il contenuto non entra nell'area disponibile.
-        const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
+        // Cerca la scala piu' grande che ci sta nell'area disponibile: un
+        // rettangolo grande con poco contenuto ottiene cosi' un testo
+        // proporzionalmente piu' grande, che segue le misure date invece di
+        // restare pinnato alla stessa dimensione qualunque sia il formato.
+        // Se il contenuto e' troppo per il rettangolo, si rimpicciolisce
+        // finche' non ci sta.
+        const candidateScales = [2, 1.75, 1.5, 1.25, 1, 0.9, 0.8, 0.7, 0.6, 0.5];
         chosenScale = candidateScales[candidateScales.length - 1];
         for (const candidate of candidateScales) {
           const h = renderLabel(candidate, 'measure', 0, 0);
