@@ -13,6 +13,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useMaterials } from '@/context/materials-context';
 import { GhsPictogram, getGhsPictogramDataUrl, GHS_PICTOGRAM_TYPES, type GhsPictogramType } from '@/lib/ghs-pictograms';
+import { drawArcTextTop } from '@/lib/pdf-arc-text';
+import { wrapTextToCircle } from '@/lib/circle-text-wrap';
 import jsPDF from 'jspdf';
 import { savePdf } from '@/lib/pdf-utils';
 
@@ -133,6 +135,81 @@ export default function LabelClpPage() {
 
   const togglePictogram = (type: GhsPictogramType) => {
     setSelectedPictograms((prev) => (prev.includes(type) ? prev.filter((p) => p !== type) : [...prev, type]));
+  };
+
+  interface PreviewLine {
+    text: string;
+    y: number;
+    fontSize: number;
+    bold?: boolean;
+    color?: string;
+    mono?: boolean;
+  }
+
+  // Righe centrate e "ristrette" per seguire la corda del cerchio, cosi'
+  // l'anteprima su schermo assomiglia gia' a un'etichetta tonda finita
+  // invece di una fascia rettangolare: stessa logica di wrapTextToCircle
+  // usata per il PDF, solo con una stima di larghezza più economica (va
+  // bene per un'anteprima, non serve la precisione di jsPDF).
+  const buildCircleLines = (radius: number) => {
+    let y = -radius * 0.62;
+    const lines: PreviewLine[] = [];
+
+    lines.push({
+      text: [
+        values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
+        t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
+      ].filter(Boolean).join(' · '),
+      y,
+      fontSize: 7,
+      color: '#6b7280',
+    });
+    y += 12;
+
+    lines.push({ text: `${t('label_clp.net_weight_label')}: ${values.netWeight || 0} g`, y, fontSize: 8, bold: true });
+    y += 14;
+
+    let pictogramsY: number | null = null;
+    if (selectedPictograms.length > 0) {
+      pictogramsY = y;
+      y += 30;
+    }
+
+    const measure = (str: string) => str.length * 3.6;
+
+    if (values.hPhrases) {
+      const wrapped = wrapTextToCircle(values.hPhrases, measure, radius, 8, y);
+      wrapped.lines.forEach((l) => lines.push({ text: l.text, y: l.y, fontSize: 6 }));
+      y = wrapped.endY + 4;
+    }
+    if (values.pPhrases) {
+      const wrapped = wrapTextToCircle(values.pPhrases, measure, radius, 8, y);
+      wrapped.lines.forEach((l) => lines.push({ text: l.text, y: l.y, fontSize: 6 }));
+      y = wrapped.endY + 4;
+    }
+    if (values.allergens) {
+      const wrapped = wrapTextToCircle(`${t('label_clp.allergens_label')}: ${values.allergens}`, measure, radius, 8, y);
+      wrapped.lines.forEach((l) => lines.push({ text: l.text, y: l.y, fontSize: 6, bold: true }));
+      y = wrapped.endY + 4;
+    }
+    if (values.ufiCode) {
+      lines.push({ text: `UFI: ${values.ufiCode}`, y, fontSize: 6, mono: true });
+      y += 9;
+    }
+    if (values.companyName) {
+      lines.push({ text: values.companyName, y, fontSize: 6, bold: true });
+      y += 8;
+    }
+    if (values.companyAddress) {
+      lines.push({ text: values.companyAddress, y, fontSize: 6, color: '#6b7280' });
+      y += 8;
+    }
+    if (values.companyEmail) {
+      lines.push({ text: values.companyEmail, y, fontSize: 6, color: '#6b7280' });
+      y += 8;
+    }
+
+    return { lines, pictogramsY };
   };
 
   const handleGeneratePdf = async () => {
@@ -311,9 +388,190 @@ export default function LabelClpPage() {
         return y - startY;
       };
 
+      // Layout dedicato al cerchio: nome prodotto ad arco lungo il bordo
+      // superiore (come su un coperchio di barattolo) e il resto centrato,
+      // con i paragrafi lunghi (frasi H/P, allergeni) che si restringono
+      // riga per riga seguendo la corda del cerchio invece di restare una
+      // fascia rettangolare. Ritorna l'estensione verticale occupata,
+      // relativa al centro, per il calcolo automatico della scala.
+      const renderCircularLabel = (
+        scale: number,
+        mode: 'measure' | 'draw',
+        centerX: number,
+        centerY: number,
+        radius: number
+      ): number => {
+        const s = (v: number) => v * scale;
+        const measureWidth = (str: string) => doc.getTextWidth(str);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(s(15));
+        if (mode === 'draw' && values.productName) {
+          doc.setTextColor(textColor);
+          drawArcTextTop(doc, values.productName.toUpperCase(), centerX, centerY, radius * 0.88);
+        }
+
+        let y = -radius * 0.62;
+
+        const subtitleParts = [
+          values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
+          t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
+        ].filter(Boolean);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(s(8));
+        if (mode === 'draw') {
+          doc.setTextColor(mutedColor);
+          doc.text(subtitleParts.join(' · '), centerX, centerY + y, { align: 'center' });
+        }
+        y += s(14);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(s(10));
+        if (mode === 'draw') {
+          doc.setTextColor(textColor);
+          doc.text(`${t('label_clp.net_weight_label')}: ${values.netWeight || 0} g`, centerX, centerY + y, { align: 'center' });
+        }
+        y += s(16);
+
+        if (selectedPictograms.length > 0) {
+          const iconSize = s(28);
+          const gap = s(6);
+          const totalWidth = selectedPictograms.length * iconSize + (selectedPictograms.length - 1) * gap;
+          if (mode === 'draw') {
+            let px = centerX - totalWidth / 2;
+            selectedPictograms.forEach((type) => {
+              const url = pictogramDataUrls[type];
+              if (url) doc.addImage(url, 'PNG', px, centerY + y, iconSize, iconSize);
+              px += iconSize + gap;
+            });
+          }
+          y += iconSize + s(10);
+        }
+
+        if (values.hPhrases) {
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(s(7));
+          const { lines, endY } = wrapTextToCircle(values.hPhrases, measureWidth, radius, s(9), y);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            lines.forEach((line) => doc.text(line.text, centerX, centerY + line.y, { align: 'center' }));
+          }
+          y = endY + s(4);
+        }
+
+        if (values.pPhrases) {
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(s(7));
+          const { lines, endY } = wrapTextToCircle(values.pPhrases, measureWidth, radius, s(9), y);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            lines.forEach((line) => doc.text(line.text, centerX, centerY + line.y, { align: 'center' }));
+          }
+          y = endY + s(4);
+        }
+
+        if (values.allergens) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(7));
+          const { lines, endY } = wrapTextToCircle(`${t('label_clp.allergens_label')}: ${values.allergens}`, measureWidth, radius, s(9), y);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            lines.forEach((line) => doc.text(line.text, centerX, centerY + line.y, { align: 'center' }));
+          }
+          y = endY + s(4);
+        }
+
+        if (values.ufiCode) {
+          doc.setFont('courier', 'normal');
+          doc.setFontSize(s(7));
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(`UFI: ${values.ufiCode}`, centerX, centerY + y, { align: 'center' });
+          }
+          y += s(11);
+        }
+
+        if (values.companyName || values.companyAddress || values.companyEmail) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(7));
+          if (values.companyName) {
+            if (mode === 'draw') {
+              doc.setTextColor(textColor);
+              doc.text(values.companyName, centerX, centerY + y, { align: 'center' });
+            }
+            y += s(9);
+          }
+          doc.setFont('helvetica', 'normal');
+          if (values.companyAddress) {
+            if (mode === 'draw') {
+              doc.setTextColor(mutedColor);
+              doc.text(values.companyAddress, centerX, centerY + y, { align: 'center' });
+            }
+            y += s(9);
+          }
+          if (values.companyEmail) {
+            if (mode === 'draw') {
+              doc.setTextColor(mutedColor);
+              doc.text(values.companyEmail, centerX, centerY + y, { align: 'center' });
+            }
+            y += s(9);
+          }
+        }
+
+        return y;
+      };
+
       let chosenScale: number;
       let offsetXpx: number;
       let offsetYpx: number;
+
+      if (isCircle) {
+        const radius = shapeWidthPx / 2;
+
+        if (hasManualPosition) {
+          chosenScale = manualScale;
+          offsetXpx = offsetMm.x * MM_TO_PX;
+          offsetYpx = offsetMm.y * MM_TO_PX;
+        } else {
+          const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
+          chosenScale = candidateScales[candidateScales.length - 1];
+          for (const candidate of candidateScales) {
+            const bottomY = renderCircularLabel(candidate, 'measure', 0, 0, radius);
+            if (bottomY <= radius * 0.88) {
+              chosenScale = candidate;
+              break;
+            }
+          }
+          offsetXpx = 0;
+          offsetYpx = 0;
+        }
+
+        const bottomY = renderCircularLabel(chosenScale, 'measure', 0, 0, radius);
+        const overflow = bottomY > radius * 0.88;
+
+        const shapeX = (pageWidth - shapeWidthPx) / 2;
+        const shapeY = 40;
+        const centerX = shapeX + shapeWidthPx / 2 + offsetXpx;
+        const centerY = shapeY + shapeHeightPx / 2 + offsetYpx;
+
+        doc.setDrawColor('#9ca3af');
+        doc.setLineWidth(1);
+        doc.setLineDashPattern([4, 3], 0);
+        doc.circle(shapeX + shapeWidthPx / 2, shapeY + shapeHeightPx / 2, radius, 'S');
+        doc.setLineDashPattern([], 0);
+
+        renderCircularLabel(chosenScale, 'draw', centerX, centerY, radius);
+
+        if (overflow) {
+          toast({
+            variant: 'destructive',
+            title: t('label_clp.overflow_warning'),
+          });
+        }
+
+        await savePdf(doc, 'waxpro-etichetta-clp.pdf');
+        return;
+      }
 
       if (hasManualPosition) {
         // L'utente ha gia' trascinato/pizzicato l'anteprima: usa esattamente
@@ -346,11 +604,7 @@ export default function LabelClpPage() {
       doc.setDrawColor('#9ca3af');
       doc.setLineWidth(1);
       doc.setLineDashPattern([4, 3], 0);
-      if (isCircle) {
-        doc.circle(shapeX + shapeWidthPx / 2, shapeY + shapeHeightPx / 2, shapeWidthPx / 2, 'S');
-      } else {
-        doc.rect(shapeX, shapeY, shapeWidthPx, shapeHeightPx, 'S');
-      }
+      doc.rect(shapeX, shapeY, shapeWidthPx, shapeHeightPx, 'S');
       doc.setLineDashPattern([], 0);
 
       const contentStartX = shapeX + shapeWidthPx / 2 + offsetXpx - contentWidth / 2;
@@ -604,65 +858,122 @@ export default function LabelClpPage() {
               onPointerCancel={handleStagePointerUp}
               onWheel={handleStageWheel}
             >
-              <div
-                className="absolute space-y-1 select-none"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  width: shapeWidthMm * pxPerMm * (labelShape === 'circle' ? 0.68 : 0.85),
-                  transform: `translate(${offsetMm.x * pxPerMm}px, ${offsetMm.y * pxPerMm}px) translate(-50%, -50%) scale(${manualScale})`,
-                  transformOrigin: 'center center',
-                  color: '#111827',
-                }}
-              >
-                <div>
-                  <p className="font-bold text-[11px] leading-tight">{values.productName || t('label_clp.preview_placeholder_name')}</p>
-                  <p className="text-[8px] leading-tight" style={{ color: '#6b7280' }}>
-                    {[
-                      values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
-                      t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
-                    ].filter(Boolean).join(' · ')}
-                  </p>
-                </div>
+              {labelShape === 'circle' ? (() => {
+                const stagePx = shapeWidthMm * pxPerMm;
+                const r = stagePx / 2;
+                const titleRadius = r * 0.85;
+                const startAngle = (-85 * Math.PI) / 180;
+                const endAngle = (85 * Math.PI) / 180;
+                const x1 = r + titleRadius * Math.sin(startAngle);
+                const y1 = r - titleRadius * Math.cos(startAngle);
+                const x2 = r + titleRadius * Math.sin(endAngle);
+                const y2 = r - titleRadius * Math.cos(endAngle);
+                const arcPath = `M ${x1} ${y1} A ${titleRadius} ${titleRadius} 0 0 1 ${x2} ${y2}`;
+                const { lines, pictogramsY } = buildCircleLines(r);
 
-                <div className="flex items-center justify-between text-[8px]" style={{ color: '#6b7280' }}>
-                  <span>{t('label_clp.net_weight_label')}</span>
-                  <span className="font-semibold" style={{ color: '#111827' }}>{values.netWeight || 0} g</span>
-                </div>
+                return (
+                  <div
+                    className="absolute select-none"
+                    style={{
+                      top: '50%',
+                      left: '50%',
+                      width: stagePx,
+                      height: stagePx,
+                      transform: `translate(${offsetMm.x * pxPerMm}px, ${offsetMm.y * pxPerMm}px) translate(-50%, -50%) scale(${manualScale})`,
+                      transformOrigin: 'center center',
+                    }}
+                  >
+                    <svg width={stagePx} height={stagePx} viewBox={`0 0 ${stagePx} ${stagePx}`} style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}>
+                      <path id="clpPreviewTitleArc" d={arcPath} fill="none" stroke="none" />
+                      <text fontSize={Math.max(stagePx * 0.075, 8)} fontWeight="bold" fill="#111827">
+                        <textPath href="#clpPreviewTitleArc" startOffset="50%" textAnchor="middle">
+                          {(values.productName || t('label_clp.preview_placeholder_name')).toUpperCase()}
+                        </textPath>
+                      </text>
+                    </svg>
+                    {lines.map((line, i) => (
+                      <p
+                        key={i}
+                        className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-center"
+                        style={{
+                          top: r + line.y,
+                          fontSize: line.fontSize,
+                          fontWeight: line.bold ? 700 : 400,
+                          color: line.color || '#111827',
+                          fontFamily: line.mono ? 'monospace' : undefined,
+                        }}
+                      >
+                        {line.text}
+                      </p>
+                    ))}
+                    {pictogramsY !== null && (
+                      <div className="absolute left-1/2 flex -translate-x-1/2 gap-1" style={{ top: r + pictogramsY }}>
+                        {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })() : (
+                <div
+                  className="absolute space-y-1 select-none"
+                  style={{
+                    top: '50%',
+                    left: '50%',
+                    width: shapeWidthMm * pxPerMm * 0.85,
+                    transform: `translate(${offsetMm.x * pxPerMm}px, ${offsetMm.y * pxPerMm}px) translate(-50%, -50%) scale(${manualScale})`,
+                    transformOrigin: 'center center',
+                    color: '#111827',
+                  }}
+                >
+                  <div>
+                    <p className="font-bold text-[11px] leading-tight">{values.productName || t('label_clp.preview_placeholder_name')}</p>
+                    <p className="text-[8px] leading-tight" style={{ color: '#6b7280' }}>
+                      {[
+                        values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
+                        t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
+                      ].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
 
-                {selectedPictograms.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="font-bold text-[8px]">{t('label_clp.warning_label')}</span>
-                    <div className="flex gap-1 flex-wrap">
-                      {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
+                  <div className="flex items-center justify-between text-[8px]" style={{ color: '#6b7280' }}>
+                    <span>{t('label_clp.net_weight_label')}</span>
+                    <span className="font-semibold" style={{ color: '#111827' }}>{values.netWeight || 0} g</span>
+                  </div>
+
+                  {selectedPictograms.length > 0 && (
+                    <div className="space-y-1">
+                      <span className="font-bold text-[8px]">{t('label_clp.warning_label')}</span>
+                      <div className="flex gap-1 flex-wrap">
+                        {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {values.hPhrases && (
-                  <p className="text-[7px] leading-tight whitespace-pre-line">{values.hPhrases}</p>
-                )}
+                  {values.hPhrases && (
+                    <p className="text-[7px] leading-tight whitespace-pre-line">{values.hPhrases}</p>
+                  )}
 
-                {values.pPhrases && (
-                  <p className="text-[7px] leading-tight whitespace-pre-line">{values.pPhrases}</p>
-                )}
+                  {values.pPhrases && (
+                    <p className="text-[7px] leading-tight whitespace-pre-line">{values.pPhrases}</p>
+                  )}
 
-                {values.allergens && (
-                  <p className="text-[7px] leading-tight">{t('label_clp.allergens_label')}: {values.allergens}</p>
-                )}
+                  {values.allergens && (
+                    <p className="text-[7px] leading-tight">{t('label_clp.allergens_label')}: {values.allergens}</p>
+                  )}
 
-                {values.ufiCode && (
-                  <p className="text-[7px] font-mono">UFI: {values.ufiCode}</p>
-                )}
+                  {values.ufiCode && (
+                    <p className="text-[7px] font-mono">UFI: {values.ufiCode}</p>
+                  )}
 
-                {(values.companyName || values.companyAddress || values.companyEmail) && (
-                  <div className="text-[7px] leading-tight" style={{ color: '#6b7280' }}>
-                    {values.companyName && <p className="font-semibold" style={{ color: '#111827' }}>{values.companyName}</p>}
-                    {values.companyAddress && <p>{values.companyAddress}</p>}
-                    {values.companyEmail && <p>{values.companyEmail}</p>}
-                  </div>
-                )}
-              </div>
+                  {(values.companyName || values.companyAddress || values.companyEmail) && (
+                    <div className="text-[7px] leading-tight" style={{ color: '#6b7280' }}>
+                      {values.companyName && <p className="font-semibold" style={{ color: '#111827' }}>{values.companyName}</p>}
+                      {values.companyAddress && <p>{values.companyAddress}</p>}
+                      {values.companyEmail && <p>{values.companyEmail}</p>}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
