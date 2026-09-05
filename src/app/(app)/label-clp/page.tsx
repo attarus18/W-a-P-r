@@ -37,6 +37,10 @@ export default function LabelClpPage() {
   const [isPrinting, setIsPrinting] = useState(false);
   const [selectedPictograms, setSelectedPictograms] = useState<GhsPictogramType[]>([]);
   const [waxSelectMode, setWaxSelectMode] = useState('other');
+  const [labelShape, setLabelShape] = useState<'rectangle' | 'circle'>('rectangle');
+  const [rectWidthMm, setRectWidthMm] = useState(80);
+  const [rectHeightMm, setRectHeightMm] = useState(50);
+  const [circleDiameterMm, setCircleDiameterMm] = useState(40);
 
   const { register, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -63,135 +67,218 @@ export default function LabelClpPage() {
   const handleGeneratePdf = async () => {
     setIsPrinting(true);
     try {
+      const pictogramDataUrls: Partial<Record<GhsPictogramType, string>> = {};
+      for (const type of selectedPictograms) {
+        pictogramDataUrls[type] = await getGhsPictogramDataUrl(type);
+      }
+
       const doc = new jsPDF({ orientation: 'p', unit: 'px', format: 'a4' });
       const pageWidth = doc.internal.pageSize.width;
-      const margin = 30;
-      let y = margin;
 
       const textColor = '#111827';
       const mutedColor = '#6b7280';
-      const lineColor = '#e5e7eb';
 
-      // --- PRODUCT NAME & SUBTITLE ---
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.setTextColor(textColor);
-      doc.text(values.productName || '-', margin, y);
-      y += 16;
+      const MM_TO_PX = 96 / 25.4;
+      const isCircle = labelShape === 'circle';
+      const shapeWidthPx = isCircle ? circleDiameterMm * MM_TO_PX : rectWidthMm * MM_TO_PX;
+      const shapeHeightPx = isCircle ? circleDiameterMm * MM_TO_PX : rectHeightMm * MM_TO_PX;
 
-      const subtitleParts = [
-        values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
-        t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
-      ].filter(Boolean);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.setTextColor(mutedColor);
-      doc.text(subtitleParts.join(' · '), margin, y);
-      y += 22;
+      const innerPadding = 14;
+      // Il cerchio ammette testo solo in un quadrato inscritto (altrimenti gli
+      // angoli del blocco di testo uscirebbero dal contorno); 0.68 lascia un
+      // piccolo margine di sicurezza rispetto al vero inscritto (0.707).
+      const circleFactor = 0.68;
+      const contentWidth = isCircle ? shapeWidthPx * circleFactor : Math.max(shapeWidthPx - innerPadding * 2, 40);
+      const availableHeight = isCircle ? shapeHeightPx * circleFactor : Math.max(shapeHeightPx - innerPadding * 2, 40);
 
-      // --- NET WEIGHT ---
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(mutedColor);
-      doc.text(t('label_clp.net_weight_label').toUpperCase(), margin, y);
-      doc.setFontSize(13);
-      doc.setTextColor(textColor);
-      doc.text(`${values.netWeight || 0} g`, pageWidth - margin, y, { align: 'right' });
-      y += 20;
+      // Disegna (o solo misura, per trovare la scala del testo che ci sta) il
+      // contenuto dell'etichetta a partire da (startX, startY), con font e
+      // interlinee scalate da `scale`. Ritorna la y finale, utile sia per
+      // calcolare l'altezza occupata sia per centrare verticalmente il blocco.
+      const renderLabel = (scale: number, mode: 'measure' | 'draw', startX: number, startY: number): number => {
+        const s = (v: number) => v * scale;
+        let y = startY;
 
-      // --- PICTOGRAMS ---
-      if (selectedPictograms.length > 0) {
-        doc.setDrawColor(lineColor);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 20;
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(textColor);
-        doc.text(t('label_clp.warning_label').toUpperCase(), margin, y - 8);
-
-        let px = margin;
-        for (const type of selectedPictograms) {
-          const dataUrl = await getGhsPictogramDataUrl(type);
-          doc.addImage(dataUrl, 'PNG', px, y, 36, 36);
-          px += 42;
+        doc.setFontSize(s(16));
+        if (mode === 'draw') {
+          doc.setTextColor(textColor);
+          doc.text(values.productName || '-', startX, y);
         }
-        y += 48;
-      }
+        y += s(16);
 
-      // --- H PHRASES ---
-      if (values.hPhrases) {
-        doc.setDrawColor(lineColor);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 16;
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(mutedColor);
-        doc.text(t('label_clp.h_phrases_label').toUpperCase(), margin, y);
-        y += 12;
+        const subtitleParts = [
+          values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
+          t('label_clp.subtitle_fragrance', { percent: values.fragrancePercent || 0 }),
+        ].filter(Boolean);
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(textColor);
-        const lines = doc.splitTextToSize(values.hPhrases, pageWidth - margin * 2);
-        doc.text(lines, margin, y);
-        y += lines.length * 11 + 10;
-      }
-
-      // --- P PHRASES ---
-      if (values.pPhrases) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(mutedColor);
-        doc.text(t('label_clp.p_phrases_label').toUpperCase(), margin, y);
-        y += 12;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(textColor);
-        const lines = doc.splitTextToSize(values.pPhrases, pageWidth - margin * 2);
-        doc.text(lines, margin, y);
-        y += lines.length * 11 + 10;
-      }
-
-      // --- ALLERGENS ---
-      if (values.allergens) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(textColor);
-        const allergenLines = doc.splitTextToSize(`${t('label_clp.allergens_label')}: ${values.allergens}`, pageWidth - margin * 2);
-        doc.text(allergenLines, margin, y);
-        y += allergenLines.length * 11 + 8;
-      }
-
-      // --- UFI ---
-      if (values.ufiCode) {
-        doc.setFont('courier', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(textColor);
-        doc.text(`UFI: ${values.ufiCode}`, margin, y);
-        y += 18;
-      }
-
-      // --- COMPANY ---
-      if (values.companyName || values.companyAddress || values.companyEmail) {
-        doc.setDrawColor(lineColor);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 16;
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(textColor);
-        if (values.companyName) {
-          doc.text(values.companyName, margin, y);
-          y += 12;
+        doc.setFontSize(s(10));
+        if (mode === 'draw') {
+          doc.setTextColor(mutedColor);
+          doc.text(subtitleParts.join(' · '), startX, y);
         }
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(mutedColor);
-        if (values.companyAddress) {
-          doc.text(values.companyAddress, margin, y);
-          y += 12;
+        y += s(22);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(s(9));
+        if (mode === 'draw') {
+          doc.setTextColor(mutedColor);
+          doc.text(t('label_clp.net_weight_label').toUpperCase(), startX, y);
+          doc.setFontSize(s(13));
+          doc.setTextColor(textColor);
+          doc.text(`${values.netWeight || 0} g`, startX + contentWidth, y, { align: 'right' });
         }
-        if (values.companyEmail) {
-          doc.text(values.companyEmail, margin, y);
-          y += 12;
+        y += s(20);
+
+        if (selectedPictograms.length > 0) {
+          y += s(20);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(10));
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(t('label_clp.warning_label').toUpperCase(), startX, y - s(8));
+          }
+          const iconSize = s(36);
+          const gap = s(6);
+          if (mode === 'draw') {
+            let px = startX;
+            selectedPictograms.forEach((type) => {
+              const url = pictogramDataUrls[type];
+              if (url) doc.addImage(url, 'PNG', px, y, iconSize, iconSize);
+              px += iconSize + gap;
+            });
+          }
+          y += iconSize + s(12);
         }
+
+        if (values.hPhrases) {
+          y += s(16);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(9));
+          if (mode === 'draw') {
+            doc.setTextColor(mutedColor);
+            doc.text(t('label_clp.h_phrases_label').toUpperCase(), startX, y);
+          }
+          y += s(12);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(s(9));
+          const lines = doc.splitTextToSize(values.hPhrases, contentWidth);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(lines, startX, y);
+          }
+          y += lines.length * s(11) + s(10);
+        }
+
+        if (values.pPhrases) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(9));
+          if (mode === 'draw') {
+            doc.setTextColor(mutedColor);
+            doc.text(t('label_clp.p_phrases_label').toUpperCase(), startX, y);
+          }
+          y += s(12);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(s(9));
+          const lines = doc.splitTextToSize(values.pPhrases, contentWidth);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(lines, startX, y);
+          }
+          y += lines.length * s(11) + s(10);
+        }
+
+        if (values.allergens) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(9));
+          const allergenLines = doc.splitTextToSize(`${t('label_clp.allergens_label')}: ${values.allergens}`, contentWidth);
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(allergenLines, startX, y);
+          }
+          y += allergenLines.length * s(11) + s(8);
+        }
+
+        if (values.ufiCode) {
+          doc.setFont('courier', 'normal');
+          doc.setFontSize(s(9));
+          if (mode === 'draw') {
+            doc.setTextColor(textColor);
+            doc.text(`UFI: ${values.ufiCode}`, startX, y);
+          }
+          y += s(18);
+        }
+
+        if (values.companyName || values.companyAddress || values.companyEmail) {
+          y += s(16);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(s(9));
+          if (values.companyName) {
+            if (mode === 'draw') {
+              doc.setTextColor(textColor);
+              doc.text(values.companyName, startX, y);
+            }
+            y += s(12);
+          }
+          doc.setFont('helvetica', 'normal');
+          if (values.companyAddress) {
+            if (mode === 'draw') {
+              doc.setTextColor(mutedColor);
+              doc.text(values.companyAddress, startX, y);
+            }
+            y += s(12);
+          }
+          if (values.companyEmail) {
+            if (mode === 'draw') {
+              doc.setTextColor(mutedColor);
+              doc.text(values.companyEmail, startX, y);
+            }
+            y += s(12);
+          }
+        }
+
+        return y - startY;
+      };
+
+      // Prova a inserire tutto a piena scala, poi rimpicciolisce testo e
+      // interlinee finche' il contenuto non entra nell'area disponibile.
+      const candidateScales = [1, 0.9, 0.8, 0.7, 0.6, 0.5];
+      let chosenScale = candidateScales[candidateScales.length - 1];
+      let usedHeight = 0;
+      for (const candidate of candidateScales) {
+        usedHeight = renderLabel(candidate, 'measure', 0, 0);
+        if (usedHeight <= availableHeight) {
+          chosenScale = candidate;
+          break;
+        }
+      }
+      const overflow = usedHeight > availableHeight;
+
+      const shapeX = (pageWidth - shapeWidthPx) / 2;
+      const shapeY = 40;
+
+      doc.setDrawColor('#9ca3af');
+      doc.setLineWidth(1);
+      doc.setLineDashPattern([4, 3], 0);
+      if (isCircle) {
+        doc.circle(shapeX + shapeWidthPx / 2, shapeY + shapeHeightPx / 2, shapeWidthPx / 2, 'S');
+      } else {
+        doc.rect(shapeX, shapeY, shapeWidthPx, shapeHeightPx, 'S');
+      }
+      doc.setLineDashPattern([], 0);
+
+      const contentStartX = isCircle ? shapeX + (shapeWidthPx - contentWidth) / 2 : shapeX + innerPadding;
+      const contentStartY = usedHeight <= availableHeight
+        ? shapeY + (shapeHeightPx - usedHeight) / 2
+        : shapeY + innerPadding;
+
+      renderLabel(chosenScale, 'draw', contentStartX, contentStartY);
+
+      if (overflow) {
+        toast({
+          variant: 'destructive',
+          title: t('label_clp.overflow_warning'),
+        });
       }
 
       await savePdf(doc, 'waxpro-etichetta-clp.pdf');
@@ -232,6 +319,66 @@ export default function LabelClpPage() {
           </ul>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('label_clp.format_title')}</CardTitle>
+          <CardDescription>{t('label_clp.format_description')}</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label>{t('label_clp.shape_label')}</Label>
+            <Select value={labelShape} onValueChange={(v) => setLabelShape(v as 'rectangle' | 'circle')}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="rectangle">{t('label_clp.shape_rectangle')}</SelectItem>
+                <SelectItem value="circle">{t('label_clp.shape_circle')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {labelShape === 'rectangle' ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="rectWidthMm">{t('label_clp.rect_width_label')}</Label>
+                <Input
+                  id="rectWidthMm"
+                  type="number"
+                  min="10"
+                  step="1"
+                  value={rectWidthMm}
+                  onChange={(e) => setRectWidthMm(parseFloat(e.target.value) || 0)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="rectHeightMm">{t('label_clp.rect_height_label')}</Label>
+                <Input
+                  id="rectHeightMm"
+                  type="number"
+                  min="10"
+                  step="1"
+                  value={rectHeightMm}
+                  onChange={(e) => setRectHeightMm(parseFloat(e.target.value) || 0)}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="circleDiameterMm">{t('label_clp.diameter_label')}</Label>
+              <Input
+                id="circleDiameterMm"
+                type="number"
+                min="10"
+                step="1"
+                value={circleDiameterMm}
+                onChange={(e) => setCircleDiameterMm(parseFloat(e.target.value) || 0)}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <Card>
