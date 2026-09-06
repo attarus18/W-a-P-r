@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { NotebookPen, Calculator, Warehouse, BookMarked, Settings, PieChart, BookOpen, FileWarning } from 'lucide-react';
+import { NotebookPen, Calculator, Warehouse, BookMarked, Settings, PieChart, BookOpen } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -77,20 +77,6 @@ export default function DashboardPage() {
                 </Card>
               </Link>
           ))}
-          <Link href="/label-clp" className="block hover:scale-[1.02] transition-transform duration-200 col-span-2 md:col-span-3">
-            <Card className="bg-card/50 border h-full">
-                <CardContent className="flex items-center gap-3 p-4 text-left">
-                <FileWarning className="h-6 w-6 text-primary flex-shrink-0" />
-                <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-foreground text-sm">{t('navbar.label_clp')}</h3>
-                      <span className="rounded border border-primary/40 px-1.5 py-0.5 text-[10px] font-bold text-primary">{t('dashboard.clp_button_badge')}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{t('dashboard.clp_button_description')}</p>
-                </div>
-                </CardContent>
-            </Card>
-          </Link>
            <Link href="/instructions" className="block hover:scale-[1.02] transition-transform duration-200 col-span-2 md:col-span-3">
               <Card className="bg-card/50 border h-full">
                   <CardContent className="flex items-center gap-3 p-4 text-left">
