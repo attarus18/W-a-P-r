@@ -158,7 +158,16 @@ export default function LabelClpPage() {
   // usata per il PDF, solo con una stima di larghezza più economica (va
   // bene per un'anteprima, non serve la precisione di jsPDF).
   const buildCircleLines = (radius: number) => {
-    let y = -radius * 0.62;
+    // Stessa logica dell'arco nel PDF: un titolo lungo si allarga e le sue
+    // estremita' scendono lungo il cerchio, quindi il sottotitolo deve
+    // scendere con lui per non sovrapporglisi (vedi titleBottomY piu' sotto
+    // in handleGeneratePdf, calcolo identico ma con stima economica).
+    const titleText = (values.productName || t('label_clp.preview_placeholder_name')).toUpperCase();
+    const titleRadius = radius * 0.85;
+    const titleFontSize = Math.max(radius * 2 * 0.075, 8);
+    const titleHalfAngle = titleRadius > 0 ? Math.min((titleText.length * titleFontSize * 0.6) / titleRadius / 2, Math.PI / 2) : 0;
+    const titleBottomY = -titleRadius * Math.cos(titleHalfAngle) + 8;
+    let y = Math.max(-radius * 0.62, titleBottomY);
     const lines: PreviewLine[] = [];
 
     lines.push({
@@ -178,7 +187,17 @@ export default function LabelClpPage() {
     let pictogramsY: number | null = null;
     if (selectedPictograms.length > 0) {
       pictogramsY = y;
-      y += 30;
+      // Anche in anteprima i pittogrammi vanno a capo su piu' righe se non
+      // ci stanno nella corda del cerchio a quell'altezza (vedi il div che
+      // li renderizza, piu' sotto), quindi riserviamo spazio in base a
+      // quante righe serviranno davvero.
+      const iconSize = 20;
+      const gap = 4;
+      const clamped = Math.min(Math.abs(y), radius * 0.98);
+      const chordWidth = 2 * Math.sqrt(Math.max(radius * radius - clamped * clamped, 0));
+      const perRow = Math.max(1, Math.floor((chordWidth + gap) / (iconSize + gap)));
+      const rows = Math.ceil(selectedPictograms.length / perRow);
+      y += rows * (iconSize + gap) + 6;
     }
 
     const measure = (str: string) => str.length * 3.6;
@@ -255,11 +274,16 @@ export default function LabelClpPage() {
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(s(16));
+        // Un titolo lungo puo' essere piu' largo del rettangolo: va a capo
+        // su piu' righe come i paragrafi, invece di uscire dal contorno
+        // senza che il controllo di overflow (che guarda solo l'altezza)
+        // se ne accorga.
+        const titleLines = doc.splitTextToSize(values.productName || '-', contentWidth);
         if (mode === 'draw') {
           doc.setTextColor(textColor);
-          doc.text(values.productName || '-', startX, y);
+          doc.text(titleLines, startX, y);
         }
-        y += s(16);
+        y += titleLines.length * s(18);
 
         const subtitleParts = [
           values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
@@ -294,15 +318,25 @@ export default function LabelClpPage() {
           }
           const iconSize = s(36);
           const gap = s(6);
+          // Con molti pittogrammi la riga puo' essere piu' larga del
+          // rettangolo (specie se stretto): va a capo su piu' righe invece
+          // di uscire dal contorno, come gia' succede per i paragrafi.
+          const perRow = Math.max(1, Math.floor((contentWidth + gap) / (iconSize + gap)));
+          const rows = Math.ceil(selectedPictograms.length / perRow);
           if (mode === 'draw') {
             let px = startX;
-            selectedPictograms.forEach((type) => {
+            let row = 0;
+            selectedPictograms.forEach((type, i) => {
+              if (i > 0 && i % perRow === 0) {
+                row += 1;
+                px = startX;
+              }
               const url = pictogramDataUrls[type];
-              if (url) doc.addImage(url, 'PNG', px, y, iconSize, iconSize);
+              if (url) doc.addImage(url, 'PNG', px, y + row * (iconSize + gap), iconSize, iconSize);
               px += iconSize + gap;
             });
           }
-          y += iconSize + s(12);
+          y += rows * iconSize + (rows - 1) * gap + s(12);
         }
 
         if (values.hPhrases) {
@@ -412,12 +446,20 @@ export default function LabelClpPage() {
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(s(15));
+        const titleRadius = radius * 0.88;
+        const titleText = (values.productName || '').toUpperCase();
         if (mode === 'draw' && values.productName) {
           doc.setTextColor(textColor);
-          drawArcTextTop(doc, values.productName.toUpperCase(), centerX, centerY, radius * 0.88);
+          drawArcTextTop(doc, titleText, centerX, centerY, titleRadius);
         }
 
-        let y = -radius * 0.62;
+        // Un titolo lungo si allarga sull'arco e le sue estremita' scendono
+        // lungo il cerchio: con un titolo corto il sottotitolo resta
+        // all'altezza fissa di sempre, con uno lungo scende quanto basta da
+        // non sovrapporsi alle estremita' dell'arco.
+        const titleHalfAngle = titleText ? Math.min(doc.getTextWidth(titleText) / titleRadius / 2, Math.PI / 2) : 0;
+        const titleBottomY = -titleRadius * Math.cos(titleHalfAngle) + s(10);
+        let y = Math.max(-radius * 0.62, titleBottomY);
 
         const subtitleParts = [
           values.waxTypeName ? t('label_clp.subtitle_wax', { wax: values.waxTypeName }) : '',
@@ -442,16 +484,30 @@ export default function LabelClpPage() {
         if (selectedPictograms.length > 0) {
           const iconSize = s(28);
           const gap = s(6);
-          const totalWidth = selectedPictograms.length * iconSize + (selectedPictograms.length - 1) * gap;
-          if (mode === 'draw') {
-            let px = centerX - totalWidth / 2;
-            selectedPictograms.forEach((type) => {
-              const url = pictogramDataUrls[type];
-              if (url) doc.addImage(url, 'PNG', px, centerY + y, iconSize, iconSize);
-              px += iconSize + gap;
-            });
+          // Come per il testo, la riga di pittogrammi deve rispettare la
+          // corda del cerchio a quell'altezza: con tanti pittogrammi va a
+          // capo su piu' righe invece di uscire dal contorno tondo.
+          const maxWidthAt = (yy: number) => {
+            const clamped = Math.min(Math.abs(yy), radius * 0.98);
+            return 2 * Math.sqrt(Math.max(radius * radius - clamped * clamped, 0));
+          };
+          let remaining = [...selectedPictograms];
+          while (remaining.length > 0) {
+            const perRow = Math.max(1, Math.min(remaining.length, Math.floor((maxWidthAt(y) + gap) / (iconSize + gap))));
+            const row = remaining.slice(0, perRow);
+            remaining = remaining.slice(perRow);
+            const rowWidth = row.length * iconSize + (row.length - 1) * gap;
+            if (mode === 'draw') {
+              let px = centerX - rowWidth / 2;
+              row.forEach((type) => {
+                const url = pictogramDataUrls[type];
+                if (url) doc.addImage(url, 'PNG', px, centerY + y, iconSize, iconSize);
+                px += iconSize + gap;
+              });
+            }
+            y += iconSize + s(6);
           }
-          y += iconSize + s(10);
+          y += s(4);
         }
 
         if (values.hPhrases) {
@@ -935,11 +991,18 @@ export default function LabelClpPage() {
                         {line.text}
                       </p>
                     ))}
-                    {pictogramsY !== null && (
-                      <div className="absolute left-1/2 flex -translate-x-1/2 gap-1" style={{ top: r + pictogramsY }}>
-                        {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
-                      </div>
-                    )}
+                    {pictogramsY !== null && (() => {
+                      const clamped = Math.min(Math.abs(pictogramsY), r * 0.98);
+                      const chordWidth = 2 * Math.sqrt(Math.max(r * r - clamped * clamped, 0));
+                      return (
+                        <div
+                          className="absolute left-1/2 flex flex-wrap justify-center gap-1 -translate-x-1/2"
+                          style={{ top: r + pictogramsY, width: chordWidth }}
+                        >
+                          {selectedPictograms.map((p) => <GhsPictogram key={p} type={p} size={20} />)}
+                        </div>
+                      );
+                    })()}
                   </div>
                 );
               })() : (
