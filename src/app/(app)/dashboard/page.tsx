@@ -61,19 +61,6 @@ export default function DashboardPage() {
         <p className="text-muted-foreground mt-2 max-w-xs mx-auto">{t('dashboard.welcome_subtitle')}</p>
       </div>
 
-      <Link href="/label-clp" className="block hover:scale-[1.01] transition-transform duration-200">
-        <div className="flex items-center gap-3 rounded-lg bg-orange-500 p-4 shadow-sm">
-          <FileWarning className="h-8 w-8 flex-shrink-0 text-black" />
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-black">{t('navbar.label_clp')}</h3>
-              <span className="rounded bg-black/10 px-1.5 py-0.5 text-[10px] font-bold text-black">{t('dashboard.clp_button_badge')}</span>
-            </div>
-            <p className="text-xs text-black/80">{t('dashboard.clp_button_description')}</p>
-          </div>
-        </div>
-      </Link>
-
       <div>
         <h2 className="text-lg font-semibold mb-4 text-muted-foreground">{t('dashboard.how_it_works')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -90,6 +77,20 @@ export default function DashboardPage() {
                 </Card>
               </Link>
           ))}
+          <Link href="/label-clp" className="block hover:scale-[1.02] transition-transform duration-200 col-span-2 md:col-span-3">
+            <Card className="bg-card/50 border h-full">
+                <CardContent className="flex items-center gap-3 p-4 text-left">
+                <FileWarning className="h-6 w-6 text-primary flex-shrink-0" />
+                <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-foreground text-sm">{t('navbar.label_clp')}</h3>
+                      <span className="rounded border border-primary/40 px-1.5 py-0.5 text-[10px] font-bold text-primary">{t('dashboard.clp_button_badge')}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{t('dashboard.clp_button_description')}</p>
+                </div>
+                </CardContent>
+            </Card>
+          </Link>
            <Link href="/instructions" className="block hover:scale-[1.02] transition-transform duration-200 col-span-2 md:col-span-3">
               <Card className="bg-card/50 border h-full">
                   <CardContent className="flex items-center gap-3 p-4 text-left">
