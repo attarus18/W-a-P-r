@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calculator, Warehouse, BookMarked, Settings, Flame, PieChart, NotebookPen, BookOpen } from 'lucide-react';
+import { Calculator, Warehouse, BookMarked, Settings, Flame, PieChart, NotebookPen, BookOpen, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -22,6 +22,7 @@ export default function AppNavbar() {
     { href: '/calculator', icon: Calculator, label: t('navbar.calculator') },
     { href: '/recipe-calculator', icon: NotebookPen, label: t('navbar.recipe_calculator') },
     { href: '/inventory', icon: Warehouse, label: t('navbar.inventory') },
+    { href: '/ai-suggester', icon: Sparkles, label: t('navbar.ai_suggester'), special: true },
     { href: '/report', icon: PieChart, label: t('navbar.report') },
     { href: '/recipes', icon: BookMarked, label: t('navbar.recipes') },
     { href: '/instructions', icon: BookOpen, label: t('navbar.instructions') },
@@ -41,8 +42,13 @@ export default function AppNavbar() {
                         <Link
                             href={item.href}
                             className={cn(
-                            'flex items-center justify-center rounded-lg h-10 w-10 text-sm font-medium text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                            pathname === item.href && 'bg-primary/10 text-primary'
+                            'flex items-center justify-center rounded-full h-10 w-10 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                            item.special
+                              ? 'bg-primary text-primary-foreground shadow-md hover:opacity-90'
+                              : cn(
+                                  'rounded-lg text-muted-foreground hover:text-primary',
+                                  pathname === item.href && 'bg-primary/10 text-primary'
+                                )
                             )}
                         >
                             <item.icon className="h-5 w-5" />
