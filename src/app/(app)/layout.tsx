@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import AppNavbar from "@/components/layout/app-navbar";
+import HomeButton from "@/components/layout/home-button";
 import AdmobBanner from "@/components/admob-banner";
 import { CurrencyProvider } from "@/context/currency-context";
 import { ProductProvider } from "@/context/product-context";
@@ -50,6 +51,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 {children}
               </main>
               <AppNavbar />
+              <HomeButton />
               <AdmobBanner />
             </CurrencyProvider>
           </MaterialsProvider>

@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calculator, Warehouse, BookMarked, Settings, Flame, PieChart, NotebookPen, BookOpen, Sparkles } from 'lucide-react';
+import { Calculator, Warehouse, BookMarked, Settings, PieChart, NotebookPen, BookOpen, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -18,7 +18,6 @@ export default function AppNavbar() {
   const { t } = useLanguage();
 
   const navItems = [
-    { href: '/dashboard', icon: Flame, label: t('navbar.dashboard') },
     { href: '/calculator', icon: Calculator, label: t('navbar.calculator') },
     { href: '/recipe-calculator', icon: NotebookPen, label: t('navbar.recipe_calculator') },
     { href: '/inventory', icon: Warehouse, label: t('navbar.inventory') },
@@ -41,22 +40,17 @@ export default function AppNavbar() {
       // la barra visibile e ferma durante lo scroll.
       style={{ bottom: 'var(--admob-banner-offset, 0px)', transform: 'translateZ(0)', willChange: 'transform' }}
     >
-        {/* overflow-x-auto + min-w-max sull'interno: se le icone non ci
-            stanno tutte (schermi molto stretti, o piu' voci aggiunte in
-            futuro) la barra scorre invece di tagliare silenziosamente
-            l'ultima icona fuori dallo schermo. */}
-        <nav className="container max-w-screen-2xl overflow-x-auto">
+        <nav className="container flex items-center justify-around h-16 max-w-screen-2xl">
             <TooltipProvider>
-                <div className="flex items-center justify-around gap-1 h-16 min-w-max">
                 {navItems.map((item) => (
                 <Tooltip key={item.href}>
                     <TooltipTrigger asChild>
                         <Link
                             href={item.href}
                             className={cn(
-                            'flex shrink-0 items-center justify-center rounded-full h-10 w-10 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                            'flex items-center justify-center h-10 w-10 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                             item.special
-                              ? 'bg-primary text-primary-foreground shadow-md hover:opacity-90'
+                              ? 'rounded-full bg-primary text-primary-foreground shadow-md hover:opacity-90'
                               : cn(
                                   'rounded-lg text-muted-foreground hover:text-primary',
                                   pathname === item.href && 'bg-primary/10 text-primary'
@@ -72,7 +66,6 @@ export default function AppNavbar() {
                     </TooltipContent>
                 </Tooltip>
                 ))}
-                </div>
             </TooltipProvider>
         </nav>
     </header>
