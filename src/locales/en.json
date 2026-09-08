@@ -340,6 +340,7 @@
   "report": {
     "title": "Financial Report",
     "description": "Analyze your business performance.",
+    "data_source_note": "Data is calculated automatically from the movements recorded in your Inventory (sales and returns).",
     "export_pdf": "Export to PDF",
     "share_button": "Share Report",
     "share_toast_title": "Report Copied!",

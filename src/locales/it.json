@@ -340,6 +340,7 @@
   "report": {
     "title": "Report Finanziario",
     "description": "Analizza le performance della tua attività.",
+    "data_source_note": "I dati vengono calcolati automaticamente dai movimenti registrati nel tuo Magazzino (vendite e resi).",
     "export_pdf": "Esporta in PDF",
     "share_button": "Condividi Report",
     "share_toast_title": "Report Copiato!",

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -81,6 +81,16 @@ export default function CalculatorPage() {
   const [materialsDialogOpen, setMaterialsDialogOpen] = useState(false);
   const [reminderOpen, setReminderOpen] = useState(false);
   const hasRemindedRef = useRef(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  // Appena esce il risultato, portiamo la pagina fin li': su schermi piccoli
+  // il form e' lungo e altrimenti l'utente dovrebbe scorrere manualmente per
+  // accorgersi che il totale e' gia' pronto.
+  useEffect(() => {
+    if (totalCost !== null) {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [totalCost]);
 
   const ceraUnit = watch('ceraUnit');
   const fragranzaUnit = watch('fragranzaUnit');
@@ -420,7 +430,7 @@ export default function CalculatorPage() {
       </Card>
       
       {totalCost !== null && (
-        <Card className="bg-primary/10 border-primary/20">
+        <Card ref={resultRef} className="bg-primary/10 border-primary/20 scroll-mt-4">
           <CardHeader>
             <CardTitle>{t('calculator.result_title')}</CardTitle>
             <CardDescription>

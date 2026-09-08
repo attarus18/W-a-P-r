@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import jsPDF from 'jspdf';
+import { savePdf } from '@/lib/pdf-utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -49,6 +51,17 @@ export default function AiSuggesterPage() {
   const [conceptOptions, setConceptOptions] = useState<FragranceOption[] | null>(null);
   const [isBlockedDialogOpen, setIsBlockedDialogOpen] = useState(false);
   const [blockReason, setBlockReason] = useState('');
+  const [isPreparingPdf, setIsPreparingPdf] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Appena arrivano le 3 proposte, portiamo la pagina fin li': su schermi
+  // piccoli l'utente altrimenti dovrebbe scorrere manualmente oltre il form
+  // per accorgersi che il risultato e' gia' pronto.
+  useEffect(() => {
+    if (conceptOptions) {
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [conceptOptions]);
 
   const handleGenerateConcept = async () => {
     if (!concept.trim()) return;
@@ -91,6 +104,75 @@ export default function AiSuggesterPage() {
   const handleCloseBlockedDialog = () => {
     setIsBlockedDialogOpen(false);
     setConcept('');
+  };
+
+  // window.print() non ha effetto dentro la WebView Android dell'app (non e'
+  // un vero browser: non c'e' un motore di stampa di sistema agganciato).
+  // Generiamo quindi un PDF vero con jsPDF e lo passiamo a savePdf(), lo
+  // stesso helper gia' usato dal Calcolatore e dal Report: su nativo apre il
+  // foglio di condivisione Android (da cui si puo' salvare, stampare o
+  // inviare), sul web usa la Web Share API se disponibile o il download.
+  const handlePrint = async () => {
+    if (!conceptOptions || conceptOptions.length === 0) return;
+
+    setIsPreparingPdf(true);
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const marginX = 15;
+      const maxY = doc.internal.pageSize.getHeight() - 20;
+      const textWidth = pageWidth - marginX * 2;
+      let y = 20;
+
+      const ensureSpace = (needed: number) => {
+        if (y + needed > maxY) {
+          doc.addPage();
+          y = 20;
+        }
+      };
+
+      doc.setFontSize(16);
+      doc.text(t('ai_suggester.concept_result_title'), marginX, y);
+      y += 10;
+
+      conceptOptions.forEach((option) => {
+        ensureSpace(20);
+        doc.setFontSize(13);
+        doc.text(option.title, marginX, y);
+        y += 7;
+
+        doc.setFontSize(10);
+        const descLines: string[] = doc.splitTextToSize(option.description, textWidth);
+        ensureSpace(descLines.length * 5);
+        doc.text(descLines, marginX, y);
+        y += descLines.length * 5 + 3;
+
+        ensureSpace(15);
+        doc.text(`${t('ai_suggester.top_note_label')}: ${option.topNote}`, marginX, y);
+        y += 5;
+        doc.text(`${t('ai_suggester.heart_note_label')}: ${option.heartNote}`, marginX, y);
+        y += 5;
+        doc.text(`${t('ai_suggester.base_note_label')}: ${option.baseNote}`, marginX, y);
+        y += 7;
+
+        option.fragrances.forEach((f) => {
+          ensureSpace(5);
+          doc.text(`${f.name} — ${f.percentage}%`, marginX + 4, y);
+          y += 5;
+        });
+        y += 8;
+      });
+
+      await savePdf(doc, 'waxpro-proposte-fragranza.pdf');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: t('ai_suggester.error_title'),
+        description: error.message || t('ai_suggester.error_desc'),
+      });
+    } finally {
+      setIsPreparingPdf(false);
+    }
   };
 
   if (isSubscriptionLoading) {
@@ -148,11 +230,11 @@ export default function AiSuggesterPage() {
       </Card>
 
       {conceptOptions && (
-        <div className="space-y-6">
+        <div ref={resultsRef} className="space-y-6 scroll-mt-4">
           <div className="flex items-center justify-between print:hidden">
             <h2 className="text-xl font-semibold">{t('ai_suggester.concept_result_title')}</h2>
-            <Button variant="outline" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" />
+            <Button variant="outline" onClick={handlePrint} disabled={isPreparingPdf}>
+              {isPreparingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Printer className="mr-2 h-4 w-4" />}
               {t('ai_suggester.print_button')}
             </Button>
           </div>

@@ -340,6 +340,7 @@
   "report": {
     "title": "Rapport financier",
     "description": "Analysez les performances de votre entreprise.",
+    "data_source_note": "Les données sont calculées automatiquement à partir des mouvements enregistrés dans votre Inventaire (ventes et retours).",
     "export_pdf": "Exporter en PDF",
     "share_button": "Partager le Rapport",
     "share_toast_title": "Rapport Copié !",

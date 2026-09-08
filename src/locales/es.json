@@ -340,6 +340,7 @@
   "report": {
     "title": "Informe financiero",
     "description": "Analice el rendimiento de su negocio.",
+    "data_source_note": "Los datos se calculan automáticamente a partir de los movimientos registrados en tu Almacén (ventas y devoluciones).",
     "export_pdf": "Exportar a PDF",
     "share_button": "Compartir Informe",
     "share_toast_title": "¡Informe Copiado!",

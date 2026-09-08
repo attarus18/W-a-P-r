@@ -340,6 +340,7 @@
   "report": {
     "title": "Finanzbericht",
     "description": "Analysieren Sie Ihre Geschäftsleistung.",
+    "data_source_note": "Die Daten werden automatisch aus den in Ihrem Lager erfassten Bewegungen berechnet (Verkäufe und Retouren).",
     "export_pdf": "Als PDF exportieren",
     "share_button": "Bericht Teilen",
     "share_toast_title": "Bericht Kopiert!",

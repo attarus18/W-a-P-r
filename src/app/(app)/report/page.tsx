@@ -620,6 +620,7 @@ export default function ReportPage() {
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">{t('report.title')}</h1>
                     <p className="text-muted-foreground">{t('report.description')}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('report.data_source_note')}</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button onClick={handleShare} variant="outline" disabled={noData}>
