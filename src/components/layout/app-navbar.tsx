@@ -34,15 +34,20 @@ export default function AppNavbar() {
       className="fixed left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t print:hidden"
       style={{ bottom: 'var(--admob-banner-offset, 0px)' }}
     >
-        <nav className="container flex items-center justify-around h-16 max-w-screen-2xl">
+        {/* overflow-x-auto + min-w-max sull'interno: se le icone non ci
+            stanno tutte (schermi molto stretti, o piu' voci aggiunte in
+            futuro) la barra scorre invece di tagliare silenziosamente
+            l'ultima icona fuori dallo schermo. */}
+        <nav className="container max-w-screen-2xl overflow-x-auto">
             <TooltipProvider>
+                <div className="flex items-center justify-around gap-1 h-16 min-w-max">
                 {navItems.map((item) => (
                 <Tooltip key={item.href}>
                     <TooltipTrigger asChild>
                         <Link
                             href={item.href}
                             className={cn(
-                            'flex items-center justify-center rounded-full h-10 w-10 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                            'flex shrink-0 items-center justify-center rounded-full h-10 w-10 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                             item.special
                               ? 'bg-primary text-primary-foreground shadow-md hover:opacity-90'
                               : cn(
@@ -60,6 +65,7 @@ export default function AppNavbar() {
                     </TooltipContent>
                 </Tooltip>
                 ))}
+                </div>
             </TooltipProvider>
         </nav>
     </header>
