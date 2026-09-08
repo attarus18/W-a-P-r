@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "@/context/language-context";
 import { useCurrency } from "@/context/currency-context";
-import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings, Trash2, LifeBuoy } from "lucide-react";
+import { User as UserIcon, LogOut, Loader2, Star, CreditCard, SunMoon, Settings, Trash2, LifeBuoy, ShieldCheck } from "lucide-react";
 import { useUser, useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import AccessDenied from "@/components/auth/access-denied";
@@ -264,6 +264,21 @@ export default function SettingsPage() {
         <CardFooter>
           <Button asChild>
             <Link href="/support">{t('support.settings_button')}</Link>
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5" />
+            {t('settings.privacy_title')}
+          </CardTitle>
+          <CardDescription>{t('settings.privacy_description')}</CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Button asChild variant="outline">
+            <Link href="/privacy">{t('settings.privacy_button')}</Link>
           </Button>
         </CardFooter>
       </Card>
