@@ -32,7 +32,14 @@ export default function AppNavbar() {
   return (
     <header
       className="fixed left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t print:hidden"
-      style={{ bottom: 'var(--admob-banner-offset, 0px)' }}
+      // translateZ(0) + will-change forzano un livello di compositing GPU
+      // dedicato per questa barra: su alcune WebView Android, un elemento
+      // "fixed" con backdrop-blur sopra un contenuto che scorre puo'
+      // "staccarsi" temporaneamente durante lo scroll attivo (sparisce e poi
+      // riappare) perche' il motore deve ricampionare lo sfondo sfocato a
+      // ogni frame; isolarlo su un proprio layer evita il ricalcolo e tiene
+      // la barra visibile e ferma durante lo scroll.
+      style={{ bottom: 'var(--admob-banner-offset, 0px)', transform: 'translateZ(0)', willChange: 'transform' }}
     >
         {/* overflow-x-auto + min-w-max sull'interno: se le icone non ci
             stanno tutte (schermi molto stretti, o piu' voci aggiunte in
