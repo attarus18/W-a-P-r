@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calculator, Warehouse, BookMarked, Settings, PieChart, NotebookPen, BookOpen, Sparkles } from 'lucide-react';
+import { Home, Calculator, Warehouse, BookMarked, Settings, PieChart, NotebookPen, BookOpen, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -18,6 +18,7 @@ export default function AppNavbar() {
   const { t } = useLanguage();
 
   const navItems = [
+    { href: '/dashboard', icon: Home, label: t('navbar.dashboard') },
     { href: '/calculator', icon: Calculator, label: t('navbar.calculator') },
     { href: '/recipe-calculator', icon: NotebookPen, label: t('navbar.recipe_calculator') },
     { href: '/inventory', icon: Warehouse, label: t('navbar.inventory') },
