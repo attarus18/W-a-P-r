@@ -94,7 +94,6 @@
   },
   "ai_suggester": {
     "title": "Suggesteur IA",
-    "description": "Décrivez une idée, un lieu ou une ambiance et laissez l'IA proposer 3 recettes de parfum différentes pour votre bougie.",
     "disclaimer": "Les propositions sont générées par une IA et n'utilisent que des parfums courants et faciles à trouver, mais elles ne remplacent pas la Fiche de Données de Sécurité de votre fournisseur : vérifiez toujours les données avant de produire en série.",
     "generating": "Génération des propositions...",
     "rate_limit_error": "Vous avez atteint la limite quotidienne de suggestions IA. Réessayez demain.",

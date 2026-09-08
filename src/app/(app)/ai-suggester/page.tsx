@@ -116,7 +116,6 @@ export default function AiSuggesterPage() {
           <Sparkles className="h-8 w-8 text-primary" />
           {t('ai_suggester.title')}
         </h1>
-        <p className="text-muted-foreground">{t('ai_suggester.description')}</p>
       </div>
 
       <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 flex gap-3 items-start print:hidden">

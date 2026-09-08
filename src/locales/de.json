@@ -94,7 +94,6 @@
   },
   "ai_suggester": {
     "title": "KI-Assistent",
-    "description": "Beschreiben Sie eine Idee, einen Ort oder eine Stimmung und lassen Sie die KI 3 verschiedene Duftrezepte für Ihre Kerze vorschlagen.",
     "disclaimer": "Die Vorschläge werden von einer KI erstellt und verwenden nur gängige, leicht zu beschaffende Düfte, ersetzen aber nicht das Sicherheitsdatenblatt Ihres Lieferanten: Überprüfen Sie die Daten immer, bevor Sie in Serie produzieren.",
     "generating": "Vorschläge werden generiert...",
     "rate_limit_error": "Sie haben das tägliche Limit an KI-Vorschlägen erreicht. Versuchen Sie es morgen erneut.",

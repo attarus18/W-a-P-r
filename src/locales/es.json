@@ -94,7 +94,6 @@
   },
   "ai_suggester": {
     "title": "Sugeridor IA",
-    "description": "Describe una idea, un lugar o un ambiente y deja que la IA proponga 3 recetas de fragancia diferentes para tu vela.",
     "disclaimer": "Las propuestas las genera una IA y usan solo fragancias comunes y fáciles de encontrar, pero no sustituyen la Ficha de Datos de Seguridad de tu proveedor: verifica siempre los datos antes de producir en serie.",
     "generating": "Generando propuestas...",
     "rate_limit_error": "Has alcanzado el límite diario de sugerencias de IA. Vuelve a intentarlo mañana.",

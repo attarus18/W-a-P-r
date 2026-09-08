@@ -94,7 +94,6 @@
   },
   "ai_suggester": {
     "title": "Suggeritore AI",
-    "description": "Descrivi un'idea, un luogo o un'atmosfera e lascia che l'AI proponga 3 ricette di fragranza diverse per la tua candela.",
     "disclaimer": "Le proposte sono generate da un'intelligenza artificiale e usano solo fragranze comuni e facilmente reperibili, ma non sostituiscono la Scheda Dati di Sicurezza del tuo fornitore: verifica sempre i dati prima di produrre in serie.",
     "generating": "Genero le proposte...",
     "rate_limit_error": "Hai raggiunto il limite giornaliero di suggerimenti AI. Riprova domani.",
