@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ForgotPasswordDialog from "@/components/auth/forgot-password-dialog";
+import GoogleIcon from "@/components/auth/google-icon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +44,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const [isGuestAlertOpen, setIsGuestAlertOpen] = useState(false);
 
@@ -59,6 +61,40 @@ export default function LoginPage() {
       router.push('/dashboard');
     }
   }, [user, router]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === 'oauth') {
+      toast({
+        variant: 'destructive',
+        title: t('login.error_title'),
+        description: t('login.oauth_error_description'),
+      });
+      router.replace('/login');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) throw error;
+      // A questo punto il browser viene reindirizzato a Google: non c'e'
+      // altro da fare qui, la pagina sta per essere abbandonata.
+    } catch (error: any) {
+      console.error('Google login failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('login.error_title'),
+        description: error.message || t('login.oauth_error_description'),
+      });
+      setIsGoogleLoading(false);
+    }
+  };
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     setIsLoading(true);
@@ -150,11 +186,15 @@ export default function LoginPage() {
             </CardFooter>
           </form>
         </Form>
-        <CardContent>
+        <CardContent className="space-y-3">
             <div className="relative my-4">
                 <Separator />
                 <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-card px-2 text-sm text-muted-foreground">{t('login.or_continue_with')}</span>
             </div>
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isGoogleLoading}>
+                {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
+                {t('login.continue_with_google')}
+            </Button>
             <Button variant="outline" className="w-full" onClick={() => setIsGuestAlertOpen(true)}>
                 {t('login.continue_as_guest')}
             </Button>

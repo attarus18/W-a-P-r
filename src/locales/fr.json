@@ -24,6 +24,8 @@
     "error_title": "Échec de la connexion",
     "error_description": "Veuillez vérifier vos identifiants et réessayer.",
     "or_continue_with": "ou",
+    "continue_with_google": "Continuer avec Google",
+    "oauth_error_description": "Échec de la connexion avec Google. Réessayez.",
     "continue_as_guest": "Continuer sans s'inscrire",
     "guest_alert_title": "Vous continuez en tant qu'invité",
     "guest_alert_description": "Certaines sections, comme l'inventaire et les rapports, nécessitent un compte pour sauvegarder les données. Toutes les données saisies en tant qu'invité seront perdues à la fermeture de la session.",
@@ -39,6 +41,8 @@
     "have_account": "Vous avez déjà un compte ?",
     "login": "Connexion",
     "error_title": "Échec de l'inscription",
+    "continue_with_google": "S'inscrire avec Google",
+    "oauth_error_description": "Échec de l'inscription avec Google. Réessayez.",
     "password_mismatch": "Les mots de passe ne correspondent pas."
   },
   "dashboard": {

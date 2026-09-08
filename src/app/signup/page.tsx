@@ -15,6 +15,8 @@ import { useAuth, useUser } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import GoogleIcon from "@/components/auth/google-icon";
 
 const signupSchema = z.object({
   email: z.string().email({ message: "Indirizzo email non valido." }),
@@ -34,6 +36,7 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -67,7 +70,26 @@ export default function SignupPage() {
       setIsLoading(false);
     }
   };
-  
+
+  const handleGoogleSignup = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Google signup failed:', error);
+      toast({
+        variant: 'destructive',
+        title: t('signup.error_title'),
+        description: error.message || t('signup.oauth_error_description'),
+      });
+      setIsGoogleLoading(false);
+    }
+  };
+
   if (isUserLoading || user) {
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -142,6 +164,16 @@ export default function SignupPage() {
             </CardFooter>
           </form>
         </Form>
+        <CardContent>
+            <div className="relative my-4">
+                <Separator />
+                <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-card px-2 text-sm text-muted-foreground">{t('login.or_continue_with')}</span>
+            </div>
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignup} disabled={isGoogleLoading}>
+                {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
+                {t('signup.continue_with_google')}
+            </Button>
+        </CardContent>
       </Card>
     </div>
   );
