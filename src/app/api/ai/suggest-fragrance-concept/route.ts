@@ -4,9 +4,8 @@ import { generateFragranceConcept } from '@/lib/gemini/client';
 
 export const runtime = 'nodejs';
 
-// Stesso budget giornaliero di /api/ai/suggest-recipe: entrambe le rotte
-// condividono la tabella di log ai_recipe_suggestions, quindi contano
-// insieme verso lo stesso limite complessivo del Suggeritore AI.
+// Tetto di sicurezza per utente: generoso per l'uso reale, basso abbastanza
+// da non far esplodere il costo se qualcuno automatizza le chiamate.
 const DAILY_LIMIT = 15;
 
 export async function POST(req: Request) {
