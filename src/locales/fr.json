@@ -116,7 +116,22 @@
     "default_recipe_name": "Recette suggérée par l'IA",
     "rate_limit_error": "Vous avez atteint la limite quotidienne de suggestions IA. Réessayez demain.",
     "error_title": "Erreur",
-    "error_desc": "Impossible de générer la suggestion. Réessayez."
+    "error_desc": "Impossible de générer la suggestion. Réessayez.",
+    "tab_dosage": "Dosage Technique",
+    "tab_concept": "Inspiration Créative",
+    "concept_form_title": "D'une idée à un parfum",
+    "concept_form_description": "Décrivez une ambiance, un lieu ou une émotion : l'IA proposera 3 recettes de parfum différentes inspirées de votre idée.",
+    "concept_label": "Votre idée",
+    "concept_placeholder": "Ex. Une bougie qui évoque le golfe de Naples",
+    "concept_submit_button": "Générer 3 Propositions",
+    "concept_result_title": "Propositions de Parfum",
+    "top_note_label": "Note de Tête",
+    "heart_note_label": "Note de Cœur",
+    "base_note_label": "Note de Fond",
+    "print_button": "Imprimer la Fiche",
+    "concept_blocked_title": "Demande non valide",
+    "concept_blocked_default_reason": "Cette demande n'est pas pertinente pour la création d'une bougie parfumée. Réessayez en décrivant une idée, un lieu ou une ambiance.",
+    "concept_blocked_close": "Fermer"
   },
   "materials": {
     "button_label": "Coût des matériaux",

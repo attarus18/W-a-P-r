@@ -116,7 +116,22 @@
     "default_recipe_name": "AI-suggested recipe",
     "rate_limit_error": "You've reached the daily limit of AI suggestions. Try again tomorrow.",
     "error_title": "Error",
-    "error_desc": "Unable to generate the suggestion. Please try again."
+    "error_desc": "Unable to generate the suggestion. Please try again.",
+    "tab_dosage": "Technical Dosage",
+    "tab_concept": "Creative Inspiration",
+    "concept_form_title": "From an idea to a fragrance",
+    "concept_form_description": "Describe a mood, a place or an emotion: the AI will propose 3 different fragrance recipes inspired by your idea.",
+    "concept_label": "Your idea",
+    "concept_placeholder": "e.g. A candle that evokes the Gulf of Naples",
+    "concept_submit_button": "Generate 3 Proposals",
+    "concept_result_title": "Fragrance Proposals",
+    "top_note_label": "Top Note",
+    "heart_note_label": "Heart Note",
+    "base_note_label": "Base Note",
+    "print_button": "Print Sheet",
+    "concept_blocked_title": "Invalid request",
+    "concept_blocked_default_reason": "This request isn't relevant to creating a scented candle. Try again describing an idea, a place or a mood.",
+    "concept_blocked_close": "Close"
   },
   "materials": {
     "button_label": "Materials Cost",

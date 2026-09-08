@@ -116,7 +116,22 @@
     "default_recipe_name": "Ricetta suggerita dall'AI",
     "rate_limit_error": "Hai raggiunto il limite giornaliero di suggerimenti AI. Riprova domani.",
     "error_title": "Errore",
-    "error_desc": "Impossibile generare il suggerimento. Riprova."
+    "error_desc": "Impossibile generare il suggerimento. Riprova.",
+    "tab_dosage": "Dosaggio Tecnico",
+    "tab_concept": "Ispirazione Creativa",
+    "concept_form_title": "Da un'idea a una fragranza",
+    "concept_form_description": "Descrivi un'atmosfera, un luogo o un'emozione: l'AI proporrà 3 ricette di fragranza diverse ispirate alla tua idea.",
+    "concept_label": "La tua idea",
+    "concept_placeholder": "Es. Una candela che richiama il golfo di Napoli",
+    "concept_submit_button": "Genera 3 Proposte",
+    "concept_result_title": "Proposte di Fragranza",
+    "top_note_label": "Nota di Testa",
+    "heart_note_label": "Nota di Cuore",
+    "base_note_label": "Nota di Fondo",
+    "print_button": "Stampa Scheda",
+    "concept_blocked_title": "Richiesta non valida",
+    "concept_blocked_default_reason": "La richiesta non è pertinente alla creazione di una candela profumata. Riprova descrivendo un'idea, un luogo o un'atmosfera.",
+    "concept_blocked_close": "Chiudi"
   },
   "materials": {
     "button_label": "Costo Materiali",

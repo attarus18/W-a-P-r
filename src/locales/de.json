@@ -116,7 +116,22 @@
     "default_recipe_name": "KI-vorgeschlagenes Rezept",
     "rate_limit_error": "Sie haben das tägliche Limit an KI-Vorschlägen erreicht. Versuchen Sie es morgen erneut.",
     "error_title": "Fehler",
-    "error_desc": "Der Vorschlag konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+    "error_desc": "Der Vorschlag konnte nicht generiert werden. Bitte versuchen Sie es erneut.",
+    "tab_dosage": "Technische Dosierung",
+    "tab_concept": "Kreative Inspiration",
+    "concept_form_title": "Von einer Idee zu einem Duft",
+    "concept_form_description": "Beschreiben Sie eine Stimmung, einen Ort oder ein Gefühl: Die KI schlägt 3 verschiedene, von Ihrer Idee inspirierte Duftrezepte vor.",
+    "concept_label": "Ihre Idee",
+    "concept_placeholder": "z. B. Eine Kerze, die an den Golf von Neapel erinnert",
+    "concept_submit_button": "3 Vorschläge Generieren",
+    "concept_result_title": "Duftvorschläge",
+    "top_note_label": "Kopfnote",
+    "heart_note_label": "Herznote",
+    "base_note_label": "Basisnote",
+    "print_button": "Blatt Drucken",
+    "concept_blocked_title": "Ungültige Anfrage",
+    "concept_blocked_default_reason": "Diese Anfrage ist für die Erstellung einer duftenden Kerze nicht relevant. Versuchen Sie es erneut, indem Sie eine Idee, einen Ort oder eine Stimmung beschreiben.",
+    "concept_blocked_close": "Schließen"
   },
   "materials": {
     "button_label": "Materialkosten",

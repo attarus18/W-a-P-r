@@ -116,7 +116,22 @@
     "default_recipe_name": "Receta sugerida por IA",
     "rate_limit_error": "Has alcanzado el límite diario de sugerencias de IA. Vuelve a intentarlo mañana.",
     "error_title": "Error",
-    "error_desc": "No se pudo generar la sugerencia. Inténtalo de nuevo."
+    "error_desc": "No se pudo generar la sugerencia. Inténtalo de nuevo.",
+    "tab_dosage": "Dosificación Técnica",
+    "tab_concept": "Inspiración Creativa",
+    "concept_form_title": "De una idea a una fragancia",
+    "concept_form_description": "Describe un ambiente, un lugar o una emoción: la IA propondrá 3 recetas de fragancia diferentes inspiradas en tu idea.",
+    "concept_label": "Tu idea",
+    "concept_placeholder": "Ej. Una vela que evoque el Golfo de Nápoles",
+    "concept_submit_button": "Generar 3 Propuestas",
+    "concept_result_title": "Propuestas de Fragancia",
+    "top_note_label": "Nota de Salida",
+    "heart_note_label": "Nota de Corazón",
+    "base_note_label": "Nota de Fondo",
+    "print_button": "Imprimir Ficha",
+    "concept_blocked_title": "Solicitud no válida",
+    "concept_blocked_default_reason": "Esta solicitud no es pertinente para crear una vela perfumada. Vuelve a intentarlo describiendo una idea, un lugar o un ambiente.",
+    "concept_blocked_close": "Cerrar"
   },
   "materials": {
     "button_label": "Costo de materiales",
