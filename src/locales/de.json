@@ -55,7 +55,8 @@
       "report": "Analysieren Sie Gewinne und Verkaufsleistungen.",
       "recipes": "Speichern und finden Sie Ihre Rezepte mit einem Klick.",
       "settings": "Passen Sie Ihre Konto- und App-Einstellungen an.",
-      "instructions": "Lesen Sie das Handbuch, um zu erfahren, wie Sie WaxPro am besten nutzen."
+      "instructions": "Lesen Sie das Handbuch, um zu erfahren, wie Sie WaxPro am besten nutzen.",
+      "ai_suggester": "Beschreiben Sie eine Idee und lassen Sie die KI 3 Duftrezepte vorschlagen."
     },
     "register_title": "Registrieren Sie sich, um Daten zu speichern",
     "register_description": "Erstellen Sie ein Konto, um Ihre Daten dauerhaft zu speichern."

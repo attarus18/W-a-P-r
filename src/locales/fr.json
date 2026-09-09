@@ -55,7 +55,8 @@
       "report": "Analysez les bénéfices et les performances de vente.",
       "recipes": "Enregistrez et retrouvez vos recettes en un clic.",
       "settings": "Personnalisez les paramètres de votre compte et de l'application.",
-      "instructions": "Consultez le manuel pour apprendre à utiliser au mieux WaxPro."
+      "instructions": "Consultez le manuel pour apprendre à utiliser au mieux WaxPro.",
+      "ai_suggester": "Décrivez une idée et laissez l'IA proposer 3 recettes de parfum."
     },
     "register_title": "Inscrivez-vous pour sauvegarder les données",
     "register_description": "Créez un compte pour sauvegarder vos données de manière permanente."
