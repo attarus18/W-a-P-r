@@ -172,6 +172,9 @@ export default function InventoryPage() {
                 ? t('inventory.product_count', { count: products.length, limit: productLimit })
                 : t('inventory.product_count_unlimited', { count: products.length })}
           </p>
+          {isTrialing && (
+            <p className="text-xs text-muted-foreground mt-0.5">{t('inventory.trial_limit_note')}</p>
+          )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {products.length > 0 && (

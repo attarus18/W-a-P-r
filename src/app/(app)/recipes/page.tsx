@@ -163,6 +163,9 @@ export default function RecipesPage() {
               ? t('recipes.recipe_count', { count: recipes.length, limit: recipeLimit })
               : t('recipes.recipe_count_free', { count: recipes.length, limit: FREE_RECIPE_LIMIT })}
           </p>
+          {isTrialing && (
+            <p className="text-xs text-muted-foreground mt-0.5">{t('recipes.trial_limit_note')}</p>
+          )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {recipes.length > 0 && (
