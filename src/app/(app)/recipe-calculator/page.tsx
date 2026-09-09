@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,6 +40,15 @@ export default function RecipeCalculatorPage() {
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const { recipes, addRecipe } = useRecipes();
   const { hasActiveSubscription } = useSubscription();
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  // Appena esce il risultato, portiamo la pagina fin li' invece di lasciare
+  // che l'utente debba scorrere manualmente oltre il form per trovarlo.
+  useEffect(() => {
+    if (result) {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [result]);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -321,7 +330,7 @@ ${t('recipe_calculator.result_title')}:
       </Card>
       
       {result && (
-        <Card className="bg-primary/10 border-primary/20">
+        <Card ref={resultRef} className="bg-primary/10 border-primary/20 scroll-mt-4">
           <CardHeader>
             <CardTitle>{t('recipe_calculator.result_title')}</CardTitle>
             <CardDescription>{t('recipe_calculator.result_description')}</CardDescription>
