@@ -31,6 +31,11 @@
     "guest_alert_description": "Alcune sezioni, come Magazzino e Report, richiedono un account per salvare i dati. Tutti i dati inseriti come ospite andranno persi alla chiusura della sessione.",
     "guest_alert_continue": "Continua"
   },
+  "validation": {
+    "invalid_email": "Indirizzo email non valido.",
+    "password_min": "La password deve contenere almeno 6 caratteri.",
+    "passwords_no_match": "Le password non corrispondono."
+  },
   "signup": {
     "title": "Crea un Account",
     "description": "Unisciti a WaxPro per salvare i tuoi dati e accedere a tutte le funzionalità.",
@@ -394,6 +399,7 @@
       "units_sold": "unità vendute",
       "most_returned_title": "Prodotto Più Reso",
       "units_returned": "unità rese",
+      "units_in_stock": "unità",
       "product": "PRODOTTO",
       "stock": "GIACENZA",
       "return_percentage": "% RESO",
@@ -483,7 +489,10 @@
       "li4": "Quanta fragranza hai usato (con selettore ml/l/fl oz).",
       "li5": "Il costo del colorante.",
       "li6": "Eventuali costi di spedizione per i materiali.",
-      "p2": "Clicca su 'Calcola Totale' per vedere il costo finale. Puoi usare il pulsante 'Reset' per azzerare i campi e 'Condividi' per copiare il risultato."
+      "li7": "Il costo del packaging (scatole, confezioni, ecc.).",
+      "li8": "Il costo delle etichette.",
+      "li9": "Qualsiasi altro costo aggiuntivo.",
+      "p2": "Clicca su 'Calcola Totale' per vedere il costo finale: la pagina scorre automaticamente al risultato. Da lì puoi usare 'Condividi' per copiare il risultato o 'Esporta PDF' per scaricare una scheda stampabile. Il pulsante 'Reset' azzera tutti i campi."
     },
     "recipe_calculator": {
       "p1": "Questo strumento è essenziale per creare ricette precise. Ti aiuta a calcolare le giuste proporzioni di cera, fragranza e colore in base al peso totale desiderato.",
@@ -491,31 +500,39 @@
       "li2": "Inserisci il peso totale della candela che vuoi produrre.",
       "li3": "Usa lo slider per definire la percentuale di fragranza.",
       "li4": "Usa lo slider per definire la percentuale di colore.",
-      "p2": "Cliccando su 'Calcola Ricetta', l'app ti mostrerà le quantità esatte di ogni ingrediente.",
-      "p3": "Puoi anche inserire il costo per unità dei materiali per calcolare il costo totale della ricetta."
+      "p2": "Cliccando su 'Calcola Ricetta', l'app ti mostrerà le quantità esatte di ogni ingrediente e scorrerà automaticamente al risultato.",
+      "p3": "Da lì puoi condividere il risultato, esportarlo in PDF, oppure salvarlo nel tuo Archivio Ricette per riutilizzarlo in futuro."
     },
     "inventory": {
       "p1": "La sezione Magazzino è il cuore della tua gestione. Qui puoi tenere traccia di tutti i tuoi prodotti finiti. Per usare questa sezione, devi essere registrato.",
       "p2": "Aggiungi un nuovo prodotto specificando nome, quantità iniziale, soglia di riordino (per ricevere un avviso quando le scorte sono basse), costo di produzione e prezzo di vendita.",
-      "p3": "Per ogni prodotto, puoi registrare una vendita ('Vendi'), aggiungere nuove scorte ('Carico') o gestire un reso ('Reso')."
+      "p3": "Per ogni prodotto, puoi registrare una vendita ('Vendi'), aggiungere nuove scorte ('Carico') o gestire un reso ('Reso').",
+      "p4": "Il pulsante 'Stampa Magazzino PDF' genera una scheda stampabile con tutti i prodotti e i relativi dati."
+    },
+    "ai_suggester": {
+      "p1": "Il Suggeritore AI trasforma un'idea, un luogo o un'atmosfera in 3 proposte di ricetta di fragranza diverse, generate dall'intelligenza artificiale. È una funzionalità riservata ai piani a pagamento.",
+      "p2": "Descrivi la tua idea (es. 'Una candela che richiama il golfo di Napoli') e premi 'Genera 3 Proposte'. Per ogni proposta l'AI fornisce un titolo, una descrizione, le note olfattive (testa, cuore, fondo) e il blend di fragranze in percentuale, usando solo fragranze comuni e facilmente reperibili.",
+      "p3": "Se la richiesta non è pertinente alla creazione di una candela (fuori tema, offensiva, ecc.), l'AI la rifiuta e ti chiede di riformularla. Puoi stampare le proposte con il pulsante 'Stampa Scheda'."
     },
     "report": {
-      "p1": "Il Report Finanziario ti offre una panoramica delle tue performance di vendita. Puoi filtrare i dati per giorno, settimana, mese o anno. Le card principali mostrano:",
+      "p1": "Il Report Finanziario ti offre una panoramica delle tue performance di vendita, calcolata automaticamente dai movimenti del tuo Magazzino. Puoi filtrare i dati per giorno, settimana, mese, anno, oppure scegliere un 'Intervallo Date' personalizzato. Le card principali mostrano:",
       "li1": "Il profitto totale generato nel periodo selezionato.",
       "li2": "Il numero totale di unità vendute.",
       "li3": "Il valore totale della merce attualmente in magazzino.",
-      "p2": "Il grafico sottostante mostra l'andamento del profitto e delle unità vendute nel tempo, offrendoti una visione chiara delle tue performance. Puoi anche esportare un report dettagliato in PDF."
+      "p2": "Il grafico sottostante mostra l'andamento del profitto e delle unità vendute nel tempo. In fondo alla pagina trovi i pulsanti 'Condividi Report' ed 'Esporta in PDF' per un report dettagliato."
     },
     "recipes": {
       "p1": "L'Archivio Ricette ti permette di salvare le ricette calcolate nel Calcolatore Ricette, così non devi reinserire tutto da zero ogni volta che rifai la stessa candela.",
-      "p2": "Puoi rinominare o eliminare le ricette salvate in qualsiasi momento. Il piano gratuito include 2 ricette salvabili; oltre questo limite serve un abbonamento attivo."
+      "p2": "Puoi rinominare o eliminare le ricette salvate in qualsiasi momento. Il piano gratuito include 2 ricette salvabili; oltre questo limite serve un abbonamento attivo.",
+      "p3": "Il pulsante 'Esporta Ricette PDF' genera una scheda stampabile con tutte le tue ricette salvate."
     },
     "settings": {
       "p1": "Nella sezione Impostazioni puoi personalizzare la tua esperienza su WaxPro.",
       "li1": "Gestisci i dati del tuo profilo e accedi o esci dall'app.",
       "li2": "Visualizza lo stato del tuo abbonamento e gestisci il piano tramite Google Play (disponibile solo nell'app Android).",
       "li3": "Scegli tra il tema chiaro e scuro per l'interfaccia dell'applicazione.",
-      "li4": "Imposta la lingua e la valuta predefinite per l'intera applicazione."
+      "li4": "Imposta la lingua e la valuta predefinite per l'intera applicazione.",
+      "li5": "Consulta l'informativa sulla privacy e le istruzioni per la cancellazione dei dati."
     },
     "support": {
       "p1": "Hai un problema o una domanda? Vai su Impostazioni e clicca su \"Contatta l'Assistenza\".",

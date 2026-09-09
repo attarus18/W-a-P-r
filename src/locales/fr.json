@@ -31,6 +31,11 @@
     "guest_alert_description": "Certaines sections, comme l'inventaire et les rapports, nécessitent un compte pour sauvegarder les données. Toutes les données saisies en tant qu'invité seront perdues à la fermeture de la session.",
     "guest_alert_continue": "Continuer"
   },
+  "validation": {
+    "invalid_email": "Adresse email invalide.",
+    "password_min": "Le mot de passe doit contenir au moins 6 caractères.",
+    "passwords_no_match": "Les mots de passe ne correspondent pas."
+  },
   "signup": {
     "title": "Créer un compte",
     "description": "Rejoignez WaxPro pour sauvegarder vos données et accéder à toutes les fonctionnalités.",
@@ -394,6 +399,7 @@
       "units_sold": "unités vendues",
       "most_returned_title": "Produit le Plus Retourné",
       "units_returned": "unités retournées",
+      "units_in_stock": "unités",
       "product": "PRODUIT",
       "stock": "STOCK",
       "return_percentage": "% RETOUR",
@@ -483,7 +489,10 @@
       "li4": "La quantité de parfum utilisée (avec sélecteur ml/l/fl oz).",
       "li5": "Le coût du colorant.",
       "li6": "Tous les frais d'expédition pour les matériaux.",
-      "p2": "Cliquez sur 'Calculer le total' pour voir le coût final. Vous pouvez utiliser le bouton 'Réinitialiser' pour effacer les champs et 'Partager' pour copier le résultat."
+      "li7": "Le coût de l'emballage (boîtes, papier, etc.).",
+      "li8": "Le coût des étiquettes.",
+      "li9": "Tout autre coût supplémentaire.",
+      "p2": "Cliquez sur 'Calculer le Total' pour voir le coût final : la page défile automatiquement jusqu'au résultat. De là, vous pouvez utiliser 'Partager le Résultat' pour copier le résultat ou 'Exporter en PDF' pour télécharger une fiche imprimable. Le bouton 'Réinitialiser' efface tous les champs."
     },
     "recipe_calculator": {
       "p1": "Cet outil est essentiel pour créer des recettes précises. Il vous aide à calculer les bonnes proportions de cire, de parfum et de couleur en fonction du poids total souhaité.",
@@ -491,31 +500,39 @@
       "li2": "Entrez le poids total de la bougie que vous souhaitez produire.",
       "li3": "Utilisez le curseur pour définir le pourcentage de parfum.",
       "li4": "Utilisez le curseur pour définir le pourcentage de couleur.",
-      "p2": "En cliquant sur 'Calculer la recette', l'application vous montrera les quantités exactes de chaque ingrédient.",
-      "p3": "Vous pouvez également entrer le coût par unité de matériau pour calculer le coût total de la recette."
+      "p2": "En cliquant sur 'Calculer la Recette', l'application vous montrera les quantités exactes de chaque ingrédient et défilera automatiquement jusqu'au résultat.",
+      "p3": "De là, vous pouvez partager le résultat, l'exporter en PDF, ou l'enregistrer dans votre Archive des Recettes pour le réutiliser plus tard."
     },
     "inventory": {
       "p1": "La section Inventaire est au cœur de votre gestion. Ici, vous pouvez suivre tous vos produits finis. Pour utiliser cette section, vous devez être inscrit.",
       "p2": "Ajoutez un nouveau produit en spécifiant son nom, sa quantité initiale, son seuil de réapprovisionnement (pour recevoir un avertissement lorsque le stock est bas), son coût de production et son prix de vente.",
-      "p3": "Pour chaque produit, vous pouvez enregistrer une vente ('Vendre'), ajouter un nouveau stock ('Charger') ou gérer un retour ('Retour')."
+      "p3": "Pour chaque produit, vous pouvez enregistrer une vente ('Vendre'), ajouter un nouveau stock ('Charger') ou gérer un retour ('Retour').",
+      "p4": "Le bouton 'Imprimer Inventaire PDF' génère une fiche imprimable avec tous vos produits et leurs données."
+    },
+    "ai_suggester": {
+      "p1": "Le Suggesteur IA transforme une idée, un lieu ou une ambiance en 3 propositions de recette de parfum différentes, générées par intelligence artificielle. C'est une fonctionnalité réservée aux plans payants.",
+      "p2": "Décrivez votre idée (ex. « Une bougie qui évoque le golfe de Naples ») et appuyez sur 'Générer 3 Propositions'. Pour chaque proposition, l'IA fournit un titre, une description, les notes olfactives (tête, cœur, fond) et le mélange de parfums en pourcentage, en utilisant uniquement des parfums courants et faciles à trouver.",
+      "p3": "Si la demande n'est pas pertinente pour la création d'une bougie (hors sujet, offensante, etc.), l'IA la rejette et vous demande de la reformuler. Vous pouvez imprimer les propositions avec le bouton 'Imprimer la Fiche'."
     },
     "report": {
-      "p1": "Le rapport financier vous donne un aperçu de vos performances de vente. Vous pouvez filtrer les données par jour, semaine, mois ou année. Les principales fiches indiquent :",
+      "p1": "Le rapport financier vous donne un aperçu de vos performances de vente, calculé automatiquement à partir des mouvements de votre Inventaire. Vous pouvez filtrer les données par jour, semaine, mois, année, ou choisir une 'Plage de Dates' personnalisée. Les principales fiches indiquent :",
       "li1": "Le bénéfice total généré sur la période sélectionnée.",
       "li2": "Le nombre total d'unités vendues.",
       "li3": "La valeur totale des marchandises actuellement en stock.",
-      "p2": "Le graphique ci-dessous montre l'évolution des bénéfices et des unités vendues dans le temps, vous donnant une vue claire de vos performances. Vous pouvez également exporter un rapport détaillé au format PDF."
+      "p2": "Le graphique ci-dessous montre l'évolution des bénéfices et des unités vendues dans le temps. En bas de la page, vous trouverez les boutons 'Partager le Rapport' et 'Exporter en PDF' pour un rapport détaillé."
     },
     "recipes": {
       "p1": "L'Archive des recettes vous permet d'enregistrer les recettes calculées dans le Calculateur de recettes, afin de ne pas devoir tout ressaisir à chaque fois que vous refaites la même bougie.",
-      "p2": "Vous pouvez renommer ou supprimer les recettes enregistrées à tout moment. Le plan gratuit inclut 2 recettes enregistrables ; au-delà, un abonnement actif est requis."
+      "p2": "Vous pouvez renommer ou supprimer les recettes enregistrées à tout moment. Le plan gratuit inclut 2 recettes enregistrables ; au-delà, un abonnement actif est requis.",
+      "p3": "Le bouton 'Exporter les Recettes en PDF' génère une fiche imprimable avec toutes vos recettes enregistrées."
     },
     "settings": {
       "p1": "Dans la section Paramètres, vous pouvez personnaliser votre expérience sur WaxPro.",
       "li1": "Gérez les données de votre profil et connectez-vous ou déconnectez-vous de l'application.",
       "li2": "Consultez l'état de votre abonnement et gérez votre plan via Google Play (disponible uniquement dans l'app Android).",
       "li3": "Choisissez entre le thème clair et le thème sombre pour l'interface de l'application.",
-      "li4": "Définissez la langue et la devise par défaut pour l'ensemble de l'application."
+      "li4": "Définissez la langue et la devise par défaut pour l'ensemble de l'application.",
+      "li5": "Consultez la politique de confidentialité et les instructions pour supprimer vos données."
     },
     "support": {
       "p1": "Un problème ou une question ? Allez dans Paramètres et appuyez sur \"Contacter l'Assistance\".",

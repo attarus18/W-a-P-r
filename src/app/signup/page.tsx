@@ -18,16 +18,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import GoogleIcon from "@/components/auth/google-icon";
 
-const signupSchema = z.object({
-  email: z.string().email({ message: "Indirizzo email non valido." }),
-  password: z.string().min(6, { message: "La password deve contenere almeno 6 caratteri." }),
-  confirmPassword: z.string()
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Le password non corrispondono.",
-  path: ["confirmPassword"],
-});
-
-type SignupFormValues = z.infer<typeof signupSchema>;
+type SignupFormValues = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export default function SignupPage() {
   const { t } = useLanguage();
@@ -37,6 +32,15 @@ export default function SignupPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  const signupSchema = z.object({
+    email: z.string().email({ message: t('validation.invalid_email') }),
+    password: z.string().min(6, { message: t('validation.password_min') }),
+    confirmPassword: z.string()
+  }).refine(data => data.password === data.confirmPassword, {
+    message: t('validation.passwords_no_match'),
+    path: ["confirmPassword"],
+  });
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),

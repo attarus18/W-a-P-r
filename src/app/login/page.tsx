@@ -30,15 +30,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
 
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 export default function LoginPage() {
   const { t } = useLanguage();
+
+  const loginSchema = z.object({
+    email: z.string().email({ message: t('validation.invalid_email') }),
+    password: z.string().min(6, { message: t('validation.password_min') }),
+  });
   const supabase = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();

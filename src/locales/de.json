@@ -31,6 +31,11 @@
     "guest_alert_description": "Einige Abschnitte, wie Inventar und Berichte, erfordern ein Konto zum Speichern von Daten. Alle als Gast eingegebenen Daten gehen beim Schließen der Sitzung verloren.",
     "guest_alert_continue": "Fortfahren"
   },
+  "validation": {
+    "invalid_email": "Ungültige E-Mail-Adresse.",
+    "password_min": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+    "passwords_no_match": "Die Passwörter stimmen nicht überein."
+  },
   "signup": {
     "title": "Konto erstellen",
     "description": "Treten Sie WaxPro bei, um Ihre Daten zu speichern und auf alle Funktionen zuzugreifen.",
@@ -394,6 +399,7 @@
       "units_sold": "verkaufte Einheiten",
       "most_returned_title": "Meistzurückgegebenes Produkt",
       "units_returned": "zurückgegebene Einheiten",
+      "units_in_stock": "Einheiten",
       "product": "PRODUKT",
       "stock": "LAGER",
       "return_percentage": "% RÜCKGABE",
@@ -483,7 +489,10 @@
       "li4": "Wie viel Duft Sie verwendet haben (mit ml/l/fl oz-Auswahl).",
       "li5": "Die Kosten für den Farbstoff.",
       "li6": "Eventuelle Versandkosten für Materialien.",
-      "p2": "Klicken Sie auf 'Gesamt berechnen', um die Endkosten zu sehen. Sie können die 'Zurücksetzen'-Schaltfläche verwenden, um die Felder zu leeren, und 'Teilen', um das Ergebnis zu kopieren."
+      "li7": "Die Kosten für die Verpackung (Kartons, Umhüllungen usw.).",
+      "li8": "Die Kosten für Etiketten.",
+      "li9": "Alle sonstigen zusätzlichen Kosten.",
+      "p2": "Klicken Sie auf 'Gesamt Berechnen', um die Endkosten zu sehen: Die Seite scrollt automatisch zum Ergebnis. Von dort können Sie 'Ergebnis Teilen' verwenden, um das Ergebnis zu kopieren, oder 'PDF Exportieren', um ein druckbares Blatt herunterzuladen. Die Schaltfläche 'Zurücksetzen' leert alle Felder."
     },
     "recipe_calculator": {
       "p1": "Dieses Werkzeug ist unerlässlich für die Erstellung präziser Rezepte. Es hilft Ihnen, die richtigen Proportionen von Wachs, Duft und Farbe basierend auf dem gewünschten Gesamtgewicht zu berechnen.",
@@ -491,31 +500,39 @@
       "li2": "Geben Sie das Gesamtgewicht der Kerze ein, die Sie herstellen möchten.",
       "li3": "Verwenden Sie den Schieberegler, um den Duftprozentsatz zu definieren.",
       "li4": "Verwenden Sie den Schieberegler, um den Farbprozentsatz zu definieren.",
-      "p2": "Wenn Sie auf 'Rezept berechnen' klicken, zeigt Ihnen die App die genauen Mengen jedes Inhaltsstoffs an.",
-      "p3": "Sie können auch die Kosten pro Materialeinheit eingeben, um die Gesamtkosten des Rezepts zu berechnen."
+      "p2": "Wenn Sie auf 'Rezept Berechnen' klicken, zeigt Ihnen die App die genauen Mengen jedes Inhaltsstoffs an und scrollt automatisch zum Ergebnis.",
+      "p3": "Von dort können Sie das Ergebnis teilen, als PDF exportieren, oder in Ihrem Rezeptarchiv speichern, um es später wiederzuverwenden."
     },
     "inventory": {
       "p1": "Der Inventarbereich ist das Herzstück Ihrer Verwaltung. Hier können Sie alle Ihre fertigen Produkte verfolgen. Um diesen Bereich nutzen zu können, müssen Sie registriert sein.",
       "p2": "Fügen Sie ein neues Produkt hinzu, indem Sie dessen Namen, Anfangsmenge, Nachbestellschwelle (um eine Warnung zu erhalten, wenn der Lagerbestand niedrig ist), Produktionskosten und Verkaufspreis angeben.",
-      "p3": "Für jedes Produkt können Sie einen Verkauf ('Verkaufen'), neuen Lagerbestand ('Laden') oder eine Rückgabe ('Rückgabe') erfassen."
+      "p3": "Für jedes Produkt können Sie einen Verkauf ('Verkaufen'), neuen Lagerbestand ('Laden') oder eine Rückgabe ('Rückgabe') erfassen.",
+      "p4": "Die Schaltfläche 'Lagerbestand PDF Drucken' erstellt ein druckbares Blatt mit allen Ihren Produkten und deren Daten."
+    },
+    "ai_suggester": {
+      "p1": "Der KI-Assistent verwandelt eine Idee, einen Ort oder eine Stimmung in 3 verschiedene Duftrezeptvorschläge, die von künstlicher Intelligenz generiert werden. Es ist eine Funktion, die kostenpflichtigen Plänen vorbehalten ist.",
+      "p2": "Beschreiben Sie Ihre Idee (z. B. „Eine Kerze, die an den Golf von Neapel erinnert“) und tippen Sie auf '3 Vorschläge Generieren'. Für jeden Vorschlag liefert die KI einen Titel, eine Beschreibung, die Duftnoten (Kopf, Herz, Basis) und die Duftmischung in Prozent, wobei nur gängige und leicht zu beschaffende Düfte verwendet werden.",
+      "p3": "Wenn die Anfrage nicht relevant für die Erstellung einer Kerze ist (themenfremd, beleidigend usw.), lehnt die KI sie ab und bittet Sie, sie umzuformulieren. Sie können die Vorschläge mit der Schaltfläche 'Blatt Drucken' drucken."
     },
     "report": {
-      "p1": "Der Finanzbericht gibt Ihnen einen Überblick über Ihre Verkaufsleistung. Sie können die Daten nach Tag, Woche, Monat oder Jahr filtern. Die Hauptkarten zeigen:",
+      "p1": "Der Finanzbericht gibt Ihnen einen Überblick über Ihre Verkaufsleistung, automatisch berechnet aus den Bewegungen Ihres Lagers. Sie können die Daten nach Tag, Woche, Monat, Jahr filtern oder einen benutzerdefinierten 'Datumsbereich' wählen. Die Hauptkarten zeigen:",
       "li1": "Den Gesamtgewinn im ausgewählten Zeitraum.",
       "li2": "Die Gesamtzahl der verkauften Einheiten.",
       "li3": "Den Gesamtwert der derzeit auf Lager befindlichen Waren.",
-      "p2": "Das folgende Diagramm zeigt den Trend von Gewinn und verkauften Einheiten über die Zeit und gibt Ihnen einen klaren Überblick über Ihre Leistung. Sie können auch einen detaillierten Bericht als PDF exportieren."
+      "p2": "Das folgende Diagramm zeigt den Trend von Gewinn und verkauften Einheiten über die Zeit. Am Ende der Seite finden Sie die Schaltflächen 'Bericht Teilen' und 'Als PDF Exportieren' für einen detaillierten Bericht."
     },
     "recipes": {
       "p1": "Mit dem Rezeptarchiv können Sie im Rezeptrechner berechnete Rezepte speichern, sodass Sie nicht jedes Mal alles neu eingeben müssen, wenn Sie dieselbe Kerze wieder herstellen.",
-      "p2": "Sie können gespeicherte Rezepte jederzeit umbenennen oder löschen. Der kostenlose Plan umfasst 2 speicherbare Rezepte; darüber hinaus ist ein aktives Abonnement erforderlich."
+      "p2": "Sie können gespeicherte Rezepte jederzeit umbenennen oder löschen. Der kostenlose Plan umfasst 2 speicherbare Rezepte; darüber hinaus ist ein aktives Abonnement erforderlich.",
+      "p3": "Die Schaltfläche 'Rezepte als PDF Exportieren' erstellt ein druckbares Blatt mit allen Ihren gespeicherten Rezepten."
     },
     "settings": {
       "p1": "Im Bereich Einstellungen können Sie Ihre Erfahrung auf WaxPro anpassen.",
       "li1": "Verwalten Sie Ihre Profildaten und melden Sie sich an oder von der App ab.",
       "li2": "Sehen Sie Ihren Abonnementstatus und verwalten Sie Ihren Plan über Google Play (nur in der Android-App verfügbar).",
       "li3": "Wählen Sie zwischen dem hellen und dem dunklen Thema für die Benutzeroberfläche der Anwendung.",
-      "li4": "Stellen Sie die Standardsprache und -währung für die gesamte Anwendung ein."
+      "li4": "Stellen Sie die Standardsprache und -währung für die gesamte Anwendung ein.",
+      "li5": "Lesen Sie die Datenschutzerklärung und die Anleitung zur Löschung Ihrer Daten."
     },
     "support": {
       "p1": "Haben Sie ein Problem oder eine Frage? Gehen Sie zu Einstellungen und tippen Sie auf \"Support Kontaktieren\".",

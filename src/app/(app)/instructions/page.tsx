@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen, LifeBuoy } from 'lucide-react';
+import { BookOpen, Calculator, Warehouse, PieChart, BookMarked, Settings, NotebookPen, LifeBuoy, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export default function InstructionsPage() {
@@ -39,6 +39,9 @@ export default function InstructionsPage() {
                   <li><strong>{t('calculator.fragrance_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li4')}</li>
                   <li><strong>{t('calculator.color_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li5')}</li>
                   <li><strong>{t('calculator.shipping_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li6')}</li>
+                  <li><strong>{t('calculator.packaging_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li7')}</li>
+                  <li><strong>{t('calculator.labels_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li8')}</li>
+                  <li><strong>{t('calculator.other_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li9')}</li>
                 </ul>
                 <p>{t('instructions.calculator.p2')}</p>
               </AccordionContent>
@@ -75,10 +78,25 @@ export default function InstructionsPage() {
                 <p>{t('instructions.inventory.p1')}</p>
                 <p>{t('instructions.inventory.p2')}</p>
                 <p>{t('instructions.inventory.p3')}</p>
+                <p>{t('instructions.inventory.p4')}</p>
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-4">
+              <AccordionTrigger>
+                <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    {t('navbar.ai_suggester')}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="prose prose-sm dark:prose-invert max-w-none">
+                <p>{t('instructions.ai_suggester.p1')}</p>
+                <p>{t('instructions.ai_suggester.p2')}</p>
+                <p>{t('instructions.ai_suggester.p3')}</p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
                     <PieChart className="h-5 w-5 text-primary" />
@@ -95,8 +113,8 @@ export default function InstructionsPage() {
                 <p>{t('instructions.report.p2')}</p>
               </AccordionContent>
             </AccordionItem>
-            
-            <AccordionItem value="item-5">
+
+            <AccordionItem value="item-6">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
                     <BookMarked className="h-5 w-5 text-primary" />
@@ -106,10 +124,11 @@ export default function InstructionsPage() {
               <AccordionContent className="prose prose-sm dark:prose-invert max-w-none">
                 <p>{t('instructions.recipes.p1')}</p>
                 <p>{t('instructions.recipes.p2')}</p>
+                <p>{t('instructions.recipes.p3')}</p>
               </AccordionContent>
             </AccordionItem>
-            
-            <AccordionItem value="item-6">
+
+            <AccordionItem value="item-7">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
                     <Settings className="h-5 w-5 text-primary" />
@@ -123,11 +142,12 @@ export default function InstructionsPage() {
                   <li><strong>{t('settings.subscription_card_title')}:</strong> {t('instructions.settings.li2')}</li>
                   <li><strong>{t('settings.theme_title')}:</strong> {t('instructions.settings.li3')}</li>
                    <li><strong>{t('settings.preferences_title')}:</strong> {t('instructions.settings.li4')}</li>
+                   <li><strong>{t('settings.privacy_title')}:</strong> {t('instructions.settings.li5')}</li>
                 </ul>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-7">
+            <AccordionItem value="item-8">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
                     <LifeBuoy className="h-5 w-5 text-primary" />

@@ -31,6 +31,11 @@
     "guest_alert_description": "Algunas secciones, como Inventario e Informes, requieren una cuenta para guardar los datos. Todos los datos ingresados como invitado se perderán al cerrar la sesión.",
     "guest_alert_continue": "Continuar"
   },
+  "validation": {
+    "invalid_email": "Dirección de correo no válida.",
+    "password_min": "La contraseña debe tener al menos 6 caracteres.",
+    "passwords_no_match": "Las contraseñas no coinciden."
+  },
   "signup": {
     "title": "Crear una cuenta",
     "description": "Únase a WaxPro para guardar sus datos y acceder a todas las funciones.",
@@ -394,6 +399,7 @@
       "units_sold": "unidades vendidas",
       "most_returned_title": "Producto Más Devuelto",
       "units_returned": "unidades devueltas",
+      "units_in_stock": "unidades",
       "product": "PRODUCTO",
       "stock": "STOCK",
       "return_percentage": "% DEVOLUCIÓN",
@@ -483,7 +489,10 @@
       "li4": "Cuánta fragancia usó (con selector ml/l/fl oz).",
       "li5": "El costo del colorante.",
       "li6": "Cualquier costo de envío de materiales.",
-      "p2": "Haga clic en 'Calcular total' para ver el costo final. Puede usar el botón 'Reiniciar' para borrar los campos y 'Compartir' para copiar el resultado."
+      "li7": "El costo del embalaje (cajas, envoltorios, etc.).",
+      "li8": "El costo de las etiquetas.",
+      "li9": "Cualquier otro costo adicional.",
+      "p2": "Haga clic en 'Calcular Total' para ver el costo final: la página se desplaza automáticamente al resultado. Desde allí puede usar 'Compartir' para copiar el resultado o 'Exportar PDF' para descargar una ficha imprimible. El botón 'Reiniciar' borra todos los campos."
     },
     "recipe_calculator": {
       "p1": "Esta herramienta es esencial para crear recetas precisas. Le ayuda a calcular las proporciones correctas de cera, fragancia y color según el peso total deseado.",
@@ -491,31 +500,39 @@
       "li2": "Ingrese el peso total de la vela que desea producir.",
       "li3": "Use el control deslizante para definir el porcentaje de fragancia.",
       "li4": "Use el control deslizante para definir el porcentaje de color.",
-      "p2": "Al hacer clic en 'Calcular receta', la aplicación le mostrará las cantidades exactas de cada ingrediente.",
-      "p3": "También puede ingresar el costo por unidad de materiales para calcular el costo total de la receta."
+      "p2": "Al hacer clic en 'Calcular Receta', la aplicación le mostrará las cantidades exactas de cada ingrediente y se desplazará automáticamente al resultado.",
+      "p3": "Desde allí puede compartir el resultado, exportarlo a PDF, o guardarlo en su Archivo de Recetas para reutilizarlo más adelante."
     },
     "inventory": {
       "p1": "La sección de Inventario es el corazón de su gestión. Aquí puede realizar un seguimiento de todos sus productos terminados. Para usar esta sección, debe estar registrado.",
       "p2": "Agregue un nuevo producto especificando su nombre, cantidad inicial, umbral de reorden (para recibir una advertencia cuando las existencias sean bajas), costo de producción y precio de venta.",
-      "p3": "Para cada producto, puede registrar una venta ('Vender'), agregar nuevas existencias ('Cargar') o gestionar una devolución ('Devolución')."
+      "p3": "Para cada producto, puede registrar una venta ('Vender'), agregar nuevas existencias ('Cargar') o gestionar una devolución ('Devolución').",
+      "p4": "El botón 'Imprimir Inventario PDF' genera una ficha imprimible con todos sus productos y sus datos."
+    },
+    "ai_suggester": {
+      "p1": "El Sugeridor IA transforma una idea, un lugar o un ambiente en 3 propuestas de receta de fragancia diferentes, generadas por inteligencia artificial. Es una función reservada a los planes de pago.",
+      "p2": "Describa su idea (ej. 'Una vela que evoque el Golfo de Nápoles') y toque 'Generar 3 Propuestas'. Para cada propuesta, la IA proporciona un título, una descripción, las notas olfativas (salida, corazón, fondo) y la mezcla de fragancias en porcentaje, usando solo fragancias comunes y fáciles de encontrar.",
+      "p3": "Si la solicitud no es pertinente para crear una vela (fuera de tema, ofensiva, etc.), la IA la rechaza y le pide que la reformule. Puede imprimir las propuestas con el botón 'Imprimir Ficha'."
     },
     "report": {
-      "p1": "El Informe financiero le brinda una descripción general del rendimiento de sus ventas. Puede filtrar los datos por día, semana, mes o año. Las tarjetas principales muestran:",
+      "p1": "El Informe Financiero le brinda una descripción general del rendimiento de sus ventas, calculada automáticamente a partir de los movimientos de su Inventario. Puede filtrar los datos por día, semana, mes, año, o elegir un 'Intervalo de Fechas' personalizado. Las tarjetas principales muestran:",
       "li1": "La ganancia total generada en el período seleccionado.",
       "li2": "El número total de unidades vendidas.",
       "li3": "El valor total de los bienes actualmente en stock.",
-      "p2": "El gráfico a continuación muestra la tendencia de las ganancias y las unidades vendidas a lo largo del tiempo, brindándole una vista clara de su rendimiento. También puede exportar un informe detallado en PDF."
+      "p2": "El gráfico a continuación muestra la tendencia de las ganancias y las unidades vendidas a lo largo del tiempo. Al final de la página encontrará los botones 'Compartir Informe' y 'Exportar a PDF' para un informe detallado."
     },
     "recipes": {
       "p1": "El Archivo de recetas le permite guardar las recetas calculadas en la Calculadora de recetas, para no tener que volver a introducir todo cada vez que haga la misma vela.",
-      "p2": "Puede cambiar el nombre o eliminar las recetas guardadas en cualquier momento. El plan gratuito incluye 2 recetas guardables; más allá de eso, se requiere una suscripción activa."
+      "p2": "Puede cambiar el nombre o eliminar las recetas guardadas en cualquier momento. El plan gratuito incluye 2 recetas guardables; más allá de eso, se requiere una suscripción activa.",
+      "p3": "El botón 'Exportar Recetas PDF' genera una ficha imprimible con todas sus recetas guardadas."
     },
     "settings": {
       "p1": "En la sección de Ajustes, puede personalizar su experiencia en WaxPro.",
       "li1": "Administre los datos de su perfil e inicie o cierre sesión en la aplicación.",
       "li2": "Vea el estado de su suscripción y administre su plan a través de Google Play (disponible solo en la app de Android).",
       "li3": "Elija entre el tema claro y oscuro para la interfaz de la aplicación.",
-      "li4": "Establezca el idioma y la moneda predeterminados para toda la aplicación."
+      "li4": "Establezca el idioma y la moneda predeterminados para toda la aplicación.",
+      "li5": "Consulte la política de privacidad y las instrucciones para eliminar sus datos."
     },
     "support": {
       "p1": "¿Tienes un problema o una pregunta? Ve a Ajustes y toca \"Contactar con Soporte\".",

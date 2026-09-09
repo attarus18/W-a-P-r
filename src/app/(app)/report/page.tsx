@@ -318,7 +318,7 @@ export default function ReportPage() {
                 { title: t('report.total_profit'), value: formatCurrencyForPdf(reportData.totalProfit), highlight: true },
                 { title: t('report.total_sold'), value: `${reportData.totalSold}`, highlight: false },
                 { title: t('report.total_returned'), value: `${reportData.totalReturned}`, highlight: false },
-                { title: t('report.total_stock'), value: `${grandTotalStock} PZ`, highlight: false },
+                { title: t('report.total_stock'), value: `${grandTotalStock} ${t('report.pdf.units_in_stock')}`, highlight: false },
             ];
 
             summaryCards.forEach((card, index) => {

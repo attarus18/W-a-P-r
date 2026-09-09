@@ -21,11 +21,9 @@ import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: "Indirizzo email non valido." }),
-});
-
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordFormValues = {
+  email: string;
+};
 
 interface ForgotPasswordDialogProps {
   children: React.ReactNode;
@@ -38,6 +36,10 @@ export default function ForgotPasswordDialog({ children, open, onOpenChange }: F
   const supabase = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const forgotPasswordSchema = z.object({
+    email: z.string().email({ message: t('validation.invalid_email') }),
+  });
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
