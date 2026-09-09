@@ -9,16 +9,24 @@ import { useLanguage } from '@/context/language-context';
 import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import { useToast } from '@/hooks/use-toast';
-import { FREE_RECIPE_LIMIT } from '@/lib/constants';
+import { FREE_RECIPE_LIMIT, TRIAL_RECIPE_LIMIT, RECIPE_LIMITS, type PaidPlan } from '@/lib/constants';
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 
 export default function RecipesPage() {
   const { t } = useLanguage();
   const { recipes, isLoading } = useRecipes();
-  const { hasActiveSubscription, isSubscriptionLoading } = useSubscription();
+  const { hasActiveSubscription, subscription, isTrialing, isSubscriptionLoading } = useSubscription();
   const { toast } = useToast();
   const [isPrinting, setIsPrinting] = useState(false);
+
+  const getRecipeLimit = () => {
+    if (isTrialing) return TRIAL_RECIPE_LIMIT;
+    const plan = subscription?.subscriptionPlan as PaidPlan | undefined;
+    if (plan && plan in RECIPE_LIMITS) return RECIPE_LIMITS[plan];
+    return FREE_RECIPE_LIMIT;
+  };
+  const recipeLimit = getRecipeLimit();
 
   const handleGeneratePdf = async () => {
     if (recipes.length === 0) return;
@@ -152,7 +160,7 @@ export default function RecipesPage() {
           <p className="text-muted-foreground">{t('recipes.description')}</p>
           <p className="text-sm text-primary font-medium mt-1">
             {hasActiveSubscription
-              ? t('recipes.recipe_count_unlimited', { count: recipes.length })
+              ? t('recipes.recipe_count', { count: recipes.length, limit: recipeLimit })
               : t('recipes.recipe_count_free', { count: recipes.length, limit: FREE_RECIPE_LIMIT })}
           </p>
         </div>

@@ -1,15 +1,19 @@
 import { NextResponse } from 'next/server';
 import { requireProUserWithinDailyLimit } from '@/lib/ai/guard';
 import { generateFragranceConcept } from '@/lib/gemini/client';
+import { AI_DAILY_LIMITS, type PaidPlan } from '@/lib/constants';
 
 export const runtime = 'nodejs';
 
-// Tetto di sicurezza per utente: generoso per l'uso reale, basso abbastanza
-// da non far esplodere il costo se qualcuno automatizza le chiamate.
-const DAILY_LIMIT = 15;
+// Limite giornaliero per piano: Hobby e' limitato a 3/giorno (come da
+// listino), Pro/Annuale sono pubblicizzati come "illimitato" ma usano
+// comunque un tetto alto (AI_DAILY_LIMITS) come rete di sicurezza
+// anti-abuso, mai raggiungibile da un utente reale.
+const getDailyLimit = (plan: string | null) =>
+  plan && plan in AI_DAILY_LIMITS ? AI_DAILY_LIMITS[plan as PaidPlan] : AI_DAILY_LIMITS.hobby;
 
 export async function POST(req: Request) {
-  const guard = await requireProUserWithinDailyLimit(req, { table: 'ai_recipe_suggestions', dailyLimit: DAILY_LIMIT });
+  const guard = await requireProUserWithinDailyLimit(req, { table: 'ai_recipe_suggestions', dailyLimit: getDailyLimit });
   if (guard.error) return guard.error;
   const { userId, supabase } = guard;
 

@@ -11,7 +11,9 @@ import { createServiceRoleClient } from '@/lib/supabase/server';
  */
 export async function requireProUserWithinDailyLimit(
   req: Request,
-  opts: { table: string; dailyLimit: number }
+  // dailyLimit puo' essere un numero fisso, o una funzione del piano
+  // (subscription_plan) per applicare limiti diversi per Hobby/Pro/Annuale.
+  opts: { table: string; dailyLimit: number | ((plan: string | null) => number) }
 ): Promise<
   | { error: NextResponse; userId?: undefined; supabase?: undefined }
   | { error?: undefined; userId: string; supabase: ReturnType<typeof createServiceRoleClient> }
@@ -36,7 +38,7 @@ export async function requireProUserWithinDailyLimit(
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('subscription_status')
+    .select('subscription_status, subscription_plan')
     .eq('id', userId)
     .single();
   const hasActiveSubscription =
@@ -45,13 +47,17 @@ export async function requireProUserWithinDailyLimit(
     return { error: NextResponse.json({ error: 'Funzionalità riservata ai piani a pagamento' }, { status: 403 }) };
   }
 
+  const dailyLimit = typeof opts.dailyLimit === 'function'
+    ? opts.dailyLimit(profile?.subscription_plan ?? null)
+    : opts.dailyLimit;
+
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const { count } = await supabase
     .from(opts.table)
     .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
     .gte('created_at', since);
-  if ((count ?? 0) >= opts.dailyLimit) {
+  if ((count ?? 0) >= dailyLimit) {
     return { error: NextResponse.json({ error: 'Hai raggiunto il limite giornaliero di suggerimenti AI' }, { status: 429 }) };
   }
 

@@ -11,7 +11,7 @@ import { useProducts } from '@/context/product-context';
 import { useSubscription } from '@/context/subscription-context';
 import { useCurrency } from '@/context/currency-context';
 import { useToast } from '@/hooks/use-toast';
-import { FREE_PRODUCT_LIMIT } from '@/lib/constants';
+import { FREE_PRODUCT_LIMIT, TRIAL_PRODUCT_LIMIT, PRODUCT_LIMITS, type PaidPlan } from '@/lib/constants';
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 
@@ -25,10 +25,9 @@ export default function InventoryPage() {
   const { toast } = useToast();
 
   const getProductLimit = () => {
-    if (isTrialing) return 5;
-    if (subscription?.subscriptionPlan === 'hobby') return 50;
-    if (subscription?.subscriptionPlan === 'pro') return 100;
-    if (subscription?.subscriptionPlan === 'annual') return 120;
+    if (isTrialing) return TRIAL_PRODUCT_LIMIT;
+    const plan = subscription?.subscriptionPlan as PaidPlan | undefined;
+    if (plan && plan in PRODUCT_LIMITS) return PRODUCT_LIMITS[plan];
     return FREE_PRODUCT_LIMIT;
   };
   
@@ -167,9 +166,11 @@ export default function InventoryPage() {
           <h1 className="text-3xl font-bold tracking-tight">{t('inventory.title')}</h1>
           <p className="text-muted-foreground">{t('inventory.description')}</p>
           <p className="text-sm text-primary font-medium mt-1">
-            {hasActiveSubscription
-              ? t('inventory.product_count', { count: products.length, limit: productLimit })
-              : t('inventory.product_count_free', { count: products.length, limit: productLimit })}
+            {!hasActiveSubscription
+              ? t('inventory.product_count_free', { count: products.length, limit: productLimit })
+              : Number.isFinite(productLimit)
+                ? t('inventory.product_count', { count: products.length, limit: productLimit })
+                : t('inventory.product_count_unlimited', { count: products.length })}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">

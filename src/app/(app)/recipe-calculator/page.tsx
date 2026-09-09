@@ -16,7 +16,7 @@ import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
-import { FREE_RECIPE_LIMIT } from '@/lib/constants';
+import { FREE_RECIPE_LIMIT, TRIAL_RECIPE_LIMIT, RECIPE_LIMITS, type PaidPlan } from '@/lib/constants';
 import { WAX_TYPES, WAX_FRAGRANCE_PROFILES, DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
 
 type FormValues = {
@@ -39,7 +39,7 @@ export default function RecipeCalculatorPage() {
   const [result, setResult] = useState<RecipeResult | null>(null);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const { recipes, addRecipe } = useRecipes();
-  const { hasActiveSubscription } = useSubscription();
+  const { subscription, isTrialing } = useSubscription();
   const resultRef = useRef<HTMLDivElement>(null);
 
   // Appena esce il risultato, portiamo la pagina fin li' invece di lasciare
@@ -87,14 +87,21 @@ export default function RecipeCalculatorPage() {
   const unit = form.watch('unit');
   const totalWeight = form.watch('totalWeight');
 
-  const atRecipeLimit = !hasActiveSubscription && recipes.length >= FREE_RECIPE_LIMIT;
+  const getRecipeLimit = () => {
+    if (isTrialing) return TRIAL_RECIPE_LIMIT;
+    const plan = subscription?.subscriptionPlan as PaidPlan | undefined;
+    if (plan && plan in RECIPE_LIMITS) return RECIPE_LIMITS[plan];
+    return FREE_RECIPE_LIMIT;
+  };
+  const recipeLimit = getRecipeLimit();
+  const atRecipeLimit = recipes.length >= recipeLimit;
 
   const handleSaveClick = () => {
     if (atRecipeLimit) {
       toast({
         variant: 'destructive',
         title: t('recipes.limit_reached_title'),
-        description: t('recipes.limit_reached_desc', { limit: FREE_RECIPE_LIMIT }),
+        description: t('recipes.limit_reached_desc', { limit: recipeLimit }),
       });
     } else {
       setIsSaveDialogOpen(true);
