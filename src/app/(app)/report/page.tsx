@@ -616,33 +616,12 @@ export default function ReportPage() {
 
     return (
         <div className="space-y-8 print:space-y-4">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:hidden">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">{t('report.title')}</h1>
-                    <p className="text-muted-foreground">{t('report.description')}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{t('report.data_source_note')}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Button onClick={handleShare} variant="outline" disabled={noData}>
-                        <Share2 className="mr-2 h-4 w-4" />
-                        {t('report.share_button')}
-                    </Button>
-                    <Button onClick={handlePrint} variant="outline" disabled={noData || isPrinting}>
-                        {isPrinting ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                {t('report.generating_pdf')}
-                            </>
-                        ) : (
-                            <>
-                                <Printer className="mr-2 h-4 w-4" />
-                                {t('report.export_pdf')}
-                            </>
-                        )}
-                    </Button>
-                </div>
+            <div className="print:hidden">
+                <h1 className="text-3xl font-bold tracking-tight">{t('report.title')}</h1>
+                <p className="text-muted-foreground">{t('report.description')}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('report.data_source_note')}</p>
             </div>
-            
+
              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
                 <h2 className="text-xl font-bold tracking-tight">{t('report.summary_title')}</h2>
                 <div className="flex flex-wrap items-center gap-2">
@@ -793,6 +772,26 @@ export default function ReportPage() {
                     </Card>
                 </div>
             )}
+
+            <div className="flex flex-col items-center gap-3 print:hidden">
+                <Button onClick={handleShare} variant="outline" disabled={noData} className="w-full max-w-xs">
+                    <Share2 className="mr-2 h-4 w-4" />
+                    {t('report.share_button')}
+                </Button>
+                <Button onClick={handlePrint} variant="outline" disabled={noData || isPrinting} className="w-full max-w-xs">
+                    {isPrinting ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            {t('report.generating_pdf')}
+                        </>
+                    ) : (
+                        <>
+                            <Printer className="mr-2 h-4 w-4" />
+                            {t('report.export_pdf')}
+                        </>
+                    )}
+                </Button>
+            </div>
         </div>
     );
 }
