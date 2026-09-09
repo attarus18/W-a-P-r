@@ -227,6 +227,7 @@
     "empty_title": "Non hai ancora ricette salvate",
     "empty_description": "Calcola una ricetta e salvala nell'archivio per ritrovarla qui.",
     "go_to_calculator_button": "Vai al Calcolatore Ricette",
+    "print_button": "Esporta Ricette PDF",
     "recipe_count_free": "{count} di {limit} ricette gratuite",
     "recipe_count_unlimited": "{count} ricette salvate",
     "save_button": "Salva nell'Archivio",

@@ -227,6 +227,7 @@
     "empty_title": "Vous n'avez pas encore de recette enregistrée",
     "empty_description": "Calculez une recette et enregistrez-la dans l'archive pour la retrouver ici.",
     "go_to_calculator_button": "Aller au calculateur de recettes",
+    "print_button": "Exporter les Recettes en PDF",
     "recipe_count_free": "{count} sur {limit} recettes gratuites",
     "recipe_count_unlimited": "{count} recettes enregistrées",
     "save_button": "Enregistrer dans l'archive",

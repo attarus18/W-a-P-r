@@ -227,6 +227,7 @@
     "empty_title": "Aún no tiene recetas guardadas",
     "empty_description": "Calcule una receta y guárdela en el archivo para encontrarla aquí.",
     "go_to_calculator_button": "Ir a la calculadora de recetas",
+    "print_button": "Exportar Recetas PDF",
     "recipe_count_free": "{count} de {limit} recetas gratuitas",
     "recipe_count_unlimited": "{count} recetas guardadas",
     "save_button": "Guardar en el archivo",

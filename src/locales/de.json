@@ -227,6 +227,7 @@
     "empty_title": "Sie haben noch keine gespeicherten Rezepte",
     "empty_description": "Berechnen Sie ein Rezept und speichern Sie es im Archiv, um es hier wiederzufinden.",
     "go_to_calculator_button": "Zum Rezeptrechner",
+    "print_button": "Rezepte als PDF Exportieren",
     "recipe_count_free": "{count} von {limit} kostenlosen Rezepten",
     "recipe_count_unlimited": "{count} gespeicherte Rezepte",
     "save_button": "Im Archiv speichern",

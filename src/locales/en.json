@@ -227,6 +227,7 @@
     "empty_title": "You don't have any saved recipes yet",
     "empty_description": "Calculate a recipe and save it to the archive to find it here.",
     "go_to_calculator_button": "Go to Recipe Calculator",
+    "print_button": "Export Recipes PDF",
     "recipe_count_free": "{count} of {limit} free recipes",
     "recipe_count_unlimited": "{count} recipes saved",
     "save_button": "Save to Archive",
