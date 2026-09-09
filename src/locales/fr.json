@@ -194,7 +194,12 @@
     "limit_reached_title": "Limite de produits atteinte",
     "limit_reached_desc": "Vous avez atteint la limite de {limit} produits pour votre plan. Veuillez passer à un plan supérieur pour en ajouter d'autres.",
     "product_count": "{count} sur {limit} produits",
-    "product_count_free": "{count} sur {limit} produits d'essai"
+    "product_count_free": "{count} sur {limit} produits d'essai",
+    "print_button": "Imprimer en PDF",
+    "pdf_quantity_label": "Quantité Disponible",
+    "pdf_reorder_label": "Seuil de Réapprovisionnement",
+    "pdf_cost_label": "Coût de Production",
+    "pdf_price_label": "Prix de Vente"
   },
   "product_card": {
     "quantity": "Quantité",

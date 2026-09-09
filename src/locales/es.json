@@ -194,7 +194,12 @@
     "limit_reached_title": "Límite de productos alcanzado",
     "limit_reached_desc": "Ha alcanzado el límite de {limit} productos para su plan. Actualice para agregar más.",
     "product_count": "{count} de {limit} productos",
-    "product_count_free": "{count} de {limit} productos de prueba"
+    "product_count_free": "{count} de {limit} productos de prueba",
+    "print_button": "Imprimir PDF",
+    "pdf_quantity_label": "Cantidad Disponible",
+    "pdf_reorder_label": "Umbral de Reposición",
+    "pdf_cost_label": "Costo de Producción",
+    "pdf_price_label": "Precio de Venta"
   },
   "product_card": {
     "quantity": "Cantidad",

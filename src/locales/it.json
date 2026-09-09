@@ -194,7 +194,12 @@
     "limit_reached_title": "Limite prodotti raggiunto",
     "limit_reached_desc": "Hai raggiunto il limite di {limit} prodotti per il tuo piano. Fai l'upgrade per aggiungerne di più.",
     "product_count": "{count} di {limit} prodotti",
-    "product_count_free": "{count} di {limit} prodotti di prova"
+    "product_count_free": "{count} di {limit} prodotti di prova",
+    "print_button": "Stampa PDF",
+    "pdf_quantity_label": "Quantità Disponibile",
+    "pdf_reorder_label": "Soglia Riordino",
+    "pdf_cost_label": "Costo di Produzione",
+    "pdf_price_label": "Prezzo di Vendita"
   },
   "product_card": {
     "quantity": "Quantità",
