@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ForgotPasswordDialog from "@/components/auth/forgot-password-dialog";
 import GoogleIcon from "@/components/auth/google-icon";
+import { signInWithGoogle } from "@/lib/auth/google-native-login";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,23 +81,23 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
-      });
-      if (error) throw error;
-      // A questo punto il browser viene reindirizzato a Google: non c'e'
-      // altro da fare qui, la pagina sta per essere abbandonata.
-    } catch (error: any) {
-      console.error('Google login failed:', error);
-      toast({
-        variant: 'destructive',
-        title: t('login.error_title'),
-        description: error.message || t('login.oauth_error_description'),
-      });
-      setIsGoogleLoading(false);
-    }
+    await signInWithGoogle(
+      supabase,
+      (message) => {
+        console.error('Google login failed:', message);
+        toast({
+          variant: 'destructive',
+          title: t('login.error_title'),
+          description: message || t('login.oauth_error_description'),
+        });
+        setIsGoogleLoading(false);
+      },
+      () => setIsGoogleLoading(false)
+    );
+    // Su web la pagina viene abbandonata subito (redirect verso Google); su
+    // Android il browser di sistema si apre sopra l'app, quindi qui non
+    // resettiamo isGoogleLoading in caso di successo: lo fa il redirect a
+    // /dashboard scatenato da "user" non appena la sessione arriva.
   };
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {

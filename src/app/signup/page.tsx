@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import GoogleIcon from "@/components/auth/google-icon";
+import { signInWithGoogle } from "@/lib/auth/google-native-login";
 
 type SignupFormValues = {
   email: string;
@@ -77,21 +78,19 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     setIsGoogleLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
-      });
-      if (error) throw error;
-    } catch (error: any) {
-      console.error('Google signup failed:', error);
-      toast({
-        variant: 'destructive',
-        title: t('signup.error_title'),
-        description: error.message || t('signup.oauth_error_description'),
-      });
-      setIsGoogleLoading(false);
-    }
+    await signInWithGoogle(
+      supabase,
+      (message) => {
+        console.error('Google signup failed:', message);
+        toast({
+          variant: 'destructive',
+          title: t('signup.error_title'),
+          description: message || t('signup.oauth_error_description'),
+        });
+        setIsGoogleLoading(false);
+      },
+      () => setIsGoogleLoading(false)
+    );
   };
 
   if (isUserLoading || user) {

@@ -23,6 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Deep link di rientro per il login Google: il flusso OAuth viene
+                 aperto nel browser di sistema (non nella WebView incorporata,
+                 che Google blocca/ostacola) e torna qui su questo schema. -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="waxpro" android:host="auth" android:path="/callback" />
+            </intent-filter>
+
         </activity>
 
         <!-- AdMob App ID, app "WAX PRO" -->
