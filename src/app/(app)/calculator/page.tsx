@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +31,11 @@ import { format } from 'date-fns';
 import { enUS, it, es, fr, de } from 'date-fns/locale';
 
 const localeMap = { en: enUS, it, es, fr, de };
+
+// Chiave localStorage per il flag "non mostrare piu'" del promemoria prezzi
+// materiali: persistente (a differenza di hasRemindedRef, che si resetta ad
+// ogni ricarica pagina), cosi' chi lo spunta non lo rivede mai piu'.
+const HIDE_MATERIALS_REMINDER_KEY = 'waxpro_hide_materials_reminder';
 
 type FormValues = {
   nomeProdotto: string;
@@ -80,6 +86,7 @@ export default function CalculatorPage() {
 
   const [materialsDialogOpen, setMaterialsDialogOpen] = useState(false);
   const [reminderOpen, setReminderOpen] = useState(false);
+  const [dontShowReminderAgain, setDontShowReminderAgain] = useState(false);
   const hasRemindedRef = useRef(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -100,8 +107,23 @@ export default function CalculatorPage() {
 
   const remindIfNotConfigured = (isConfigured: boolean) => {
     if (hasRemindedRef.current || isConfigured) return;
+    if (typeof window !== 'undefined' && localStorage.getItem(HIDE_MATERIALS_REMINDER_KEY) === 'true') return;
     hasRemindedRef.current = true;
     setReminderOpen(true);
+  };
+
+  const closeReminder = () => {
+    if (dontShowReminderAgain) {
+      localStorage.setItem(HIDE_MATERIALS_REMINDER_KEY, 'true');
+    }
+    setReminderOpen(false);
+  };
+
+  const handleReminderConfigureClick = () => {
+    if (dontShowReminderAgain) {
+      localStorage.setItem(HIDE_MATERIALS_REMINDER_KEY, 'true');
+    }
+    setMaterialsDialogOpen(true);
   };
 
   const getWaxCost = (variantId: string, qty: number, unit: WeightUnit) => {
@@ -453,15 +475,25 @@ export default function CalculatorPage() {
         </Card>
       )}
 
-      <AlertDialog open={reminderOpen} onOpenChange={setReminderOpen}>
+      <AlertDialog open={reminderOpen} onOpenChange={(open) => { if (!open) closeReminder(); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('materials.reminder_title')}</AlertDialogTitle>
             <AlertDialogDescription>{t('materials.reminder_description')}</AlertDialogDescription>
           </AlertDialogHeader>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="dont-show-reminder-again"
+              checked={dontShowReminderAgain}
+              onCheckedChange={(v) => setDontShowReminderAgain(v === true)}
+            />
+            <Label htmlFor="dont-show-reminder-again" className="font-normal">
+              {t('materials.reminder_dont_show_again')}
+            </Label>
+          </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('materials.reminder_dismiss')}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => setMaterialsDialogOpen(true)}>
+            <AlertDialogCancel onClick={closeReminder}>{t('materials.reminder_dismiss')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleReminderConfigureClick}>
               {t('materials.reminder_confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>

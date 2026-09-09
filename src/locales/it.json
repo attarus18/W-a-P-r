@@ -151,7 +151,8 @@
     "reminder_title": "Prezzi materiali non impostati",
     "reminder_description": "Non hai ancora impostato i prezzi dei materiali: il costo di cera, stoppino e fragranza non verrà calcolato finché non lo fai. Vuoi impostarli ora?",
     "reminder_confirm": "Imposta ora",
-    "reminder_dismiss": "Continua comunque"
+    "reminder_dismiss": "Chiudi",
+    "reminder_dont_show_again": "Non mostrare più"
   },
   "recipe_calculator": {
     "title": "Calcolatore Ricette Candele",

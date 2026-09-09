@@ -151,7 +151,8 @@
     "reminder_title": "Precios de materiales no configurados",
     "reminder_description": "Aún no has configurado los precios de tus materiales: el costo de la cera, la mecha y la fragancia no se calculará hasta que lo hagas. ¿Quieres configurarlos ahora?",
     "reminder_confirm": "Configurar ahora",
-    "reminder_dismiss": "Continuar de todos modos"
+    "reminder_dismiss": "Cerrar",
+    "reminder_dont_show_again": "No volver a mostrar"
   },
   "recipe_calculator": {
     "title": "Calculadora de recetas de velas",

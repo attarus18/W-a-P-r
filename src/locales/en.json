@@ -151,7 +151,8 @@
     "reminder_title": "Material prices not set",
     "reminder_description": "You haven't set your material prices yet: the cost of wax, wick, and fragrance won't be calculated until you do. Set them now?",
     "reminder_confirm": "Set now",
-    "reminder_dismiss": "Continue anyway"
+    "reminder_dismiss": "Close",
+    "reminder_dont_show_again": "Don't show again"
   },
   "recipe_calculator": {
     "title": "Candle Recipe Calculator",
