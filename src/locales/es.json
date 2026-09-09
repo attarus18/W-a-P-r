@@ -195,7 +195,7 @@
     "limit_reached_desc": "Ha alcanzado el límite de {limit} productos para su plan. Actualice para agregar más.",
     "product_count": "{count} de {limit} productos",
     "product_count_free": "{count} de {limit} productos de prueba",
-    "print_button": "Imprimir PDF",
+    "print_button": "Imprimir Inventario PDF",
     "pdf_quantity_label": "Cantidad Disponible",
     "pdf_reorder_label": "Umbral de Reposición",
     "pdf_cost_label": "Costo de Producción",

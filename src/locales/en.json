@@ -195,7 +195,7 @@
     "limit_reached_desc": "You have reached the {limit} product limit for your plan. Please upgrade to add more.",
     "product_count": "{count} of {limit} products",
     "product_count_free": "{count} of {limit} trial products",
-    "print_button": "Print PDF",
+    "print_button": "Print Inventory PDF",
     "pdf_quantity_label": "Available Quantity",
     "pdf_reorder_label": "Reorder Threshold",
     "pdf_cost_label": "Production Cost",

@@ -195,7 +195,7 @@
     "limit_reached_desc": "Sie haben das Produktlimit von {limit} für Ihren Plan erreicht. Bitte upgraden Sie, um mehr hinzuzufügen.",
     "product_count": "{count} von {limit} Produkten",
     "product_count_free": "{count} von {limit} Testprodukten",
-    "print_button": "PDF Drucken",
+    "print_button": "Lagerbestand PDF Drucken",
     "pdf_quantity_label": "Verfügbare Menge",
     "pdf_reorder_label": "Nachbestellschwelle",
     "pdf_cost_label": "Herstellungskosten",

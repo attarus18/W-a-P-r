@@ -73,6 +73,8 @@ export default function InventoryPage() {
       const primaryColor = '#f97316';
       const textColor = '#111827';
       const mutedColor = '#6b7280';
+      const stripeColor = '#f3f4f6';
+      const rowHeight = 18;
 
       const drawHeader = async () => {
         const logoSize = 34;
@@ -103,7 +105,7 @@ export default function InventoryPage() {
       await drawHeader();
 
       for (const product of products) {
-        await ensureSpace(70);
+        await ensureSpace(18 + rowHeight * 4 + 18);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(13);
@@ -119,17 +121,22 @@ export default function InventoryPage() {
         ];
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(11);
-        details.forEach(([label, value]) => {
+        details.forEach(([label, value], rowIndex) => {
+          if (rowIndex % 2 === 1) {
+            doc.setFillColor(stripeColor);
+            doc.rect(margin, y - rowHeight + 5, pageWidth - margin * 2, rowHeight, 'F');
+          }
           doc.setTextColor(mutedColor);
-          doc.text(`${label}:`, margin, y);
+          doc.text(`${label}:`, margin + 6, y);
           doc.setTextColor(textColor);
-          doc.text(value, pageWidth - margin, y, { align: 'right' });
-          y += 15;
+          doc.text(value, pageWidth - margin - 6, y, { align: 'right' });
+          y += rowHeight;
         });
 
-        y += 12;
-        doc.setDrawColor('#e5e7eb');
-        doc.line(margin, y - 6, pageWidth - margin, y - 6);
+        y += 10;
+        doc.setDrawColor('#d1d5db');
+        doc.line(margin, y - 5, pageWidth - margin, y - 5);
+        y += 8;
       }
 
       await savePdf(doc, 'waxpro-magazzino.pdf');
