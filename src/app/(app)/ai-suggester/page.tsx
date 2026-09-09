@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
-import { savePdf } from '@/lib/pdf-utils';
+import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -109,59 +109,96 @@ export default function AiSuggesterPage() {
   // window.print() non ha effetto dentro la WebView Android dell'app (non e'
   // un vero browser: non c'e' un motore di stampa di sistema agganciato).
   // Generiamo quindi un PDF vero con jsPDF e lo passiamo a savePdf(), lo
-  // stesso helper gia' usato dal Calcolatore e dal Report: su nativo apre il
-  // foglio di condivisione Android (da cui si puo' salvare, stampare o
-  // inviare), sul web usa la Web Share API se disponibile o il download.
+  // stesso helper (e la stessa intestazione WAX PRO) gia' usati da
+  // Calcolatore, Ricette e Magazzino: su nativo apre il foglio di
+  // condivisione Android (da cui si puo' salvare, stampare o inviare), sul
+  // web usa la Web Share API se disponibile o il download.
   const handlePrint = async () => {
     if (!conceptOptions || conceptOptions.length === 0) return;
 
     setIsPreparingPdf(true);
     try {
-      const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const marginX = 15;
-      const maxY = doc.internal.pageSize.getHeight() - 20;
-      const textWidth = pageWidth - marginX * 2;
-      let y = 20;
+      const doc = new jsPDF({ orientation: 'p', unit: 'px', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.width;
+      const margin = 30;
+      const maxY = doc.internal.pageSize.height - margin;
+      const textWidth = pageWidth - margin * 2;
+      let y = margin;
 
-      const ensureSpace = (needed: number) => {
+      const primaryColor = '#f97316';
+      const textColor = '#111827';
+      const mutedColor = '#6b7280';
+
+      const drawHeader = async () => {
+        const logoSize = 34;
+        const logoDataUrl = await getPdfLogoDataUrl();
+        const titleX = logoDataUrl ? margin + logoSize + 12 : margin;
+        if (logoDataUrl) {
+          doc.addImage(logoDataUrl, 'PNG', margin, y, logoSize, logoSize);
+        }
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(30);
+        doc.setTextColor(primaryColor);
+        doc.text('WAX PRO', titleX, y + 20, { charSpace: 2 });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(mutedColor);
+        doc.text(t('ai_suggester.concept_result_title').toUpperCase(), titleX, y + 32, { charSpace: 1 });
+        y += logoSize + 20;
+      };
+
+      const ensureSpace = async (needed: number) => {
         if (y + needed > maxY) {
           doc.addPage();
-          y = 20;
+          y = margin;
+          await drawHeader();
         }
       };
 
-      doc.setFontSize(16);
-      doc.text(t('ai_suggester.concept_result_title'), marginX, y);
-      y += 10;
+      await drawHeader();
 
-      conceptOptions.forEach((option) => {
-        ensureSpace(20);
-        doc.setFontSize(13);
-        doc.text(option.title, marginX, y);
-        y += 7;
-
+      for (const option of conceptOptions) {
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         const descLines: string[] = doc.splitTextToSize(option.description, textWidth);
-        ensureSpace(descLines.length * 5);
-        doc.text(descLines, marginX, y);
-        y += descLines.length * 5 + 3;
+        await ensureSpace(20 + descLines.length * 13 + 15 * 3 + option.fragrances.length * 14 + 30);
 
-        ensureSpace(15);
-        doc.text(`${t('ai_suggester.top_note_label')}: ${option.topNote}`, marginX, y);
-        y += 5;
-        doc.text(`${t('ai_suggester.heart_note_label')}: ${option.heartNote}`, marginX, y);
-        y += 5;
-        doc.text(`${t('ai_suggester.base_note_label')}: ${option.baseNote}`, marginX, y);
-        y += 7;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(textColor);
+        doc.text(option.title, margin, y);
+        y += 20;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(mutedColor);
+        doc.text(descLines, margin, y);
+        y += descLines.length * 13 + 8;
+
+        doc.setFontSize(10);
+        doc.setTextColor(textColor);
+        doc.text(`${t('ai_suggester.top_note_label')}: ${option.topNote}`, margin, y);
+        y += 15;
+        doc.text(`${t('ai_suggester.heart_note_label')}: ${option.heartNote}`, margin, y);
+        y += 15;
+        doc.text(`${t('ai_suggester.base_note_label')}: ${option.baseNote}`, margin, y);
+        y += 20;
 
         option.fragrances.forEach((f) => {
-          ensureSpace(5);
-          doc.text(`${f.name} — ${f.percentage}%`, marginX + 4, y);
-          y += 5;
+          doc.setTextColor(mutedColor);
+          doc.text(f.name, margin + 6, y);
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(primaryColor);
+          doc.text(`${f.percentage}%`, pageWidth - margin - 6, y, { align: 'right' });
+          doc.setFont('helvetica', 'normal');
+          y += 14;
         });
-        y += 8;
-      });
+
+        y += 10;
+        doc.setDrawColor('#d1d5db');
+        doc.line(margin, y - 5, pageWidth - margin, y - 5);
+        y += 12;
+      }
 
       await savePdf(doc, 'waxpro-proposte-fragranza.pdf');
     } catch (error: any) {
