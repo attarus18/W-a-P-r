@@ -34,6 +34,24 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const storedLang = localStorage.getItem('waxpro_language') as Language;
     if (storedLang && translations[storedLang]) {
       setLanguage(storedLang);
+      return;
+    }
+    // Nessuna preferenza salvata: proviamo a indovinare la lingua dal
+    // dispositivo/browser (navigator.languages, in ordine di preferenza),
+    // cosi' un utente non italiano non si trova l'app in una lingua che non
+    // capisce alla primissima apertura. Non scriviamo su localStorage qui:
+    // resta un default automatico, non una scelta esplicita dell'utente,
+    // che puo' sempre cambiarla da Impostazioni (handleSetLanguage sotto).
+    const supported: Language[] = ['it', 'en', 'es', 'fr', 'de'];
+    const candidates = typeof navigator !== 'undefined'
+      ? (navigator.languages && navigator.languages.length > 0 ? navigator.languages : [navigator.language])
+      : [];
+    for (const candidate of candidates) {
+      const primary = candidate.slice(0, 2).toLowerCase() as Language;
+      if (supported.includes(primary)) {
+        setLanguage(primary);
+        break;
+      }
     }
   }, []);
 
