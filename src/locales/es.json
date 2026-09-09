@@ -373,7 +373,7 @@
     "weekly": "Semanal",
     "monthly": "Mensual",
     "yearly": "Anual",
-    "custom_range": "Elegir fechas",
+    "custom_range": "Intervalo de Fechas",
     "apply_range": "Aplicar",
     "reset_range": "Borrar",
     "previous_period": "Período anterior",

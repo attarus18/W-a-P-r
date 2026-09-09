@@ -635,11 +635,11 @@ export default function ReportPage() {
                         <PopoverTrigger asChild>
                             <Button
                                 variant={timeRange === 'custom' ? 'default' : 'outline'}
-                                size="icon"
                                 aria-label={t('report.custom_range')}
                                 title={t('report.custom_range')}
                             >
-                                <CalendarIcon className="h-4 w-4" />
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {t('report.custom_range')}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="end">

@@ -373,7 +373,7 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "yearly": "Yearly",
-    "custom_range": "Pick dates",
+    "custom_range": "Date Range",
     "apply_range": "Apply",
     "reset_range": "Clear",
     "previous_period": "Previous period",
