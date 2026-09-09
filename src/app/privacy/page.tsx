@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           <p>
             Il titolare del trattamento dei dati raccolti tramite l&apos;applicazione WaxPro Manager
             (web e Android) è contattabile all&apos;indirizzo email{' '}
-            <a href="mailto:waxpro.app@gmail.com" className="text-primary hover:underline">waxpro.app@gmail.com</a>.
+            <Link href="/support" className="text-primary hover:underline">waxpro.app@gmail.com</Link>.
           </p>
         </section>
 
@@ -110,11 +110,10 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Via email:</strong> scrivi a{' '}
-              <a href="mailto:waxpro.app@gmail.com?subject=Richiesta%20cancellazione%20dati" className="text-primary hover:underline">
+              <Link href="/support?prefill=Richiesta%20cancellazione%20dati" className="text-primary hover:underline">
                 waxpro.app@gmail.com
-              </a>{' '}
-              dall&apos;indirizzo email associato al tuo account, indicando che richiedi la cancellazione dei
-              tuoi dati. Elaboriamo la richiesta entro 30 giorni.
+              </Link>{' '}
+              indicando che richiedi la cancellazione dei tuoi dati. Elaboriamo la richiesta entro 30 giorni.
             </li>
           </ul>
         </section>
@@ -125,7 +124,7 @@ export default function PrivacyPage() {
             Hai diritto di accedere ai tuoi dati, chiederne la correzione, la portabilità o la cancellazione, e
             di opporti al loro trattamento. Puoi esercitare questi diritti direttamente dalle Impostazioni
             dell&apos;app o scrivendoci a{' '}
-            <a href="mailto:waxpro.app@gmail.com" className="text-primary hover:underline">waxpro.app@gmail.com</a>.
+            <Link href="/support" className="text-primary hover:underline">waxpro.app@gmail.com</Link>.
           </p>
         </section>
 
@@ -155,7 +154,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-semibold">Contatti</h2>
           <p>
             Per qualsiasi domanda su questa informativa o sui tuoi dati, scrivi a{' '}
-            <a href="mailto:waxpro.app@gmail.com" className="text-primary hover:underline">waxpro.app@gmail.com</a>.
+            <Link href="/support" className="text-primary hover:underline">waxpro.app@gmail.com</Link>.
           </p>
         </section>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,14 @@ export default function SupportPage() {
   const [isSent, setIsSent] = useState(false);
 
   const goHome = () => router.push('/dashboard');
+
+  // Letto da window.location.search (non useSearchParams) per evitare il
+  // vincolo di un boundary Suspense richiesto dal rendering statico -- stesso
+  // approccio gia' usato in /login per il parametro ?error=oauth.
+  useEffect(() => {
+    const prefill = new URLSearchParams(window.location.search).get('prefill');
+    if (prefill) setMessage(prefill);
+  }, []);
 
   if (!user) {
     return <AccessDenied featureName={t('navbar.support')} />;
