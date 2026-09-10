@@ -153,8 +153,7 @@
     "reminder_title": "Materialpreise nicht festgelegt",
     "reminder_description": "Sie haben Ihre Materialpreise noch nicht festgelegt: Die Kosten für Wachs, Docht und Duft werden erst berechnet, wenn Sie dies tun. Jetzt festlegen?",
     "reminder_confirm": "Jetzt festlegen",
-    "reminder_dismiss": "Schließen",
-    "reminder_dont_show_again": "Nicht mehr anzeigen"
+    "reminder_dismiss": "Schließen"
   },
   "recipe_calculator": {
     "title": "Kerzenrezept-Rechner",

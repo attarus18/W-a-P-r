@@ -153,8 +153,7 @@
     "reminder_title": "Prix des matériaux non configurés",
     "reminder_description": "Vous n'avez pas encore configuré les prix de vos matériaux : le coût de la cire, de la mèche et du parfum ne sera pas calculé tant que vous ne l'aurez pas fait. Voulez-vous les configurer maintenant ?",
     "reminder_confirm": "Configurer maintenant",
-    "reminder_dismiss": "Fermer",
-    "reminder_dont_show_again": "Ne plus afficher"
+    "reminder_dismiss": "Fermer"
   },
   "recipe_calculator": {
     "title": "Calculateur de recette de bougie",
