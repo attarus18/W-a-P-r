@@ -1,25 +1,26 @@
 import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 import { App } from '@capacitor/app';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Provider, SupabaseClient } from '@supabase/supabase-js';
 
 // Schema di rientro registrato nell'AndroidManifest (intent-filter su
 // MainActivity) per il deep link di ritorno dal browser di sistema.
 const NATIVE_REDIRECT_URL = 'waxpro://auth/callback';
 
 /**
- * Avvia il login/registrazione Google. Su web usa il normale redirect nella
- * stessa pagina verso /auth/callback. Su Android (Capacitor) apre il flusso
- * OAuth nel browser di sistema (Chrome Custom Tabs) invece che nella WebView
- * incorporata dell'app: Google blocca/ostacola il login OAuth dentro le
- * WebView incorporate ("disallowed_useragent"), causando lentezza, avvisi
- * "browser non sicuro" o blocchi. Il rientro avviene via deep link
- * (waxpro://auth/callback), da cui si estrae il "code" e si completa lo
- * scambio per la sessione con lo stesso client Supabase usato per avviarlo
- * (necessario perche' il flow PKCE tiene il code verifier nello storage di
- * quel client).
+ * Avvia il login/registrazione con un provider OAuth (Google, Facebook, ...).
+ * Su web usa il normale redirect nella stessa pagina verso /auth/callback.
+ * Su Android (Capacitor) apre il flusso OAuth nel browser di sistema (Chrome
+ * Custom Tabs) invece che nella WebView incorporata dell'app: sia Google che
+ * Facebook bloccano/ostacolano il login OAuth dentro le WebView incorporate,
+ * causando lentezza, avvisi "browser non sicuro" o blocchi. Il rientro
+ * avviene via deep link (waxpro://auth/callback), da cui si estrae il "code"
+ * e si completa lo scambio per la sessione con lo stesso client Supabase
+ * usato per avviarlo (necessario perche' il flow PKCE tiene il code
+ * verifier nello storage di quel client).
  */
-export async function signInWithGoogle(
+export async function signInWithOAuthProvider(
+  provider: Provider,
   supabase: SupabaseClient,
   onError: (message?: string) => void,
   // Chiamato quando l'utente chiude il browser di sistema senza completare
@@ -29,7 +30,7 @@ export async function signInWithGoogle(
 ): Promise<void> {
   if (!Capacitor.isNativePlatform()) {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) onError(error.message);
@@ -37,7 +38,7 @@ export async function signInWithGoogle(
   }
 
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
+    provider,
     options: { redirectTo: NATIVE_REDIRECT_URL, skipBrowserRedirect: true },
   });
   if (error || !data?.url) {

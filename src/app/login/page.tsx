@@ -18,7 +18,8 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import ForgotPasswordDialog from "@/components/auth/forgot-password-dialog";
 import GoogleIcon from "@/components/auth/google-icon";
-import { signInWithGoogle } from "@/lib/auth/google-native-login";
+import FacebookIcon from "@/components/auth/facebook-icon";
+import { signInWithOAuthProvider } from "@/lib/auth/oauth-native-login";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const [isGuestAlertOpen, setIsGuestAlertOpen] = useState(false);
 
@@ -81,7 +83,8 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
-    await signInWithGoogle(
+    await signInWithOAuthProvider(
+      'google',
       supabase,
       (message) => {
         console.error('Google login failed:', message);
@@ -98,6 +101,24 @@ export default function LoginPage() {
     // Android il browser di sistema si apre sopra l'app, quindi qui non
     // resettiamo isGoogleLoading in caso di successo: lo fa il redirect a
     // /dashboard scatenato da "user" non appena la sessione arriva.
+  };
+
+  const handleFacebookLogin = async () => {
+    setIsFacebookLoading(true);
+    await signInWithOAuthProvider(
+      'facebook',
+      supabase,
+      (message) => {
+        console.error('Facebook login failed:', message);
+        toast({
+          variant: 'destructive',
+          title: t('login.error_title'),
+          description: message || t('login.oauth_error_description'),
+        });
+        setIsFacebookLoading(false);
+      },
+      () => setIsFacebookLoading(false)
+    );
   };
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
@@ -198,6 +219,10 @@ export default function LoginPage() {
             <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isGoogleLoading}>
                 {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                 {t('login.continue_with_google')}
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleFacebookLogin} disabled={isFacebookLoading}>
+                {isFacebookLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FacebookIcon className="mr-2 h-4 w-4" />}
+                {t('login.continue_with_facebook')}
             </Button>
             <Button variant="outline" className="w-full" onClick={() => setIsGuestAlertOpen(true)}>
                 {t('login.continue_as_guest')}

@@ -25,6 +25,7 @@
     "error_description": "Bitte überprüfen Sie Ihre Anmeldeinformationen und versuchen Sie es erneut.",
     "or_continue_with": "oder",
     "continue_with_google": "Mit Google fortfahren",
+    "continue_with_facebook": "Mit Facebook fortfahren",
     "oauth_error_description": "Anmeldung mit Google fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "continue_as_guest": "Ohne Anmeldung fortfahren",
     "guest_alert_title": "Sie fahren als Gast fort",
@@ -47,6 +48,7 @@
     "login": "Anmelden",
     "error_title": "Registrierung fehlgeschlagen",
     "continue_with_google": "Mit Google registrieren",
+    "continue_with_facebook": "Mit Facebook registrieren",
     "oauth_error_description": "Registrierung mit Google fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "password_mismatch": "Passwörter stimmen nicht überein."
   },

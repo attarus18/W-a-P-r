@@ -25,6 +25,7 @@
     "error_description": "Veuillez vérifier vos identifiants et réessayer.",
     "or_continue_with": "ou",
     "continue_with_google": "Continuer avec Google",
+    "continue_with_facebook": "Continuer avec Facebook",
     "oauth_error_description": "Échec de la connexion avec Google. Réessayez.",
     "continue_as_guest": "Continuer sans s'inscrire",
     "guest_alert_title": "Vous continuez en tant qu'invité",
@@ -47,6 +48,7 @@
     "login": "Connexion",
     "error_title": "Échec de l'inscription",
     "continue_with_google": "S'inscrire avec Google",
+    "continue_with_facebook": "S'inscrire avec Facebook",
     "oauth_error_description": "Échec de l'inscription avec Google. Réessayez.",
     "password_mismatch": "Les mots de passe ne correspondent pas."
   },

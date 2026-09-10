@@ -25,6 +25,7 @@
     "error_description": "Controlla le tue credenziali e riprova.",
     "or_continue_with": "oppure",
     "continue_with_google": "Continua con Google",
+    "continue_with_facebook": "Continua con Facebook",
     "oauth_error_description": "Accesso con Google non riuscito. Riprova.",
     "continue_as_guest": "Accedi senza registrarti",
     "guest_alert_title": "Stai continuando come ospite",
@@ -47,6 +48,7 @@
     "login": "Accedi",
     "error_title": "Registrazione Fallita",
     "continue_with_google": "Registrati con Google",
+    "continue_with_facebook": "Registrati con Facebook",
     "oauth_error_description": "Registrazione con Google non riuscita. Riprova.",
     "password_mismatch": "Le password non corrispondono."
   },

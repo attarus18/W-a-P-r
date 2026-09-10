@@ -12,7 +12,7 @@ export default function PrivacyPage() {
         <div>
           <Link href="/dashboard" className="text-sm text-primary hover:underline">&larr; Torna a WaxPro Manager</Link>
           <h1 className="text-3xl font-bold tracking-tight mt-4">Informativa sulla Privacy</h1>
-          <p className="text-muted-foreground mt-1">WaxPro Manager — Ultimo aggiornamento: 8 settembre 2026</p>
+          <p className="text-muted-foreground mt-1">WaxPro Manager — Ultimo aggiornamento: 10 settembre 2026</p>
         </div>
 
         <section className="space-y-3">
@@ -30,7 +30,8 @@ export default function PrivacyPage() {
             <li>
               <strong>Dati account:</strong> indirizzo email e password (gestita in modo sicuro dal nostro
               fornitore di autenticazione, Supabase, e mai leggibile in chiaro da noi). Se scegli di accedere
-              con Google, riceviamo da Google il tuo nome, indirizzo email e immagine del profilo.
+              con Google o con Facebook, riceviamo dal relativo servizio il tuo nome, indirizzo email e
+              immagine del profilo.
             </li>
             <li>
               <strong>Dati che inserisci nell&apos;app:</strong> prodotti di magazzino, quantità, vendite,
@@ -84,6 +85,7 @@ export default function PrivacyPage() {
             <li><strong>Supabase</strong> — database, autenticazione e archiviazione dei dati dell&apos;app.</li>
             <li><strong>Cloudflare</strong> — hosting ed erogazione del sito web.</li>
             <li><strong>Google</strong> — accesso con Google, Google Play Billing (abbonamenti), Google AdMob (pubblicità) e API Gemini (Suggeritore AI).</li>
+            <li><strong>Meta (Facebook)</strong> — accesso con Facebook.</li>
             <li><strong>Resend</strong> — invio delle email di assistenza.</li>
           </ul>
           <p>Ognuno di questi fornitori ha una propria informativa sulla privacy indipendente per il trattamento che effettua per proprio conto.</p>

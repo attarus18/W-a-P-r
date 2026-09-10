@@ -17,7 +17,8 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import GoogleIcon from "@/components/auth/google-icon";
-import { signInWithGoogle } from "@/lib/auth/google-native-login";
+import FacebookIcon from "@/components/auth/facebook-icon";
+import { signInWithOAuthProvider } from "@/lib/auth/oauth-native-login";
 
 type SignupFormValues = {
   email: string;
@@ -33,6 +34,7 @@ export default function SignupPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
 
   const signupSchema = z.object({
     email: z.string().email({ message: t('validation.invalid_email') }),
@@ -78,7 +80,8 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     setIsGoogleLoading(true);
-    await signInWithGoogle(
+    await signInWithOAuthProvider(
+      'google',
       supabase,
       (message) => {
         console.error('Google signup failed:', message);
@@ -90,6 +93,24 @@ export default function SignupPage() {
         setIsGoogleLoading(false);
       },
       () => setIsGoogleLoading(false)
+    );
+  };
+
+  const handleFacebookSignup = async () => {
+    setIsFacebookLoading(true);
+    await signInWithOAuthProvider(
+      'facebook',
+      supabase,
+      (message) => {
+        console.error('Facebook signup failed:', message);
+        toast({
+          variant: 'destructive',
+          title: t('signup.error_title'),
+          description: message || t('signup.oauth_error_description'),
+        });
+        setIsFacebookLoading(false);
+      },
+      () => setIsFacebookLoading(false)
     );
   };
 
@@ -175,6 +196,10 @@ export default function SignupPage() {
             <Button variant="outline" className="w-full" onClick={handleGoogleSignup} disabled={isGoogleLoading}>
                 {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                 {t('signup.continue_with_google')}
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleFacebookSignup} disabled={isFacebookLoading}>
+                {isFacebookLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FacebookIcon className="mr-2 h-4 w-4" />}
+                {t('signup.continue_with_facebook')}
             </Button>
         </CardContent>
       </Card>

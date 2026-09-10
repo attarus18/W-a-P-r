@@ -25,6 +25,7 @@
     "error_description": "Por favor, verifique sus credenciales e intente de nuevo.",
     "or_continue_with": "o",
     "continue_with_google": "Continuar con Google",
+    "continue_with_facebook": "Continuar con Facebook",
     "oauth_error_description": "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
     "continue_as_guest": "Continuar sin iniciar sesión",
     "guest_alert_title": "Continúa como invitado",
@@ -47,6 +48,7 @@
     "login": "Iniciar sesión",
     "error_title": "Error de registro",
     "continue_with_google": "Regístrate con Google",
+    "continue_with_facebook": "Regístrate con Facebook",
     "oauth_error_description": "No se pudo registrar con Google. Inténtalo de nuevo.",
     "password_mismatch": "Las contraseñas no coinciden."
   },
