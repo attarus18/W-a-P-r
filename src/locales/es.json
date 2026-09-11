@@ -22,7 +22,7 @@
     "no_account": "¿No tienes una cuenta?",
     "register": "Registrarse",
     "error_title": "Error de inicio de sesión",
-    "error_description": "Por favor, verifique sus credenciales e intente de nuevo.",
+    "error_description": "Por favor, verifica tus credenciales e inténtalo de nuevo.",
     "or_continue_with": "o",
     "continue_with_google": "Continuar con Google",
     "continue_with_facebook": "Continuar con Facebook",
@@ -39,7 +39,7 @@
   },
   "signup": {
     "title": "Crear una cuenta",
-    "description": "Únase a WaxPro para guardar sus datos y acceder a todas las funciones.",
+    "description": "Únete a WaxPro para guardar tus datos y acceder a todas las funciones.",
     "email_label": "Correo electrónico",
     "password_label": "Contraseña",
     "confirm_password_label": "Confirmar contraseña",
@@ -56,10 +56,10 @@
     "welcome_subtitle": "Tu guía completa para administrar la producción de velas.",
     "how_it_works": "Cómo funciona",
     "features": {
-      "calculator": "Calcule el costo de producción de cada vela.",
-      "recipe_calculator": "Calcule las cantidades de ingredientes para sus recetas.",
-      "inventory": "Administre sus productos, cantidades y existencias.",
-      "report": "Analice las ganancias y el rendimiento de las ventas.",
+      "calculator": "Calcula el costo de producción de cada vela.",
+      "recipe_calculator": "Calcula las cantidades de ingredientes para tus recetas.",
+      "inventory": "Administra tus productos, cantidades y existencias.",
+      "report": "Analiza las ganancias y el rendimiento de las ventas.",
       "recipes": "Guarda y encuentra tus recetas con un clic.",
       "settings": "Personaliza la configuración de tu cuenta y de la aplicación.",
       "instructions": "Consulta el manual para aprender a usar WaxPro de la mejor manera.",
@@ -189,7 +189,7 @@
     "description": "Administra tu inventario de productos en tiempo real. Los datos se guardarán automáticamente en tu cuenta.",
     "add_product_button": "Agregar producto",
     "empty_title": "Tu inventario está vacío",
-    "empty_description": "Comience a agregar sus productos para verlos aquí y administrar sus existencias.",
+    "empty_description": "Comienza a agregar tus productos para verlos aquí y administrar tus existencias.",
     "add_first_product_button": "Agregar tu primer producto",
     "add_product_title": "Agregar nuevo producto",
     "add_product_description": "Completa los detalles de tu nuevo producto.",
@@ -285,7 +285,7 @@
     "title": "Ajustes",
     "description": "Administra tu cuenta y las preferencias de la aplicación.",
     "profile_title": "Cuenta",
-    "logged_in_as": "Hola, ha iniciado sesión con el correo electrónico: {email}",
+    "logged_in_as": "Hola, has iniciado sesión con el correo electrónico: {email}",
     "email_label": "Correo electrónico",
     "password_title": "Cambiar contraseña",
     "password_description": "Actualiza tu contraseña aquí. Usa una contraseña segura y única.",
@@ -293,7 +293,7 @@
     "new_password_label": "Nueva contraseña",
     "update_password_button": "Actualizar contraseña",
     "preferences_title": "Preferencias",
-    "preferences_description": "Personalice la aplicación a sus necesidades.",
+    "preferences_description": "Personaliza la aplicación a tus necesidades.",
     "language_label": "Idioma",
     "language_placeholder": "Seleccionar idioma",
     "currency_label": "Moneda",
@@ -449,7 +449,7 @@
   "access_denied": {
     "title": "Acceso restringido",
     "description": "La función '{feature}' solo está disponible para usuarios registrados.",
-    "instructions": "Inicie sesión para acceder a esta función y guardar sus datos, o regístrese para crear una nueva cuenta.",
+    "instructions": "Inicia sesión para acceder a esta función y guardar tus datos, o regístrate para crear una nueva cuenta.",
     "login_button": "Iniciar sesión",
     "signup_button": "Registrarse"
   },
@@ -487,7 +487,7 @@
     "error_already_subscribed_desc": "Ya tienes un plan activo. Cancélalo en los ajustes antes de suscribirte a otro.",
     "already_subscribed_notice": "Ya tienes una suscripción activa. Para cambiar de plan, cancela primero la actual.",
     "android_only_title": "Disponible solo en la app de Android",
-    "android_only_description": "Las suscripciones se activan a través de Google Play, solo desde la app de Android. Descargue la app para suscribirse.",
+    "android_only_description": "Las suscripciones se activan a través de Google Play, solo desde la app de Android. Descarga la app para suscribirte.",
     "android_only_button": "Descargar la app de Android"
   },
   "subscribe": {
@@ -524,7 +524,7 @@
       "p1": "La sección de Inventario es el corazón de tu gestión. Aquí puedes realizar un seguimiento de todos tus productos terminados. Para usar esta sección, debes estar registrado.",
       "p2": "Agrega un nuevo producto especificando su nombre, cantidad inicial, umbral de reorden (para recibir una advertencia cuando las existencias sean bajas), costo de producción y precio de venta.",
       "p3": "Para cada producto, puedes registrar una venta ('Vender'), agregar nuevas existencias ('Cargar') o gestionar una devolución ('Devolución').",
-      "p4": "El botón 'Imprimir Inventario PDF' genera una ficha imprimible con todos sus productos y sus datos."
+      "p4": "El botón 'Imprimir Inventario PDF' genera una ficha imprimible con todos tus productos y sus datos."
     },
     "ai_suggester": {
       "p1": "El Sugeridor IA transforma una idea, un lugar o un ambiente en 3 propuestas de receta de fragancia diferentes, generadas por inteligencia artificial. Es una función reservada a los planes de pago.",
@@ -541,7 +541,7 @@
     "recipes": {
       "p1": "El Archivo de recetas le permite guardar las recetas calculadas en la Calculadora de recetas, para no tener que volver a introducir todo cada vez que haga la misma vela.",
       "p2": "Puedes cambiar el nombre o eliminar las recetas guardadas en cualquier momento. El plan gratuito incluye 2 recetas guardables; más allá de eso, se requiere una suscripción activa.",
-      "p3": "El botón 'Exportar Recetas PDF' genera una ficha imprimible con todas sus recetas guardadas."
+      "p3": "El botón 'Exportar Recetas PDF' genera una ficha imprimible con todas tus recetas guardadas."
     },
     "settings": {
       "p1": "En la sección de Ajustes, puedes personalizar tu experiencia en WaxPro.",

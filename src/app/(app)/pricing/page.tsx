@@ -9,6 +9,7 @@ import { CheckCircle2, Loader2, Zap, Smartphone } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useUser } from '@/context/auth-context';
 import { useSubscription } from '@/context/subscription-context';
+import { localeByLanguage } from '@/context/currency-context';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
@@ -16,7 +17,12 @@ import Link from 'next/link';
 const PLAY_STORE_LISTING_URL = `https://play.google.com/store/apps/details?id=${process.env.NEXT_PUBLIC_GOOGLE_PLAY_PACKAGE_NAME ?? ''}`;
 
 export default function PricingPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  // I prezzi degli abbonamenti sono fissi in EUR (fatturati da Google Play),
+  // quindi non passano dalla conversione valuta del calcolatore: qui
+  // formattiamo solo la punteggiatura secondo la lingua scelta.
+  const formatPlanPrice = (price: number) =>
+    new Intl.NumberFormat(localeByLanguage[language] ?? 'it-IT', { style: 'currency', currency: 'EUR' }).format(price);
   const { user } = useUser();
   const { subscription, hasActiveSubscription } = useSubscription();
   const [supabase] = useState(() => createClient());
@@ -197,7 +203,7 @@ export default function PricingPage() {
             <CardHeader>
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <CardDescription className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-foreground">€{plan.price}</span>
+                <span className="text-4xl font-bold text-foreground">{formatPlanPrice(plan.price)}</span>
                 <span className="text-muted-foreground">/ {plan.period}</span>
               </CardDescription>
             </CardHeader>

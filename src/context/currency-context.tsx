@@ -30,7 +30,7 @@ const exchangeRates = {
 // Il formato numerico deve seguire la lingua scelta nell'app, non quella del
 // dispositivo: altrimenti un utente con l'app in inglese ma il telefono in
 // italiano vedrebbe comunque "0,00 €" invece di "€0.00".
-const localeByLanguage: { [key: string]: string } = {
+export const localeByLanguage: { [key: string]: string } = {
   it: 'it-IT',
   en: 'en-US',
   es: 'es-ES',
