@@ -34,7 +34,7 @@ export default function PricingPage() {
       planKey: 'hobby',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_HOBBY_PLAN_ID!,
-      price: 6.97,
+      price: 6.99,
       period: t('pricing.month'),
       features: [
         t('pricing.features.up_to_20'),
@@ -50,7 +50,7 @@ export default function PricingPage() {
       planKey: 'pro',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_PRO_PLAN_ID!,
-      price: 9.97,
+      price: 9.99,
       period: t('pricing.month'),
       features: [
         t('pricing.features.unlimited_products'),
@@ -66,7 +66,7 @@ export default function PricingPage() {
       planKey: 'annual',
       productId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PRODUCT_ID!,
       planId: process.env.NEXT_PUBLIC_GOOGLE_PLAY_ANNUAL_PLAN_ID!,
-      price: 83.67,
+      price: 84.99,
       period: t('pricing.year'),
       features: [
         t('pricing.features.unlimited_products'),
