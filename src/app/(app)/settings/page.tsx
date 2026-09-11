@@ -291,7 +291,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="destructive">{t('settings.empty_inventory_button')}</Button>
+                    <Button variant="destructive" className="h-auto whitespace-normal text-center py-2">{t('settings.empty_inventory_button')}</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -313,8 +313,8 @@ export default function SettingsPage() {
             <div className="border-t pt-4">
               <AlertDialog onOpenChange={(open) => { if (!open) setDeleteConfirmText(''); }}>
                 <AlertDialogTrigger asChild>
-                    <Button variant="destructive">
-                        <Trash2 className="mr-2 h-4 w-4" />
+                    <Button variant="destructive" className="h-auto whitespace-normal text-center py-2">
+                        <Trash2 className="mr-2 h-4 w-4 flex-shrink-0" />
                         {t('settings.delete_account_button')}
                     </Button>
                 </AlertDialogTrigger>
