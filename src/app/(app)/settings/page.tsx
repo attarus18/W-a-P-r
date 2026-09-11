@@ -125,7 +125,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <UserIcon className="h-5 w-5" />
+            <UserIcon className="h-5 w-5 flex-shrink-0" />
             {t('settings.profile_title')}
           </CardTitle>
           {user && <CardDescription>{t('settings.logged_in_as', { email: user.email ?? '' })}</CardDescription>}
@@ -147,7 +147,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
             <CardTitle className="flex items-center gap-2">
-                <Star className="h-5 w-5" />
+                <Star className="h-5 w-5 flex-shrink-0" />
                 {t('settings.subscription_card_title')}
             </CardTitle>
             <CardDescription>{t('settings.subscription_card_description')}</CardDescription>
@@ -203,7 +203,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <SunMoon className="h-5 w-5" />
+            <SunMoon className="h-5 w-5 flex-shrink-0" />
             {t('settings.theme_title')}
           </CardTitle>
           <CardDescription>{t('settings.theme_description')}</CardDescription>
@@ -256,7 +256,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <LifeBuoy className="h-5 w-5" />
+            <LifeBuoy className="h-5 w-5 flex-shrink-0" />
             {t('support.title')}
           </CardTitle>
           <CardDescription>{t('support.description')}</CardDescription>
@@ -271,7 +271,7 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5" />
+            <ShieldCheck className="h-5 w-5 flex-shrink-0" />
             {t('settings.privacy_title')}
           </CardTitle>
           <CardDescription>{t('settings.privacy_description')}</CardDescription>

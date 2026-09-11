@@ -232,7 +232,7 @@ export default function AiSuggesterPage() {
     <div className="space-y-8 max-w-2xl mx-auto">
       <div className="print:hidden">
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Sparkles className="h-8 w-8 text-primary" />
+          <Sparkles className="h-8 w-8 text-primary flex-shrink-0" />
           {t('ai_suggester.title')}
         </h1>
       </div>

@@ -108,9 +108,9 @@ export default function RecipeCalculatorPage() {
     }
   };
 
-  const handleSaveRecipe = ({ name, notes }: { name: string; notes: string }) => {
+  const handleSaveRecipe = async ({ name, notes }: { name: string; notes: string }) => {
     if (!result) return;
-    addRecipe({
+    const { error } = await addRecipe({
       name,
       notes: notes || undefined,
       totalWeight,
@@ -123,6 +123,14 @@ export default function RecipeCalculatorPage() {
       colorAmount: result.color,
     });
     setIsSaveDialogOpen(false);
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: t('recipes.toast_error_title'),
+        description: t('recipes.toast_error_description'),
+      });
+      return;
+    }
     toast({
       title: t('recipes.toast_saved_title'),
       description: t('recipes.toast_saved_description'),

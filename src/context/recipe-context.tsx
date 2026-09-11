@@ -8,9 +8,9 @@ import { DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
 
 interface RecipeContextType {
   recipes: WithId<Recipe>[];
-  addRecipe: (recipe: Omit<Recipe, 'id' | 'timestamp' | 'userId'>) => void;
-  updateRecipe: (updatedRecipe: WithId<Recipe>) => void;
-  deleteRecipe: (recipeId: string) => void;
+  addRecipe: (recipe: Omit<Recipe, 'id' | 'timestamp' | 'userId'>) => Promise<{ error: string | null }>;
+  updateRecipe: (updatedRecipe: WithId<Recipe>) => Promise<{ error: string | null }>;
+  deleteRecipe: (recipeId: string) => Promise<{ error: string | null }>;
   isLoading: boolean;
 }
 
@@ -66,9 +66,9 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
 
   const recipes = user ? remoteRecipes : localRecipes;
 
-  const addRecipe = useCallback((newRecipe: Omit<Recipe, 'id' | 'timestamp' | 'userId'>) => {
+  const addRecipe = useCallback(async (newRecipe: Omit<Recipe, 'id' | 'timestamp' | 'userId'>) => {
     if (user) {
-      supabase.from('recipes').insert({
+      const { error } = await supabase.from('recipes').insert({
         user_id: user.id,
         name: newRecipe.name,
         total_weight: newRecipe.totalWeight,
@@ -80,7 +80,10 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         fragrance_amount: newRecipe.fragranceAmount,
         color_amount: newRecipe.colorAmount,
         notes: newRecipe.notes ?? null,
-      }).then(() => refetchRecipes());
+      });
+      if (error) return { error: error.message };
+      await refetchRecipes();
+      return { error: null };
     } else {
       const recipeToAdd: WithId<Recipe> = {
         ...newRecipe,
@@ -89,12 +92,13 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         timestamp: new Date().toISOString(),
       };
       setLocalRecipes(prev => [...prev, recipeToAdd]);
+      return { error: null };
     }
   }, [user, supabase, refetchRecipes]);
 
-  const updateRecipe = useCallback((updatedRecipe: WithId<Recipe>) => {
+  const updateRecipe = useCallback(async (updatedRecipe: WithId<Recipe>) => {
     if (user) {
-      supabase.from('recipes').update({
+      const { error } = await supabase.from('recipes').update({
         name: updatedRecipe.name,
         total_weight: updatedRecipe.totalWeight,
         unit: updatedRecipe.unit,
@@ -105,17 +109,25 @@ export const RecipeProvider = ({ children }: { children: ReactNode }) => {
         fragrance_amount: updatedRecipe.fragranceAmount,
         color_amount: updatedRecipe.colorAmount,
         notes: updatedRecipe.notes ?? null,
-      }).eq('id', updatedRecipe.id).then(() => refetchRecipes());
+      }).eq('id', updatedRecipe.id);
+      if (error) return { error: error.message };
+      await refetchRecipes();
+      return { error: null };
     } else {
       setLocalRecipes(prev => prev.map(r => r.id === updatedRecipe.id ? updatedRecipe : r));
+      return { error: null };
     }
   }, [user, supabase, refetchRecipes]);
 
-  const deleteRecipe = useCallback((recipeId: string) => {
+  const deleteRecipe = useCallback(async (recipeId: string) => {
     if (user) {
-      supabase.from('recipes').delete().eq('id', recipeId).then(() => refetchRecipes());
+      const { error } = await supabase.from('recipes').delete().eq('id', recipeId);
+      if (error) return { error: error.message };
+      await refetchRecipes();
+      return { error: null };
     } else {
       setLocalRecipes(prev => prev.filter(r => r.id !== recipeId));
+      return { error: null };
     }
   }, [user, supabase, refetchRecipes]);
 

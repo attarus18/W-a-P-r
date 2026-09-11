@@ -257,6 +257,10 @@
     "delete_alert_description": "L'azione non può essere annullata e la ricetta verrà rimossa definitivamente.",
     "toast_saved_title": "Ricetta salvata",
     "toast_saved_description": "La ricetta è stata aggiunta al tuo archivio.",
+    "toast_error_title": "Salvataggio non riuscito",
+    "toast_error_description": "Non siamo riusciti a salvare la ricetta. Riprova.",
+    "toast_delete_error_title": "Eliminazione non riuscita",
+    "toast_delete_error_description": "Non siamo riusciti a eliminare la ricetta. Riprova.",
     "limit_reached_title": "Limite ricette gratuite raggiunto",
     "limit_reached_desc": "Hai raggiunto il limite di {limit} ricette gratuite. Fai l'upgrade per salvarne senza limiti.",
     "upgrade_button": "Vedi i Piani"

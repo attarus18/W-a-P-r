@@ -257,6 +257,10 @@
     "delete_alert_description": "This action cannot be undone and the recipe will be permanently removed.",
     "toast_saved_title": "Recipe saved",
     "toast_saved_description": "The recipe has been added to your archive.",
+    "toast_error_title": "Couldn't save",
+    "toast_error_description": "We couldn't save the recipe. Please try again.",
+    "toast_delete_error_title": "Couldn't delete",
+    "toast_delete_error_description": "We couldn't delete the recipe. Please try again.",
     "limit_reached_title": "Free recipe limit reached",
     "limit_reached_desc": "You have reached the {limit} free recipe limit. Upgrade to save unlimited recipes.",
     "upgrade_button": "View Plans"

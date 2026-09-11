@@ -257,6 +257,10 @@
     "delete_alert_description": "Cette action ne peut pas être annulée et la recette sera définitivement supprimée.",
     "toast_saved_title": "Recette enregistrée",
     "toast_saved_description": "La recette a été ajoutée à votre archive.",
+    "toast_error_title": "Échec de l'enregistrement",
+    "toast_error_description": "Impossible d'enregistrer la recette. Réessayez.",
+    "toast_delete_error_title": "Échec de la suppression",
+    "toast_delete_error_description": "Impossible de supprimer la recette. Réessayez.",
     "limit_reached_title": "Limite de recettes gratuites atteinte",
     "limit_reached_desc": "Vous avez atteint la limite de {limit} recettes gratuites. Passez à un plan supérieur pour en enregistrer sans limite.",
     "upgrade_button": "Voir les plans"

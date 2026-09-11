@@ -257,6 +257,10 @@
     "delete_alert_description": "Esta acción no se puede deshacer y la receta se eliminará permanentemente.",
     "toast_saved_title": "Receta guardada",
     "toast_saved_description": "La receta se ha añadido a su archivo.",
+    "toast_error_title": "No se pudo guardar",
+    "toast_error_description": "No se pudo guardar la receta. Inténtelo de nuevo.",
+    "toast_delete_error_title": "No se pudo eliminar",
+    "toast_delete_error_description": "No se pudo eliminar la receta. Inténtelo de nuevo.",
     "limit_reached_title": "Límite de recetas gratuitas alcanzado",
     "limit_reached_desc": "Ha alcanzado el límite de {limit} recetas gratuitas. Actualice para guardar recetas ilimitadas.",
     "upgrade_button": "Ver planes"

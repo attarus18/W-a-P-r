@@ -77,7 +77,7 @@ export default function SupportPage() {
             <X className="h-4 w-4" />
           </Button>
           <CardTitle className="flex items-center gap-2">
-            <LifeBuoy className="h-5 w-5" />
+            <LifeBuoy className="h-5 w-5 flex-shrink-0" />
             {t('support.title')}
           </CardTitle>
           <CardDescription>{t('support.description')}</CardDescription>

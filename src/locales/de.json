@@ -257,6 +257,10 @@
     "delete_alert_description": "Diese Aktion kann nicht rückgängig gemacht werden und das Rezept wird dauerhaft entfernt.",
     "toast_saved_title": "Rezept gespeichert",
     "toast_saved_description": "Das Rezept wurde zu Ihrem Archiv hinzugefügt.",
+    "toast_error_title": "Speichern fehlgeschlagen",
+    "toast_error_description": "Das Rezept konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "toast_delete_error_title": "Löschen fehlgeschlagen",
+    "toast_delete_error_description": "Das Rezept konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
     "limit_reached_title": "Limit für kostenlose Rezepte erreicht",
     "limit_reached_desc": "Sie haben das Limit von {limit} kostenlosen Rezepten erreicht. Upgraden Sie, um unbegrenzt Rezepte zu speichern.",
     "upgrade_button": "Pläne anzeigen"

@@ -11,7 +11,7 @@ export default function InstructionsPage() {
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <BookOpen className="h-8 w-8 text-primary" />
+          <BookOpen className="h-8 w-8 text-primary flex-shrink-0" />
           {t('instructions.title')}
         </h1>
         <p className="text-muted-foreground">{t('instructions.description')}</p>
@@ -26,7 +26,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-1">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <Calculator className="h-5 w-5 text-primary" />
+                    <Calculator className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.calculator')}
                 </div>
               </AccordionTrigger>
@@ -50,7 +50,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-2">
               <AccordionTrigger>
                  <div className="flex items-center gap-2">
-                    <NotebookPen className="h-5 w-5 text-primary" />
+                    <NotebookPen className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.recipe_calculator')}
                 </div>
               </AccordionTrigger>
@@ -70,7 +70,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-3">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <Warehouse className="h-5 w-5 text-primary" />
+                    <Warehouse className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.inventory')}
                 </div>
               </AccordionTrigger>
@@ -85,7 +85,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-4">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
+                    <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.ai_suggester')}
                 </div>
               </AccordionTrigger>
@@ -99,7 +99,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-5">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <PieChart className="h-5 w-5 text-primary" />
+                    <PieChart className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.report')}
                 </div>
               </AccordionTrigger>
@@ -117,7 +117,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-6">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <BookMarked className="h-5 w-5 text-primary" />
+                    <BookMarked className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.recipes')}
                 </div>
               </AccordionTrigger>
@@ -131,7 +131,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-7">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <Settings className="h-5 w-5 text-primary" />
+                    <Settings className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.settings')}
                 </div>
               </AccordionTrigger>
@@ -150,7 +150,7 @@ export default function InstructionsPage() {
             <AccordionItem value="item-8">
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                    <LifeBuoy className="h-5 w-5 text-primary" />
+                    <LifeBuoy className="h-5 w-5 text-primary flex-shrink-0" />
                     {t('navbar.support')}
                 </div>
               </AccordionTrigger>

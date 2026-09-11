@@ -16,6 +16,7 @@ import {
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import EditRecipeDialog from './edit-recipe-dialog';
 import { useRecipes } from '@/context/recipe-context';
+import { useToast } from '@/hooks/use-toast';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -25,10 +26,29 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const { updateRecipe, deleteRecipe } = useRecipes();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { t } = useLanguage();
+  const { toast } = useToast();
 
-  const handleUpdate = (values: { name: string; notes?: string }) => {
-    updateRecipe({ ...recipe, ...values });
+  const handleUpdate = async (values: { name: string; notes?: string }) => {
+    const { error } = await updateRecipe({ ...recipe, ...values });
     setIsEditDialogOpen(false);
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: t('recipes.toast_error_title'),
+        description: t('recipes.toast_error_description'),
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    const { error } = await deleteRecipe(recipe.id);
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: t('recipes.toast_delete_error_title'),
+        description: t('recipes.toast_delete_error_description'),
+      });
+    }
   };
 
   return (
@@ -70,7 +90,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>{t('settings.alert_cancel')}</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => deleteRecipe(recipe.id)} className={cn(buttonVariants({ variant: "destructive" }))}>{t('recipes.delete_button')}</AlertDialogAction>
+                    <AlertDialogAction onClick={handleDelete} className={cn(buttonVariants({ variant: "destructive" }))}>{t('recipes.delete_button')}</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>

@@ -80,6 +80,11 @@ export default function CalculatorPage() {
 
   const [materialsDialogOpen, setMaterialsDialogOpen] = useState(false);
   const [reminderOpen, setReminderOpen] = useState(false);
+  // Incrementato ogni volta che il promemoria deve (ri)comparire: usato come
+  // "key" sull'AlertDialog cosi' Radix lo rimonta sempre da zero invece di
+  // riusare l'istanza precedente, che puo' ignorare una riapertura arrivata
+  // mentre l'animazione di chiusura del click precedente e' ancora in corso.
+  const [reminderKey, setReminderKey] = useState(0);
   const hasRemindedRef = useRef(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -103,6 +108,7 @@ export default function CalculatorPage() {
   const remindIfNotConfigured = (isConfigured: boolean) => {
     if (hasRemindedRef.current || isConfigured) return;
     hasRemindedRef.current = true;
+    setReminderKey((k) => k + 1);
     setReminderOpen(true);
   };
 
@@ -155,6 +161,7 @@ export default function CalculatorPage() {
     // materiali a costo zero e' un dato sbagliato, non va lasciato passare
     // silenziosamente.
     if (hasUnconfiguredMaterialCosts()) {
+      setReminderKey((k) => k + 1);
       setReminderOpen(true);
     }
   };
@@ -477,7 +484,7 @@ export default function CalculatorPage() {
         </Card>
       )}
 
-      <AlertDialog open={reminderOpen} onOpenChange={(open) => { if (!open) closeReminder(); }}>
+      <AlertDialog key={reminderKey} open={reminderOpen} onOpenChange={(open) => { if (!open) closeReminder(); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('materials.reminder_title')}</AlertDialogTitle>

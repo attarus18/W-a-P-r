@@ -205,9 +205,9 @@ export default function PricingPage() {
               <p>{t('pricing.includes')}</p>
               <ul className="space-y-2">
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-green-500" />
-                    <span>{feature}</span>
+                  <li key={index} className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="break-words">{feature}</span>
                   </li>
                 ))}
               </ul>
