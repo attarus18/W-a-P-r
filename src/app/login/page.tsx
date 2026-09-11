@@ -220,10 +220,9 @@ export default function LoginPage() {
                 {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                 {t('login.continue_with_google')}
             </Button>
-            <Button variant="outline" className="w-full" onClick={handleFacebookLogin} disabled={isFacebookLoading}>
-                {isFacebookLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FacebookIcon className="mr-2 h-4 w-4" />}
-                {t('login.continue_with_facebook')}
-            </Button>
+            {/* Bottone Facebook nascosto temporaneamente: l'app Facebook e' ancora
+                in modalita' sviluppo (verifica business non completata), quindi il
+                login fallirebbe per qualsiasi utente reale non aggiunto come tester. */}
             <Button variant="outline" className="w-full" onClick={() => setIsGuestAlertOpen(true)}>
                 {t('login.continue_as_guest')}
             </Button>
