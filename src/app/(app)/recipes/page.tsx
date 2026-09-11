@@ -155,7 +155,7 @@ export default function RecipesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
             <BookMarked className="h-8 w-8 text-primary flex-shrink-0" />
-            {t('recipes.title')}
+            <span className="min-w-0 break-words">{t('recipes.title')}</span>
           </h1>
           <p className="text-muted-foreground">{t('recipes.description')}</p>
           <p className="text-sm text-primary font-medium mt-1">

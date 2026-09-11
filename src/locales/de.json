@@ -69,7 +69,7 @@
     "register_description": "Erstellen Sie ein Konto, um Ihre Daten dauerhaft zu speichern."
   },
   "calculator": {
-    "title": "Produktionskostenrechner",
+    "title": "Produktionskosten-Rechner",
     "description": "Geben Sie die Kosten ein, um die Produktionssumme zu berechnen.",
     "form_title": "Materialkosten",
     "product_name_label": "Produktname",

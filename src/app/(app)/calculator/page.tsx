@@ -305,7 +305,7 @@ export default function CalculatorPage() {
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('calculator.title')}</h1>
+        <h1 className="text-3xl font-bold tracking-tight break-words">{t('calculator.title')}</h1>
         <p className="text-muted-foreground">{t('calculator.description')}</p>
       </div>
       <Card>

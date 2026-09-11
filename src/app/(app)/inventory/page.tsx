@@ -163,7 +163,7 @@ export default function InventoryPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t('inventory.title')}</h1>
+          <h1 className="text-3xl font-bold tracking-tight break-words">{t('inventory.title')}</h1>
           <p className="text-muted-foreground">{t('inventory.description')}</p>
           <p className="text-sm text-primary font-medium mt-1">
             {!hasActiveSubscription

@@ -253,8 +253,8 @@ ${t('recipe_calculator.result_title')}:
     <div className="space-y-8 max-w-2xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <NotebookPen className="h-8 w-8 text-primary" />
-            {t('recipe_calculator.title')}
+            <NotebookPen className="h-8 w-8 text-primary flex-shrink-0" />
+            <span className="min-w-0 break-words">{t('recipe_calculator.title')}</span>
         </h1>
         <p className="text-muted-foreground">{t('recipe_calculator.description')}</p>
       </div>

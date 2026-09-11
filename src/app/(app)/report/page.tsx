@@ -617,13 +617,13 @@ export default function ReportPage() {
     return (
         <div className="space-y-8 print:space-y-4">
             <div className="print:hidden">
-                <h1 className="text-3xl font-bold tracking-tight">{t('report.title')}</h1>
+                <h1 className="text-3xl font-bold tracking-tight break-words">{t('report.title')}</h1>
                 <p className="text-muted-foreground">{t('report.description')}</p>
                 <p className="text-xs text-muted-foreground mt-1">{t('report.data_source_note')}</p>
             </div>
 
              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
-                <h2 className="text-xl font-bold tracking-tight">{t('report.summary_title')}</h2>
+                <h2 className="text-xl font-bold tracking-tight break-words">{t('report.summary_title')}</h2>
                 <div className="flex flex-wrap items-center gap-2">
                     <ToggleGroup type="single" value={timeRange === 'custom' ? undefined : timeRange} onValueChange={handleTimeRangeChange}>
                         <ToggleGroupItem value="day" aria-label={t('report.daily')}>{t('report.daily')}</ToggleGroupItem>

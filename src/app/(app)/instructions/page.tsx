@@ -12,7 +12,7 @@ export default function InstructionsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
           <BookOpen className="h-8 w-8 text-primary flex-shrink-0" />
-          {t('instructions.title')}
+          <span className="min-w-0 break-words">{t('instructions.title')}</span>
         </h1>
         <p className="text-muted-foreground">{t('instructions.description')}</p>
       </div>
