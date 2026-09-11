@@ -477,8 +477,8 @@
       "reports": "Informes avanzados",
       "no_ads": "Sin anuncios"
     },
-    "start_trial_button": "Iniciar prueba gratuita de 7 días",
-    "trial_note": "Después de los 7 días de prueba, tu suscripción se activará automáticamente. Puedes cancelar en cualquier momento.",
+    "start_trial_button": "Suscribirse Ahora",
+    "trial_note": "Se te cobrará de inmediato según el plan que elijas. Puedes cancelar tu suscripción en cualquier momento.",
     "error_not_logged_in_title": "Inicio de sesión requerido",
     "error_not_logged_in_desc": "Debes iniciar sesión para suscribirte a un plan.",
     "error_checkout_title": "Error de pago",

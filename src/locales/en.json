@@ -477,8 +477,8 @@
       "reports": "Advanced Reports",
       "no_ads": "No ads"
     },
-    "start_trial_button": "Start 7-Day Free Trial",
-    "trial_note": "After the 7-day trial, your subscription will automatically activate. You can cancel anytime.",
+    "start_trial_button": "Subscribe Now",
+    "trial_note": "You'll be charged immediately based on the plan you choose. You can cancel your subscription at any time.",
     "error_not_logged_in_title": "Login Required",
     "error_not_logged_in_desc": "You must be logged in to subscribe to a plan.",
     "error_checkout_title": "Checkout Error",

@@ -477,8 +477,8 @@
       "reports": "Report Avanzati",
       "no_ads": "Nessuna pubblicità"
     },
-    "start_trial_button": "Inizia Prova Gratuita di 7 Giorni",
-    "trial_note": "Dopo i 7 giorni di prova, l'abbonamento si attiverà automaticamente. Puoi cancellare in qualsiasi momento.",
+    "start_trial_button": "Abbonati Ora",
+    "trial_note": "Verrai addebitato subito in base al piano scelto. Puoi cancellare l'abbonamento in qualsiasi momento.",
     "error_not_logged_in_title": "Accesso Richiesto",
     "error_not_logged_in_desc": "Devi effettuare l'accesso per poter sottoscrivere un piano.",
     "error_checkout_title": "Errore Checkout",
