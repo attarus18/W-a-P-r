@@ -62,7 +62,20 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   
   const t = useCallback((key: string, options?: { [key: string]: string | number }): string => {
     const translationSet = translations[language] || translations.it;
-    let translatedText = getNestedTranslation(translationSet, key);
+
+    // Pluralizzazione: se viene passato options.count === 1 e per la
+    // chiave esiste una variante "<key>_one", usiamo quella al posto della
+    // chiave base (che resta la forma plurale/"altro"), cosi' non serve
+    // toccare tutte le chiamate esistenti per aggiungere il singolare.
+    let resolvedKey = key;
+    if (options && typeof options.count === 'number' && options.count === 1) {
+      const singularKey = `${key}_one`;
+      if (getNestedTranslation(translationSet, singularKey) !== undefined) {
+        resolvedKey = singularKey;
+      }
+    }
+
+    let translatedText = getNestedTranslation(translationSet, resolvedKey);
 
     if (translatedText && options) {
       Object.keys(options).forEach(optionKey => {
