@@ -362,7 +362,7 @@
     "close_button": "Sluiten",
     "error_title": "Verzenden mislukt",
     "error_description": "Het verzoek kon niet worden verzonden. Probeer het later opnieuw.",
-    "settings_button": "Contact opnemen met ondersteuning"
+    "settings_button": "Contact opnemen"
   },
   "currency": {
     "toast_title": "Valuta bijgewerkt",
