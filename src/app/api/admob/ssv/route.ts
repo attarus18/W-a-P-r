@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/lib/supabase/server';
 import { REWARD_DAILY_LIMIT } from '@/lib/constants';
+import { ADMOB_REWARDED_AD_UNIT_ID } from '@/lib/admob';
 
 // Stesso runtime delle altre rotte server-side (WebCrypto disponibile anche
 // su Cloudflare Workers con nodejs_compat).
@@ -124,7 +125,7 @@ export async function GET(req: Request) {
 
   // Facoltativo ma consigliato: accetta solo callback della NOSTRA unita'
   // con ricompensa (ad_unit e' la parte numerica dopo lo "/" dell'ID completo).
-  const configuredUnit = process.env.NEXT_PUBLIC_ADMOB_REWARDED_AD_UNIT_ID?.split('/')[1];
+  const configuredUnit = ADMOB_REWARDED_AD_UNIT_ID.split('/')[1];
   const adUnit = url.searchParams.get('ad_unit');
   if (configuredUnit && adUnit && adUnit !== configuredUnit) {
     return NextResponse.json({ ok: true, credited: false, reason: 'ad_unit non riconosciuta' });
