@@ -69,9 +69,9 @@ export default function DashboardPage() {
                 <Card className="bg-card/50 border h-full">
                     <CardContent className="flex items-center gap-3 p-4 text-left">
                     <feature.icon className="h-6 w-6 text-primary flex-shrink-0" />
-                    <div>
-                        <h3 className="font-semibold text-foreground text-sm">{feature.title}</h3>
-                        <p className="text-xs text-muted-foreground">{feature.description}</p>
+                    <div className="min-w-0">
+                        <h3 className="font-semibold text-foreground text-sm break-words">{feature.title}</h3>
+                        <p className="text-xs text-muted-foreground break-words">{feature.description}</p>
                     </div>
                     </CardContent>
                 </Card>
@@ -81,9 +81,9 @@ export default function DashboardPage() {
               <Card className="bg-card/50 border h-full">
                   <CardContent className="flex items-center gap-3 p-4 text-left">
                   <Sparkles className="h-6 w-6 text-primary flex-shrink-0" />
-                  <div>
-                      <h3 className="font-semibold text-foreground text-sm">{t('navbar.ai_suggester')}</h3>
-                      <p className="text-xs text-muted-foreground">{t('dashboard.features.ai_suggester')}</p>
+                  <div className="min-w-0">
+                      <h3 className="font-semibold text-foreground text-sm break-words">{t('navbar.ai_suggester')}</h3>
+                      <p className="text-xs text-muted-foreground break-words">{t('dashboard.features.ai_suggester')}</p>
                   </div>
                   </CardContent>
               </Card>
@@ -92,9 +92,9 @@ export default function DashboardPage() {
               <Card className="bg-card/50 border h-full">
                   <CardContent className="flex items-center gap-3 p-4 text-left">
                   <BookOpen className="h-6 w-6 text-primary flex-shrink-0" />
-                  <div>
-                      <h3 className="font-semibold text-foreground text-sm">{t('navbar.instructions')}</h3>
-                      <p className="text-xs text-muted-foreground">{t('dashboard.features.instructions')}</p>
+                  <div className="min-w-0">
+                      <h3 className="font-semibold text-foreground text-sm break-words">{t('navbar.instructions')}</h3>
+                      <p className="text-xs text-muted-foreground break-words">{t('dashboard.features.instructions')}</p>
                   </div>
                   </CardContent>
               </Card>
