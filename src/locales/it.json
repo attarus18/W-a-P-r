@@ -119,7 +119,16 @@
     "print_button": "Stampa Scheda",
     "concept_blocked_title": "Richiesta non valida",
     "concept_blocked_default_reason": "La richiesta non è pertinente alla creazione di una candela profumata. Riprova descrivendo un'idea, un luogo o un'atmosfera.",
-    "concept_blocked_close": "Chiudi"
+    "concept_blocked_close": "Chiudi",
+    "reward_button": "Guarda un video e genera",
+    "reward_watching": "Video in corso…",
+    "reward_confirming": "Conferma della ricompensa…",
+    "reward_info": "Gratis con la pubblicità: un breve video per ogni richiesta (oggi {used} su {limit}).",
+    "reward_subscribe_link": "Abbonati per non vedere i video.",
+    "reward_limit_reached": "Hai usato tutti i {limit} video gratuiti di oggi. Riprova domani oppure abbonati.",
+    "reward_no_ad": "Nessun video disponibile in questo momento. Riprova tra poco.",
+    "reward_not_earned": "Video non completato: per sbloccare la richiesta guardalo fino alla fine.",
+    "reward_pending": "Sto ancora confermando il video. Riprova tra qualche secondo."
   },
   "materials": {
     "button_label": "Costo Materiali",

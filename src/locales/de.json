@@ -119,7 +119,16 @@
     "print_button": "Blatt Drucken",
     "concept_blocked_title": "Ungültige Anfrage",
     "concept_blocked_default_reason": "Diese Anfrage ist für die Erstellung einer duftenden Kerze nicht relevant. Versuchen Sie es erneut, indem Sie eine Idee, einen Ort oder eine Stimmung beschreiben.",
-    "concept_blocked_close": "Schließen"
+    "concept_blocked_close": "Schließen",
+    "reward_button": "Video ansehen und generieren",
+    "reward_watching": "Video läuft…",
+    "reward_confirming": "Belohnung wird bestätigt…",
+    "reward_info": "Kostenlos mit Werbung: ein kurzes Video pro Anfrage (heute {used} von {limit}).",
+    "reward_subscribe_link": "Abonnieren, um keine Videos mehr zu sehen.",
+    "reward_limit_reached": "Du hast alle {limit} kostenlosen Videos für heute genutzt. Versuche es morgen erneut oder abonniere.",
+    "reward_no_ad": "Im Moment ist kein Video verfügbar. Bitte versuche es gleich noch einmal.",
+    "reward_not_earned": "Video nicht abgeschlossen: Sieh es bis zum Ende an, um die Anfrage freizuschalten.",
+    "reward_pending": "Das Video wird noch bestätigt. Bitte versuche es in ein paar Sekunden erneut."
   },
   "materials": {
     "button_label": "Materialkosten",

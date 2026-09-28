@@ -13,10 +13,26 @@ export async function requireProUserWithinDailyLimit(
   req: Request,
   // dailyLimit puo' essere un numero fisso, o una funzione del piano
   // (subscription_plan) per applicare limiti diversi per Hobby/Pro/Annuale.
-  opts: { table: string; dailyLimit: number | ((plan: string | null) => number) }
+  opts: {
+    table: string;
+    dailyLimit: number | ((plan: string | null) => number);
+    // Se true, chi NON e' abbonato puo' comunque procedere consumando un
+    // credito "video con ricompensa" (1 credito = 1 richiesta). Il tetto
+    // giornaliero dei non abbonati e' quello dei crediti (REWARD_DAILY_LIMIT),
+    // applicato quando il credito viene accreditato, non qui.
+    allowRewardCredit?: boolean;
+  }
 ): Promise<
-  | { error: NextResponse; userId?: undefined; supabase?: undefined }
-  | { error?: undefined; userId: string; supabase: ReturnType<typeof createServiceRoleClient> }
+  | { error: NextResponse; userId?: undefined; supabase?: undefined; rewardCreditId?: undefined }
+  | {
+      error?: undefined;
+      userId: string;
+      supabase: ReturnType<typeof createServiceRoleClient>;
+      // Valorizzato solo se questa richiesta ha consumato un credito: chi
+      // chiama deve restituirlo (refundRewardCredit) se la richiesta fallisce
+      // per un errore nostro.
+      rewardCreditId?: string;
+    }
 > {
   const authHeader = req.headers.get('authorization');
   const token = authHeader?.replace(/^Bearer\s+/i, '');
@@ -44,7 +60,25 @@ export async function requireProUserWithinDailyLimit(
   const hasActiveSubscription =
     profile?.subscription_status === 'active' || profile?.subscription_status === 'grace_period';
   if (!hasActiveSubscription) {
-    return { error: NextResponse.json({ error: 'Funzionalità riservata ai piani a pagamento' }, { status: 403 }) };
+    if (!opts.allowRewardCredit) {
+      return { error: NextResponse.json({ error: 'Funzionalità riservata ai piani a pagamento' }, { status: 403 }) };
+    }
+    const { data: creditId, error: creditError } = await supabase.rpc('consume_reward_credit', { p_user_id: userId });
+    if (creditError) {
+      console.error('AI guard: errore nel consumo del credito ricompensa', creditError);
+      return { error: NextResponse.json({ error: 'Impossibile verificare il credito' }, { status: 500 }) };
+    }
+    if (!creditId) {
+      // "reward_required" permette all'app di distinguere questo caso e
+      // proporre il video, invece di mostrare un errore generico.
+      return {
+        error: NextResponse.json(
+          { error: 'Guarda un video per usare il Suggeritore AI', code: 'reward_required' },
+          { status: 403 }
+        ),
+      };
+    }
+    return { userId, supabase, rewardCreditId: creditId as string };
   }
 
   const dailyLimit = typeof opts.dailyLimit === 'function'

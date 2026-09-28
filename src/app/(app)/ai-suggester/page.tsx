@@ -16,7 +16,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Sparkles, Loader2, TriangleAlert, Wand2, Printer } from 'lucide-react';
+import { Sparkles, Loader2, TriangleAlert, Wand2, Printer, PlayCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Capacitor } from '@capacitor/core';
+import { showRewardedAd } from '@/lib/rewarded-ad';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/context/auth-context';
@@ -54,6 +57,89 @@ export default function AiSuggesterPage() {
   const [isPreparingPdf, setIsPreparingPdf] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  // Chi non e' abbonato guarda un video con ricompensa prima di ogni richiesta
+  // (solo nell'app Android). isNative si legge in un effect, non durante il
+  // render, per non creare differenze tra HTML del server e del client.
+  const [isNative, setIsNative] = useState(false);
+  const [nativeChecked, setNativeChecked] = useState(false);
+  const [rewardStatus, setRewardStatus] = useState<{ available: number; usedToday: number; dailyLimit: number } | null>(null);
+  const [rewardPhase, setRewardPhase] = useState<'idle' | 'watching' | 'confirming'>('idle');
+
+  useEffect(() => {
+    setIsNative(Capacitor.isNativePlatform());
+    setNativeChecked(true);
+  }, []);
+
+  const fetchRewardStatus = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch('/api/rewards/status', {
+      headers: { Authorization: `Bearer ${session?.access_token ?? ''}` },
+    });
+    if (!res.ok) throw new Error(t('ai_suggester.error_desc'));
+    const status = await res.json();
+    setRewardStatus(status);
+    return status as { available: number; usedToday: number; dailyLimit: number };
+  };
+
+  useEffect(() => {
+    if (!user || isSubscriptionLoading || hasActiveSubscription || !isNative) return;
+    fetchRewardStatus().catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isSubscriptionLoading, hasActiveSubscription, isNative]);
+
+  // Garantisce che l'utente non abbonato abbia un credito da spendere: se ne ha
+  // gia' uno (video guardato ma richiesta non partita) lo usa, altrimenti
+  // mostra il video e aspetta che AdMob confermi la ricompensa al server.
+  // Ritorna true se si puo' procedere con la richiesta AI.
+  const ensureRewardCredit = async (): Promise<boolean> => {
+    if (!user) return false;
+    try {
+      const status = await fetchRewardStatus();
+      if (status.available > 0) return true;
+      if (status.usedToday >= status.dailyLimit) {
+        toast({
+          variant: 'destructive',
+          title: t('ai_suggester.error_title'),
+          description: t('ai_suggester.reward_limit_reached', { limit: status.dailyLimit }),
+        });
+        return false;
+      }
+
+      setRewardPhase('watching');
+      let earned = false;
+      try {
+        earned = await showRewardedAd(user.id);
+      } catch {
+        toast({ variant: 'destructive', title: t('ai_suggester.error_title'), description: t('ai_suggester.reward_no_ad') });
+        return false;
+      }
+      if (!earned) {
+        toast({ variant: 'destructive', title: t('ai_suggester.error_title'), description: t('ai_suggester.reward_not_earned') });
+        return false;
+      }
+
+      // AdMob conferma il video al nostro server con una chiamata separata,
+      // qualche secondo dopo: aspettiamo che il credito compaia.
+      setRewardPhase('confirming');
+      for (let attempt = 0; attempt < 12; attempt++) {
+        const updated = await fetchRewardStatus();
+        if (updated.available > 0) return true;
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+      toast({ title: t('ai_suggester.error_title'), description: t('ai_suggester.reward_pending') });
+      return false;
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: t('ai_suggester.error_title'),
+        description: error.message || t('ai_suggester.error_desc'),
+      });
+      return false;
+    } finally {
+      setRewardPhase('idle');
+    }
+  };
+
   // Appena arrivano le 3 proposte, portiamo la pagina fin li': su schermi
   // piccoli l'utente altrimenti dovrebbe scorrere manualmente oltre il form
   // per accorgersi che il risultato e' gia' pronto.
@@ -65,6 +151,7 @@ export default function AiSuggesterPage() {
 
   const handleGenerateConcept = async () => {
     if (!concept.trim()) return;
+    if (!hasActiveSubscription && !(await ensureRewardCredit())) return;
     setIsGeneratingConcept(true);
     setConceptOptions(null);
     try {
@@ -82,6 +169,9 @@ export default function AiSuggesterPage() {
         if (res.status === 429) {
           throw new Error(t('ai_suggester.rate_limit_error'));
         }
+        if (body.code === 'reward_required') {
+          throw new Error(t('ai_suggester.reward_pending'));
+        }
         throw new Error(body.error || t('ai_suggester.error_desc'));
       }
       if (body.blocked) {
@@ -98,6 +188,9 @@ export default function AiSuggesterPage() {
       });
     } finally {
       setIsGeneratingConcept(false);
+      // Il credito e' stato speso (o restituito dal server): aggiorniamo il
+      // contatore dei video di oggi mostrato sotto il pulsante.
+      if (!hasActiveSubscription && isNative) fetchRewardStatus().catch(() => {});
     }
   };
 
@@ -212,7 +305,7 @@ export default function AiSuggesterPage() {
     }
   };
 
-  if (isSubscriptionLoading) {
+  if (isSubscriptionLoading || !nativeChecked) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
@@ -224,9 +317,22 @@ export default function AiSuggesterPage() {
     return <AccessDenied featureName={t('navbar.ai_suggester')} />;
   }
 
-  if (!hasActiveSubscription) {
+  // Fuori dall'app Android non ci sono video con ricompensa: resta il blocco
+  // "solo abbonati".
+  if (!hasActiveSubscription && !isNative) {
     return <ProFeatureDialog />;
   }
+
+  const isBusy = isGeneratingConcept || rewardPhase !== 'idle';
+  const generateLabel = isGeneratingConcept
+    ? t('ai_suggester.generating')
+    : rewardPhase === 'watching'
+      ? t('ai_suggester.reward_watching')
+      : rewardPhase === 'confirming'
+        ? t('ai_suggester.reward_confirming')
+        : hasActiveSubscription || (rewardStatus?.available ?? 0) > 0
+          ? t('ai_suggester.concept_submit_button')
+          : t('ai_suggester.reward_button');
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -258,11 +364,28 @@ export default function AiSuggesterPage() {
             maxLength={300}
           />
         </CardContent>
-        <CardFooter>
-          <Button type="button" onClick={handleGenerateConcept} disabled={isGeneratingConcept || !concept.trim()}>
-            {isGeneratingConcept ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-            {isGeneratingConcept ? t('ai_suggester.generating') : t('ai_suggester.concept_submit_button')}
+        <CardFooter className="flex flex-col items-start gap-3">
+          <Button type="button" onClick={handleGenerateConcept} disabled={isBusy || !concept.trim()}>
+            {isBusy ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : !hasActiveSubscription && (rewardStatus?.available ?? 0) === 0 ? (
+              <PlayCircle className="mr-2 h-4 w-4" />
+            ) : (
+              <Wand2 className="mr-2 h-4 w-4" />
+            )}
+            {generateLabel}
           </Button>
+          {!hasActiveSubscription && (
+            <p className="text-xs text-muted-foreground">
+              {t('ai_suggester.reward_info', {
+                used: rewardStatus?.usedToday ?? 0,
+                limit: rewardStatus?.dailyLimit ?? 3,
+              })}{' '}
+              <Link href="/pricing" className="underline">
+                {t('ai_suggester.reward_subscribe_link')}
+              </Link>
+            </p>
+          )}
         </CardFooter>
       </Card>
 

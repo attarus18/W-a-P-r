@@ -119,7 +119,16 @@
     "print_button": "Imprimer la Fiche",
     "concept_blocked_title": "Demande non valide",
     "concept_blocked_default_reason": "Cette demande n'est pas pertinente pour la création d'une bougie parfumée. Réessayez en décrivant une idée, un lieu ou une ambiance.",
-    "concept_blocked_close": "Fermer"
+    "concept_blocked_close": "Fermer",
+    "reward_button": "Regarder une vidéo et générer",
+    "reward_watching": "Vidéo en cours…",
+    "reward_confirming": "Confirmation de la récompense…",
+    "reward_info": "Gratuit avec la publicité : une courte vidéo par demande ({used} sur {limit} aujourd'hui).",
+    "reward_subscribe_link": "Abonnez-vous pour ne plus voir les vidéos.",
+    "reward_limit_reached": "Vous avez utilisé les {limit} vidéos gratuites d'aujourd'hui. Réessayez demain ou abonnez-vous.",
+    "reward_no_ad": "Aucune vidéo disponible pour le moment. Réessayez dans quelques instants.",
+    "reward_not_earned": "Vidéo non terminée : regardez-la jusqu'au bout pour débloquer la demande.",
+    "reward_pending": "Confirmation de la vidéo en cours. Réessayez dans quelques secondes."
   },
   "materials": {
     "button_label": "Coût des matériaux",

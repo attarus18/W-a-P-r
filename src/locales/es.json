@@ -119,7 +119,16 @@
     "print_button": "Imprimir Ficha",
     "concept_blocked_title": "Solicitud no válida",
     "concept_blocked_default_reason": "Esta solicitud no es pertinente para crear una vela perfumada. Vuelve a intentarlo describiendo una idea, un lugar o un ambiente.",
-    "concept_blocked_close": "Cerrar"
+    "concept_blocked_close": "Cerrar",
+    "reward_button": "Ver un video y generar",
+    "reward_watching": "Video en curso…",
+    "reward_confirming": "Confirmando la recompensa…",
+    "reward_info": "Gratis con publicidad: un video corto por cada solicitud ({used} de {limit} hoy).",
+    "reward_subscribe_link": "Suscríbete para no ver los videos.",
+    "reward_limit_reached": "Has usado los {limit} videos gratuitos de hoy. Inténtalo mañana o suscríbete.",
+    "reward_no_ad": "No hay ningún video disponible ahora. Inténtalo de nuevo en unos instantes.",
+    "reward_not_earned": "Video no completado: velo hasta el final para desbloquear la solicitud.",
+    "reward_pending": "Todavía estoy confirmando el video. Inténtalo de nuevo en unos segundos."
   },
   "materials": {
     "button_label": "Costo de materiales",

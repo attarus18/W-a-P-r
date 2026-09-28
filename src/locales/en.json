@@ -119,7 +119,16 @@
     "print_button": "Print Sheet",
     "concept_blocked_title": "Invalid request",
     "concept_blocked_default_reason": "This request isn't relevant to creating a scented candle. Try again describing an idea, a place or a mood.",
-    "concept_blocked_close": "Close"
+    "concept_blocked_close": "Close",
+    "reward_button": "Watch a video and generate",
+    "reward_watching": "Video playing…",
+    "reward_confirming": "Confirming your reward…",
+    "reward_info": "Free with ads: one short video per request ({used} of {limit} today).",
+    "reward_subscribe_link": "Subscribe to skip the videos.",
+    "reward_limit_reached": "You've used all {limit} free videos for today. Try again tomorrow or subscribe.",
+    "reward_no_ad": "No video available right now. Please try again shortly.",
+    "reward_not_earned": "Video not completed: watch it to the end to unlock the request.",
+    "reward_pending": "Still confirming the video. Please try again in a few seconds."
   },
   "materials": {
     "button_label": "Materials Cost",
