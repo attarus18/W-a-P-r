@@ -4,6 +4,11 @@ import { ADMOB_REWARDED_AD_UNIT_ID } from '@/lib/admob';
 
 let sdkInitialized = false;
 
+function describeAdError(err: unknown): string {
+  const e = err as { code?: number | string; message?: string } | undefined;
+  return [e?.code, e?.message].filter((part) => part !== undefined && part !== '').join(': ') || 'errore sconosciuto';
+}
+
 // I video con ricompensa esistono solo nell'app Android (plugin nativo AdMob).
 export const isRewardedAdSupported = () => Capacitor.isNativePlatform();
 
@@ -36,7 +41,17 @@ export async function showRewardedAd(userId: string): Promise<boolean> {
       await AdMob.addListener(RewardAdPluginEvents.FailedToShow, () => closeAd())
     );
 
-    await AdMob.prepareRewardVideoAd({ adId: ADMOB_REWARDED_AD_UNIT_ID, ssv: { userId } });
+    try {
+      await AdMob.prepareRewardVideoAd({ adId: ADMOB_REWARDED_AD_UNIT_ID, ssv: { userId } });
+    } catch (err) {
+      // Il plugin rifiuta con { code, message } (es. "3: No fill" = nessun
+      // annuncio da mostrare). Lo rilanciamo cosi' la pagina puo' mostrare il
+      // codice, utile per capire se l'unita' non e' ancora attiva o e' un
+      // problema di configurazione.
+      const detail = describeAdError(err);
+      console.error('AdMob rewarded: caricamento non riuscito', detail);
+      throw new Error(detail);
+    }
 
     // showRewardVideoAd si risolve quando la ricompensa e' guadagnata, ma
     // l'utente puo' ancora vedere la schermata finale: aspettiamo la chiusura
@@ -45,7 +60,10 @@ export async function showRewardedAd(userId: string): Promise<boolean> {
       () => {
         earned = true;
       },
-      () => closeAd()
+      (err) => {
+        console.error('AdMob rewarded: visualizzazione non riuscita', describeAdError(err));
+        closeAd();
+      }
     );
     await Promise.race([closed, shown.then(() => new Promise<void>((r) => setTimeout(r, 45000)))]);
     return earned;

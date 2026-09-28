@@ -109,8 +109,14 @@ export default function AiSuggesterPage() {
       let earned = false;
       try {
         earned = await showRewardedAd(user.id);
-      } catch {
-        toast({ variant: 'destructive', title: t('ai_suggester.error_title'), description: t('ai_suggester.reward_no_ad') });
+      } catch (adError: any) {
+        // Oltre al messaggio per l'utente mostriamo il codice AdMob tra
+        // parentesi (es. "3: No fill"): serve a capire il motivo.
+        toast({
+          variant: 'destructive',
+          title: t('ai_suggester.error_title'),
+          description: `${t('ai_suggester.reward_no_ad')} (${adError?.message ?? '?'})`,
+        });
         return false;
       }
       if (!earned) {
