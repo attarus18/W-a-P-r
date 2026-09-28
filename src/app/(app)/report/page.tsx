@@ -9,7 +9,7 @@ import { useLanguage } from '@/context/language-context';
 import { TrendingUp, Package, Undo, Printer, LineChart, Calendar as CalendarIcon, Warehouse, Loader2, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { useCurrency } from '@/context/currency-context';
 import { startOfDay, startOfWeek, startOfMonth, startOfYear, endOfDay, endOfWeek, endOfMonth, endOfYear, addDays, addWeeks, addMonths, addYears, differenceInCalendarDays, format } from 'date-fns';
-import { enUS, it, es, fr, de } from 'date-fns/locale';
+import { enUS, it, es, fr, de, nl } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -30,7 +30,7 @@ interface ProductStat {
   returned: number;
 }
 
-const localeMap = { en: enUS, it, es, fr, de };
+const localeMap = { en: enUS, it, es, fr, de, nl };
 
 export default function ReportPage() {
     const { user } = useUser();

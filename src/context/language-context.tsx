@@ -3,7 +3,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import translations from '@/locales/translations';
 
-type Language = 'it' | 'en' | 'fr' | 'de' | 'es';
+type Language = 'it' | 'en' | 'fr' | 'de' | 'es' | 'nl';
 
 type Translations = {
   [key: string]: string | Translations;
@@ -42,7 +42,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     // capisce alla primissima apertura. Non scriviamo su localStorage qui:
     // resta un default automatico, non una scelta esplicita dell'utente,
     // che puo' sempre cambiarla da Impostazioni (handleSetLanguage sotto).
-    const supported: Language[] = ['it', 'en', 'es', 'fr', 'de'];
+    const supported: Language[] = ['it', 'en', 'es', 'fr', 'de', 'nl'];
     const candidates = typeof navigator !== 'undefined'
       ? (navigator.languages && navigator.languages.length > 0 ? navigator.languages : [navigator.language])
       : [];

@@ -27,9 +27,9 @@ import { convertWeight, convertVolume, type WeightUnit, type VolumeUnit } from '
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 import { format } from 'date-fns';
-import { enUS, it, es, fr, de } from 'date-fns/locale';
+import { enUS, it, es, fr, de, nl } from 'date-fns/locale';
 
-const localeMap = { en: enUS, it, es, fr, de };
+const localeMap = { en: enUS, it, es, fr, de, nl };
 
 type FormValues = {
   nomeProdotto: string;

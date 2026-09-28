@@ -36,6 +36,7 @@ export const localeByLanguage: { [key: string]: string } = {
   es: 'es-ES',
   fr: 'fr-FR',
   de: 'de-DE',
+  nl: 'nl-NL',
 };
 
 interface CurrencyContextType {

@@ -219,7 +219,7 @@ export default function SettingsPage() {
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
                 <Label htmlFor="language">{t('settings.language_label')}</Label>
-                <Select value={language} onValueChange={(value) => setLanguage(value as 'it' | 'en' | 'fr' | 'de' | 'es')}>
+                <Select value={language} onValueChange={(value) => setLanguage(value as 'it' | 'en' | 'fr' | 'de' | 'es' | 'nl')}>
                     <SelectTrigger id="language">
                         <SelectValue placeholder={t('settings.language_placeholder')} />
                     </SelectTrigger>
@@ -229,6 +229,7 @@ export default function SettingsPage() {
                         <SelectItem value="fr">Français</SelectItem>
                         <SelectItem value="de">Deutsch</SelectItem>
                         <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="nl">Nederlands</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
