@@ -11,23 +11,22 @@ import { useProducts } from '@/context/product-context';
 import { useSubscription } from '@/context/subscription-context';
 import { useCurrency } from '@/context/currency-context';
 import { useToast } from '@/hooks/use-toast';
-import { FREE_PRODUCT_LIMIT, TRIAL_PRODUCT_LIMIT, PRODUCT_LIMITS, type PaidPlan } from '@/lib/constants';
+import { FREE_PRODUCT_LIMIT, PRODUCT_LIMITS, type PaidPlan } from '@/lib/constants';
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
 
 export default function InventoryPage() {
   const { t } = useLanguage();
   const { products, addProduct, isLoading: productsLoading } = useProducts();
-  const { subscription, isSubscriptionLoading, hasActiveSubscription, isTrialing } = useSubscription();
+  const { subscription, isSubscriptionLoading, hasActiveSubscription } = useSubscription();
   const { formatCurrency } = useCurrency();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
   const { toast } = useToast();
 
   const getProductLimit = () => {
-    if (isTrialing) return TRIAL_PRODUCT_LIMIT;
     const plan = subscription?.subscriptionPlan as PaidPlan | undefined;
-    if (plan && plan in PRODUCT_LIMITS) return PRODUCT_LIMITS[plan];
+    if (hasActiveSubscription && plan && plan in PRODUCT_LIMITS) return PRODUCT_LIMITS[plan];
     return FREE_PRODUCT_LIMIT;
   };
   
@@ -172,9 +171,6 @@ export default function InventoryPage() {
                 ? t('inventory.product_count', { count: products.length, limit: productLimit })
                 : t('inventory.product_count_unlimited', { count: products.length })}
           </p>
-          {isTrialing && (
-            <p className="text-xs text-muted-foreground mt-0.5">{t('inventory.trial_limit_note')}</p>
-          )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {products.length > 0 && (

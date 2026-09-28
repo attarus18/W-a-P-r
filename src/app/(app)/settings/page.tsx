@@ -37,7 +37,7 @@ export default function SettingsPage() {
   const { user } = useUser();
   const supabase = useAuth();
   const router = useRouter();
-  const { subscription, hasActiveSubscription, isSubscriptionLoading, isTrialing } = useSubscription();
+  const { subscription, hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const { toast } = useToast();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
   const [isEmptyingInventory, setIsEmptyingInventory] = useState(false);
@@ -165,13 +165,11 @@ export default function SettingsPage() {
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-muted-foreground">{t('settings.status')}</span>
-                        <span className="font-semibold capitalize">{t(`settings.plan_status_${isTrialing ? 'trialing' : subscription.subscriptionStatus}`)}</span>
+                        <span className="font-semibold capitalize">{t(`settings.plan_status_${subscription.subscriptionStatus}`)}</span>
                     </div>
                     {subscription.subscriptionPeriodEndDate && (
                         <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">
-                                {isTrialing ? t('settings.trial_ends_in_label') : t('settings.renews_on_label')}
-                            </span>
+                            <span className="text-muted-foreground">{t('settings.renews_on_label')}</span>
                             <span className="font-semibold">{new Date(subscription.subscriptionPeriodEndDate).toLocaleDateString(language)}</span>
                         </div>
                     )}

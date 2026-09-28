@@ -1,11 +1,6 @@
 export const FREE_RECIPE_LIMIT = 2;
 export const FREE_PRODUCT_LIMIT = 2;
 
-// Limite prodotti/ricette durante i 7 giorni di prova gratuita: uguale per
-// tutti i piani indipendentemente da quale si sta provando.
-export const TRIAL_PRODUCT_LIMIT = 5;
-export const TRIAL_RECIPE_LIMIT = 5;
-
 export type PaidPlan = 'hobby' | 'pro' | 'annual';
 
 // Limite prodotti in magazzino per piano a pagamento. Pro e Annuale sono
