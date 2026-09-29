@@ -16,6 +16,11 @@ export const ADMOB_BANNER_AD_UNIT_ID =
 // AdMob.
 const REAL_REWARDED_AD_UNIT_ID = 'ca-app-pub-4870944787959973/1000865632';
 const TEST_REWARDED_AD_UNIT_ID = 'ca-app-pub-3940256099942544/5224354917';
-export const ADMOB_REWARDED_AD_UNIT_ID =
-  process.env.NEXT_PUBLIC_ADMOB_REWARDED_AD_UNIT_ID ??
-  (process.env.NODE_ENV === 'production' ? REAL_REWARDED_AD_UNIT_ID : TEST_REWARDED_AD_UNIT_ID);
+// DIAGNOSTICA TEMPORANEA (2026-09-29): forziamo sempre l'ID di test per
+// isolare se il "no fill" persistente e' mancanza di domanda reale o un
+// problema di codice/mediazione. Da rimuovere non appena verificato: vedi
+// commit successivo che ripristina la riga originale.
+export const ADMOB_REWARDED_AD_UNIT_ID = TEST_REWARDED_AD_UNIT_ID;
+// export const ADMOB_REWARDED_AD_UNIT_ID =
+//   process.env.NEXT_PUBLIC_ADMOB_REWARDED_AD_UNIT_ID ??
+//   (process.env.NODE_ENV === 'production' ? REAL_REWARDED_AD_UNIT_ID : TEST_REWARDED_AD_UNIT_ID);
