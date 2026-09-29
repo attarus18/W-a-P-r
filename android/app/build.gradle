@@ -65,21 +65,19 @@ dependencies {
     implementation project(':capacitor-cordova-android-plugins')
 
     // --- Mediazione AdMob (video con ricompensa) -----------------------
-    // Attivare SOLO dopo aver creato gli account sulle reti e configurato
-    // le origini annuncio nel gruppo di mediazione "Con premio" in AdMob
-    // (console.admob.google.com -> Mediazione -> il gruppo per il formato
-    // "Con premio" della app WaxPro). L'App ID/Ad Unit ID di ciascuna rete
-    // si inseriscono LI', non qui: qui serve solo l'adattatore (la libreria
-    // che permette all'SDK di AdMob di chiamare quella rete).
-    //
-    // Versioni segnaposto: prima di scommentare, sostituire "REPLACE_ME"
-    // con la versione esatta indicata nella pagina di integrazione Google
-    // per l'adattatore (cambia spesso, mai usare "+" per non rompere le
-    // build future in modo silenzioso):
-    //   Unity Ads:  https://developers.google.com/admob/android/mediation/unity
-    //   AppLovin:   https://developers.google.com/admob/android/mediation/applovin
-    //
-    // implementation "com.google.ads.mediation:unity:REPLACE_ME"
+    // Unity Ads: adattatore attivo. Versione 4.20.1.0, compilata e testata
+    // da Google con Google Mobile Ads SDK 25.4.0, che e' la stessa major
+    // usata dal plugin @capacitor-community/admob in questo progetto
+    // (vedi il suo README: "Android continues to use GMA SDK (Legacy)
+    // 25.4.x"). Verificato il 2026-09-29 su
+    // https://developers.google.com/admob/android/mediation/unity
+    // Da aggiornare insieme, in futuro, se si aggiorna il plugin AdMob.
+    implementation "com.google.ads.mediation:unity:4.20.1.0"
+
+    // AppLovin: non ancora attivo (account AppLovin sospeso, in attesa di
+    // sblocco). Attivare seguendo lo stesso schema sopra, prendendo la
+    // versione esatta da:
+    // https://developers.google.com/admob/android/mediation/applovin
     // implementation "com.google.ads.mediation:applovin:REPLACE_ME"
 }
 

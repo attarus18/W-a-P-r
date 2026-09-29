@@ -1,41 +1,37 @@
 # Mediazione AdMob per il video con ricompensa (Suggeritore AI)
 
-Stato: **scheletro preparato, non ancora attivo**. Il codice attuale usa solo
-la rete AdMob diretta (nessuna mediazione) sull'unità "Video Suggeritore AI"
+Stato: **Unity Ads attivo, sia lato codice che nel gruppo di mediazione
+AdMob "WaxPro - Rewarded" (ID 5923294910). AppLovin in pausa** (account
+sospeso, da sbloccare col supporto AppLovin prima di riprendere). Con il
+prossimo build Android che include la dipendenza Unity (punto 2), l'app
+inizierà a servire annunci anche tramite Unity Ads oltre alla rete AdMob
+diretta, aumentando il fill rate per l'unità "Video Suggeritore AI"
 (`ca-app-pub-4870944787959973/1000865632`, formato "Con premio").
 
-Questo documento elenca cosa manca per aggiungere Unity Ads e AppLovin come
-reti aggiuntive, per aumentare il riempimento (fill rate) quando AdMob da
-solo risponde "No fill".
+## 1. Account e valori raccolti
 
-## 1. Account da creare (a cura del titolare, non automatizzabile)
+- **Unity Ads (Unity Cloud / LevelPlay)** — organizzazione `attarus18_unity`
+  (ID `6872887436829`), progetto "WaxPro - Candle Management"
+  (`4f2ec0e2-9fee-4f35-a551-3f49dec04eb4`), app "CANDLE CALCULATOR" collegata
+  a Google Play. Placement Rewarded creato il 2026-09-29:
+  - **Game ID**: `800383714`
+  - **Ad Unit ID (Network Placement ID)**: `BP_Rewarded_Android`
+- **AppLovin** — https://max.applovin.com — **account sospeso**, motivo non
+  noto. Da risolvere scrivendo al supporto AppLovin (verifica
+  identità/azienda, di solito) prima di poter creare app/unità. Finché resta
+  così, questa rete non fa parte della mediazione.
 
-Per ciascuna rete: creare un account business, aggiungere l'app Android
-(package `appinventor.ai_attarus18.CalcoloCandele`, nome "WaxPro - Candle
-Management"), creare un'unità pubblicitaria **Rewarded / Video con
-ricompensa**.
+## 2. Codice nativo
 
-- **Unity Ads (LevelPlay)** — https://unity.com/products/unity-ads
-  Servono: **Game ID** e **Ad Unit ID** (o Placement ID) dell'unità rewarded.
-- **AppLovin** — https://www.applovin.com
-  Servono: **SDK Key** e **Ad Unit ID** dell'unità rewarded.
-
-Questi valori vanno inseriti **nella console AdMob**, non nel codice (vedi
-punto 3): l'app nativa non ha bisogno di conoscerli direttamente, li usa
-l'SDK di AdMob internamente quando decide di far servire l'annuncio da
-quella rete.
-
-## 2. Codice nativo (già scritto, da attivare)
-
-In `android/app/build.gradle`, sezione "Mediazione AdMob": due righe
-commentate con `REPLACE_ME` al posto della versione. Prima di scommentarle:
-
-1. Aprire le pagine ufficiali di integrazione Google e prendere la versione
-   esatta dell'adattatore (cambia nel tempo, mai usare `+`):
-   - Unity: https://developers.google.com/admob/android/mediation/unity
-   - AppLovin: https://developers.google.com/admob/android/mediation/applovin
-2. Sostituire `REPLACE_ME` con quella versione.
-3. Togliere il commento `//` dalle due righe `implementation`.
+In `android/app/build.gradle`, sezione "Mediazione AdMob":
+- **Unity: attivo.** `com.google.ads.mediation:unity:4.20.1.0`, verificata
+  compatibile con la versione del Google Mobile Ads SDK usata dal plugin
+  `@capacitor-community/admob` (25.4.x) il 2026-09-29 su
+  https://developers.google.com/admob/android/mediation/unity — da
+  ricontrollare se in futuro si aggiorna quel plugin.
+- **AppLovin: ancora commentata**, in attesa che l'account si sblocchi.
+  Prima di scommentarla, prendere la versione esatta da
+  https://developers.google.com/admob/android/mediation/applovin (mai `+`).
 
 `google()` e `mavenCentral()` sono già nei repository del progetto
 (`android/build.gradle`), quindi non serve aggiungere altro lì.
@@ -45,13 +41,16 @@ commentate con `REPLACE_ME` al posto della versione. Prima di scommentarle:
 Il gruppo esistente "Wax pro" (ID 2088111038) è **solo per i banner**: non
 tocca il video con ricompensa, va lasciato com'è.
 
-Da creare un **nuovo gruppo di mediazione**, formato "Con premio", app WaxPro
-- Candle Management, unità pubblicitaria collegata: "Video Suggeritore AI".
-- In "Origini asta" o "Struttura a cascata", aggiungere Unity Ads e AppLovin
-  come origini annuncio, incollando App ID/Ad Unit ID/SDK Key ottenuti al
-  punto 1 nella mappatura di ciascuna origine.
-- AdMob Network resta come origine di base (nessuna configurazione
-  aggiuntiva richiesta).
+**Fatto (2026-09-29).** Creato il nuovo gruppo di mediazione "WaxPro -
+Rewarded" (ID `5923294910`), formato "Con premio", app WaxPro Gestionale
+Candele, unità pubblicitaria collegata: "Video Suggeritore AI"
+(`ca-app-pub-4870944787959973/1000865632`).
+- In "Origini asta" sono presenti **AdMob Network** (origine di base, nessuna
+  configurazione aggiuntiva) e **Unity Ads**, mappata con Game ID
+  `800383714` e Placement ID `BP_Rewarded_Android` sull'unità "Video
+  Suggeritore AI". Partnership Unity accettata, stato "Attivi".
+- AppLovin non è stata aggiunta come origine annuncio: resta da fare quando
+  l'account si sblocca (vedi punto 1).
 
 ## 4. Build e pubblicazione
 
