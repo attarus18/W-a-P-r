@@ -127,7 +127,7 @@
     "reward_subscribe_link": "Abonnieren, um keine Videos mehr zu sehen.",
     "reward_limit_reached": "Du hast alle {limit} kostenlosen Videos für heute genutzt. Versuche es morgen erneut oder abonniere.",
     "reward_no_ad": "Im Moment ist kein Video verfügbar. Bitte versuche es gleich noch einmal.",
-    "reward_no_fill": "Momentan sind keine Anzeigen verfügbar, um eine kostenlose Anfrage freizuschalten (das passiert bei neuen oder wenig genutzten Apps). Versuche es später erneut oder abonniere, um nicht von Videos abhängig zu sein.",
+    "reward_no_fill": "Momentan sind keine Anzeigen verfügbar, um eine kostenlose Anfrage freizuschalten. Versuche es später erneut oder abonniere, um nicht von Videos abhängig zu sein.",
     "reward_not_earned": "Video nicht abgeschlossen: Sieh es bis zum Ende an, um die Anfrage freizuschalten.",
     "reward_pending": "Das Video wird noch bestätigt. Bitte versuche es in ein paar Sekunden erneut."
   },

@@ -127,7 +127,7 @@
     "reward_subscribe_link": "Suscríbete para no ver los videos.",
     "reward_limit_reached": "Has usado los {limit} videos gratuitos de hoy. Inténtalo mañana o suscríbete.",
     "reward_no_ad": "No hay ningún video disponible ahora. Inténtalo de nuevo en unos instantes.",
-    "reward_no_fill": "Ahora mismo no hay anuncios disponibles para desbloquear una solicitud gratis (pasa en apps nuevas o con poco tráfico). Inténtalo más tarde, o suscríbete para no depender de los videos.",
+    "reward_no_fill": "Ahora mismo no hay anuncios disponibles para desbloquear una solicitud gratis. Inténtalo más tarde, o suscríbete para no depender de los videos.",
     "reward_not_earned": "Video no completado: velo hasta el final para desbloquear la solicitud.",
     "reward_pending": "Todavía estoy confirmando el video. Inténtalo de nuevo en unos segundos."
   },
