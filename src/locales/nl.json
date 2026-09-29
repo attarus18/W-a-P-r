@@ -127,6 +127,7 @@
     "reward_subscribe_link": "Abonneer je om geen video's meer te zien.",
     "reward_limit_reached": "Je hebt vandaag alle {limit} gratis video's gebruikt. Probeer het morgen opnieuw of neem een abonnement.",
     "reward_no_ad": "Er is momenteel geen video beschikbaar. Probeer het over even opnieuw.",
+    "reward_no_fill": "Er zijn nu geen advertenties beschikbaar om een gratis aanvraag te ontgrendelen (dit gebeurt bij nieuwe of weinig gebruikte apps). Probeer het later opnieuw, of neem een abonnement om niet van video's afhankelijk te zijn.",
     "reward_not_earned": "Video niet volledig bekeken: bekijk hem tot het einde om het verzoek te ontgrendelen.",
     "reward_pending": "De video wordt nog bevestigd. Probeer het over een paar seconden opnieuw."
   },

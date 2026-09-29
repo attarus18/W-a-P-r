@@ -127,6 +127,7 @@
     "reward_subscribe_link": "Abbonati per non vedere i video.",
     "reward_limit_reached": "Hai usato tutti i {limit} video gratuiti di oggi. Riprova domani oppure abbonati.",
     "reward_no_ad": "Nessun video disponibile in questo momento. Riprova tra poco.",
+    "reward_no_fill": "Al momento non ci sono pubblicità disponibili per sbloccare la richiesta gratis (capita con app nuove o poco trafficate). Riprova più tardi, oppure abbonati per non dipendere dai video.",
     "reward_not_earned": "Video non completato: per sbloccare la richiesta guardalo fino alla fine.",
     "reward_pending": "Sto ancora confermando il video. Riprova tra qualche secondo."
   },

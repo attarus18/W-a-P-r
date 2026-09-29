@@ -110,12 +110,18 @@ export default function AiSuggesterPage() {
       try {
         earned = await showRewardedAd(user.id);
       } catch (adError: any) {
-        // Oltre al messaggio per l'utente mostriamo il codice AdMob tra
-        // parentesi (es. "3: No fill"): serve a capire il motivo.
+        // "No fill" e' AdMob che risponde "non ho pubblicita' da mostrare
+        // ora" (frequente sulle unita' nuove o con poco traffico): messaggio
+        // dedicato, piu' chiaro del generico "riprova". Per ogni altro
+        // errore mostriamo comunque il codice AdMob tra parentesi (es.
+        // "5: Internal error"), utile per capire il motivo.
+        const isNoFill = /no fill/i.test(adError?.message ?? '');
         toast({
           variant: 'destructive',
           title: t('ai_suggester.error_title'),
-          description: `${t('ai_suggester.reward_no_ad')} (${adError?.message ?? '?'})`,
+          description: isNoFill
+            ? t('ai_suggester.reward_no_fill')
+            : `${t('ai_suggester.reward_no_ad')} (${adError?.message ?? '?'})`,
         });
         return false;
       }

@@ -127,6 +127,7 @@
     "reward_subscribe_link": "Subscribe to skip the videos.",
     "reward_limit_reached": "You've used all {limit} free videos for today. Try again tomorrow or subscribe.",
     "reward_no_ad": "No video available right now. Please try again shortly.",
+    "reward_no_fill": "There are no ads available right now to unlock a free request (this happens on new or low-traffic apps). Try again later, or subscribe to skip the videos.",
     "reward_not_earned": "Video not completed: watch it to the end to unlock the request.",
     "reward_pending": "Still confirming the video. Please try again in a few seconds."
   },
