@@ -67,3 +67,32 @@ Candele, unità pubblicitaria collegata: "Video Suggeritore AI"
 Nessuna di queste ultime azioni (creazione account, inserimento chiavi in
 AdMob, caricamento su Play Console) è automatizzabile da qui: richiedono
 l'accesso del titolare a servizi esterni con dati di fatturazione/pagamento.
+
+## 5. "No fill" persistente anche con la mediazione attiva (2026-09-30)
+
+Dopo aver attivato Unity Ads, il "no fill" continuava a presentarsi sempre,
+anche da un dispositivo di test italiano. Diagnosi:
+
+1. **Escluso un problema di codice/mediazione**: forzando temporaneamente
+   `ADMOB_REWARDED_AD_UNIT_ID` sull'ID di test universale di Google
+   (`ca-app-pub-3940256099942544/5224354917`, vedi `src/lib/admob.ts`), il
+   video si è caricato regolarmente. L'unità di test ha sempre fill al 100%
+   e non richiede consenso: il fatto che funzioni conferma che plugin, build
+   nativa e gruppo di mediazione sono tutti a posto.
+2. **Causa trovata**: l'app non chiamava mai le API di consenso GDPR/UMP del
+   plugin (`requestConsentInfo()` / `showConsentForm()`), pur avendo già un
+   messaggio di consenso **pubblicato** in AdMob per questa app ("Privacy e
+   messaggi → Regolamenti europei", attivo dal 31/10/2025). Senza consenso
+   raccolto per un utente nel SEE/Regno Unito/Svizzera, i partner di
+   mediazione (Unity Ads incluso) possono legittimamente rifiutarsi di fare
+   offerte per conformità, a prescindere da quanta domanda reale esista —
+   spiegando un "no fill" sistematico proprio per i test fatti dall'Italia.
+   Fix: `src/lib/admob-consent.ts` (`ensureAdmobConsent()`), chiamata prima
+   di `AdMob.initialize()` sia nel banner (`admob-banner.tsx`) sia nel video
+   con ricompensa (`rewarded-ad.ts`).
+
+Questo fix non richiede una nuova build Android (l'app carica il sito via
+WebView, vedi `server.url` in `capacitor.config.ts`): basta il deploy web
+per essere attivo. Da verificare sul campo se risolve del tutto il fill, o
+se resta comunque un po' di "no fill" residuo per pura scarsità di domanda
+(normale per un'unità ancora giovane/a basso traffico).
