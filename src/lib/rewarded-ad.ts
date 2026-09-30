@@ -1,6 +1,7 @@
 import { Capacitor } from '@capacitor/core';
 import type { PluginListenerHandle } from '@capacitor/core';
 import { ADMOB_REWARDED_AD_UNIT_ID } from '@/lib/admob';
+import { ensureAdmobConsent } from '@/lib/admob-consent';
 
 let sdkInitialized = false;
 
@@ -21,6 +22,7 @@ export async function showRewardedAd(userId: string): Promise<boolean> {
   const { AdMob, RewardAdPluginEvents } = await import('@capacitor-community/admob');
 
   if (!sdkInitialized) {
+    await ensureAdmobConsent();
     await AdMob.initialize();
     sdkInitialized = true;
   }

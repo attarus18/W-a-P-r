@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useSubscription } from '@/context/subscription-context';
 import { ADMOB_BANNER_AD_UNIT_ID } from '@/lib/admob';
+import { ensureAdmobConsent } from '@/lib/admob-consent';
 
 let sdkInitialized = false;
 
@@ -32,6 +33,8 @@ export default function AdmobBanner() {
       if (cancelled) return;
 
       if (!sdkInitialized) {
+        await ensureAdmobConsent();
+        if (cancelled) return;
         await AdMob.initialize();
         sdkInitialized = true;
       }
