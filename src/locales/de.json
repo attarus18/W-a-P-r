@@ -129,7 +129,20 @@
     "reward_no_ad": "Im Moment ist kein Video verfügbar. Bitte versuche es gleich noch einmal.",
     "reward_no_fill": "Momentan sind keine Anzeigen verfügbar, um eine kostenlose Anfrage freizuschalten. Versuche es später erneut oder abonniere, um nicht von Videos abhängig zu sein.",
     "reward_not_earned": "Video nicht abgeschlossen: Sieh es bis zum Ende an, um die Anfrage freizuschalten.",
-    "reward_pending": "Das Video wird noch bestätigt. Bitte versuche es in ein paar Sekunden erneut."
+    "reward_pending": "Das Video wird noch bestätigt. Bitte versuche es in ein paar Sekunden erneut.",
+    "save_button": "Diesen Vorschlag speichern",
+    "saved_button": "Gespeichert",
+    "toast_saved_title": "Vorschlag gespeichert",
+    "toast_saved_description": "Der Vorschlag wurde zu deinen gespeicherten Vorschlägen hinzugefügt.",
+    "toast_save_error_title": "Speichern fehlgeschlagen",
+    "toast_save_error_description": "Der Vorschlag konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "saved_section_title": "Deine gespeicherten Vorschläge",
+    "saved_empty": "Du hast noch keinen Duftvorschlag gespeichert.",
+    "delete_button": "Löschen",
+    "delete_alert_title": "Diesen gespeicherten Vorschlag löschen?",
+    "delete_alert_description": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "toast_delete_error_title": "Löschen fehlgeschlagen",
+    "toast_delete_error_description": "Der Vorschlag konnte nicht gelöscht werden. Bitte versuche es erneut."
   },
   "materials": {
     "button_label": "Materialkosten",

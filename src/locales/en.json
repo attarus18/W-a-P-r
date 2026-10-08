@@ -129,7 +129,20 @@
     "reward_no_ad": "No video available right now. Please try again shortly.",
     "reward_no_fill": "There are no ads available right now to unlock a free request. Try again later, or subscribe to skip the videos.",
     "reward_not_earned": "Video not completed: watch it to the end to unlock the request.",
-    "reward_pending": "Still confirming the video. Please try again in a few seconds."
+    "reward_pending": "Still confirming the video. Please try again in a few seconds.",
+    "save_button": "Save this suggestion",
+    "saved_button": "Saved",
+    "toast_saved_title": "Suggestion saved",
+    "toast_saved_description": "The suggestion was added to your saved suggestions.",
+    "toast_save_error_title": "Save failed",
+    "toast_save_error_description": "We couldn't save the suggestion. Please try again.",
+    "saved_section_title": "Your saved suggestions",
+    "saved_empty": "You haven't saved any fragrance suggestion yet.",
+    "delete_button": "Delete",
+    "delete_alert_title": "Delete this saved suggestion?",
+    "delete_alert_description": "This action cannot be undone.",
+    "toast_delete_error_title": "Delete failed",
+    "toast_delete_error_description": "We couldn't delete the suggestion. Please try again."
   },
   "materials": {
     "button_label": "Materials Cost",

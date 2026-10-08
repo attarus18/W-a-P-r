@@ -3,20 +3,22 @@
 import { useEffect, useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import { savePdf, getPdfLogoDataUrl } from '@/lib/pdf-utils';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Sparkles, Loader2, TriangleAlert, Wand2, Printer, PlayCircle } from 'lucide-react';
+import { Sparkles, Loader2, TriangleAlert, Wand2, Printer, PlayCircle, Bookmark, BookmarkCheck, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { Capacitor } from '@capacitor/core';
 import { showRewardedAd } from '@/lib/rewarded-ad';
@@ -27,6 +29,7 @@ import { useSubscription } from '@/context/subscription-context';
 import { createClient } from '@/lib/supabase/client';
 import AccessDenied from '@/components/auth/access-denied';
 import ProFeatureDialog from '@/components/auth/pro-feature-dialog';
+import { useFragranceConcepts } from '@/context/fragrance-concept-context';
 
 interface FragranceComponent {
   name: string;
@@ -48,14 +51,28 @@ export default function AiSuggesterPage() {
   const { user } = useUser();
   const { hasActiveSubscription, isSubscriptionLoading } = useSubscription();
   const [supabase] = useState(() => createClient());
+  const { savedConcepts, addSavedConcept, deleteSavedConcept } = useFragranceConcepts();
 
   const [concept, setConcept] = useState('');
   const [isGeneratingConcept, setIsGeneratingConcept] = useState(false);
   const [conceptOptions, setConceptOptions] = useState<FragranceOption[] | null>(null);
+  // Idea testuale che ha generato conceptOptions: salvata a parte cosi' se
+  // l'utente modifica il campo dopo la generazione (per una richiesta
+  // successiva) il salvataggio di una proposta corrente resta comunque
+  // associato all'idea giusta.
+  const [submittedConcept, setSubmittedConcept] = useState('');
   const [isBlockedDialogOpen, setIsBlockedDialogOpen] = useState(false);
   const [blockReason, setBlockReason] = useState('');
   const [isPreparingPdf, setIsPreparingPdf] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Stato di salvataggio delle 3 proposte correnti: resettato a ogni nuova
+  // generazione (le proposte non hanno un id finche' non vengono salvate,
+  // quindi l'indice nell'array basta per questo batch).
+  const [savedFlags, setSavedFlags] = useState<boolean[]>([]);
+  const [savingIndex, setSavingIndex] = useState<number | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Chi non e' abbonato guarda un video con ricompensa prima di ogni richiesta
   // (solo nell'app Android). isNative si legge in un effect, non durante il
@@ -191,6 +208,8 @@ export default function AiSuggesterPage() {
         setIsBlockedDialogOpen(true);
       } else {
         setConceptOptions(body.options);
+        setSavedFlags(new Array(body.options.length).fill(false));
+        setSubmittedConcept(concept);
       }
     } catch (error: any) {
       toast({
@@ -209,6 +228,50 @@ export default function AiSuggesterPage() {
   const handleCloseBlockedDialog = () => {
     setIsBlockedDialogOpen(false);
     setConcept('');
+  };
+
+  const handleSaveConcept = async (option: FragranceOption, index: number) => {
+    setSavingIndex(index);
+    try {
+      const { error } = await addSavedConcept({
+        concept: submittedConcept,
+        title: option.title,
+        description: option.description,
+        topNote: option.topNote,
+        heartNote: option.heartNote,
+        baseNote: option.baseNote,
+        fragrances: option.fragrances,
+      });
+      if (error) throw new Error(error);
+      setSavedFlags((prev) => prev.map((flag, i) => (i === index ? true : flag)));
+      toast({ title: t('ai_suggester.toast_saved_title'), description: t('ai_suggester.toast_saved_description') });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: t('ai_suggester.toast_save_error_title'),
+        description: error.message || t('ai_suggester.toast_save_error_description'),
+      });
+    } finally {
+      setSavingIndex(null);
+    }
+  };
+
+  const handleConfirmDeleteSaved = async () => {
+    if (!deleteTargetId) return;
+    setIsDeleting(true);
+    try {
+      const { error } = await deleteSavedConcept(deleteTargetId);
+      if (error) throw new Error(error);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: t('ai_suggester.toast_delete_error_title'),
+        description: error.message || t('ai_suggester.toast_delete_error_description'),
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteTargetId(null);
+    }
   };
 
   // window.print() non ha effetto dentro la WebView Android dell'app (non e'
@@ -441,6 +504,76 @@ export default function AiSuggesterPage() {
                     ))}
                   </div>
                 </CardContent>
+                <CardFooter className="print:hidden">
+                  <Button
+                    type="button"
+                    variant={savedFlags[index] ? 'secondary' : 'outline'}
+                    size="sm"
+                    disabled={savedFlags[index] || savingIndex === index}
+                    onClick={() => handleSaveConcept(option, index)}
+                  >
+                    {savingIndex === index ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : savedFlags[index] ? (
+                      <BookmarkCheck className="mr-2 h-4 w-4" />
+                    ) : (
+                      <Bookmark className="mr-2 h-4 w-4" />
+                    )}
+                    {savedFlags[index] ? t('ai_suggester.saved_button') : t('ai_suggester.save_button')}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {savedConcepts.length > 0 && (
+        <div className="space-y-4 print:hidden">
+          <h2 className="text-xl font-semibold">{t('ai_suggester.saved_section_title')}</h2>
+          <div className="grid grid-cols-1 gap-4">
+            {savedConcepts.map((sc) => (
+              <Card key={sc.id}>
+                <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0">
+                  <div className="min-w-0 space-y-1.5">
+                    <CardTitle className="break-words">{sc.title}</CardTitle>
+                    <CardDescription className="break-words">{sc.description}</CardDescription>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => setDeleteTargetId(sc.id)}
+                    aria-label={t('ai_suggester.delete_button')}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">{t('ai_suggester.top_note_label')}</p>
+                      <p className="font-medium">{sc.topNote}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">{t('ai_suggester.heart_note_label')}</p>
+                      <p className="font-medium">{sc.heartNote}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase text-muted-foreground">{t('ai_suggester.base_note_label')}</p>
+                      <p className="font-medium">{sc.baseNote}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 pt-2 border-t">
+                    {sc.fragrances.map((f, i) => (
+                      <div key={i} className="flex justify-between items-center">
+                        <span className="text-muted-foreground">{f.name}</span>
+                        <span className="font-bold text-primary">{f.percentage}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>
@@ -456,6 +589,29 @@ export default function AiSuggesterPage() {
           <AlertDialogFooter>
             <AlertDialogAction onClick={handleCloseBlockedDialog}>
               {t('ai_suggester.concept_blocked_close')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={deleteTargetId !== null} onOpenChange={(open) => !open && setDeleteTargetId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('ai_suggester.delete_alert_title')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('ai_suggester.delete_alert_description')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('settings.alert_cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmDeleteSaved();
+              }}
+              disabled={isDeleting}
+              className={cn(buttonVariants({ variant: 'destructive' }))}
+            >
+              {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {t('ai_suggester.delete_button')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

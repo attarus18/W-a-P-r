@@ -129,7 +129,20 @@
     "reward_no_ad": "Aucune vidéo disponible pour le moment. Réessayez dans quelques instants.",
     "reward_no_fill": "Aucune publicité n'est disponible pour le moment pour débloquer une demande gratuite. Réessayez plus tard, ou abonnez-vous pour ne plus dépendre des vidéos.",
     "reward_not_earned": "Vidéo non terminée : regardez-la jusqu'au bout pour débloquer la demande.",
-    "reward_pending": "Confirmation de la vidéo en cours. Réessayez dans quelques secondes."
+    "reward_pending": "Confirmation de la vidéo en cours. Réessayez dans quelques secondes.",
+    "save_button": "Enregistrer cette proposition",
+    "saved_button": "Enregistrée",
+    "toast_saved_title": "Proposition enregistrée",
+    "toast_saved_description": "La proposition a été ajoutée à vos propositions enregistrées.",
+    "toast_save_error_title": "Échec de l'enregistrement",
+    "toast_save_error_description": "Impossible d'enregistrer la proposition. Réessayez.",
+    "saved_section_title": "Vos propositions enregistrées",
+    "saved_empty": "Vous n'avez encore enregistré aucune proposition de fragrance.",
+    "delete_button": "Supprimer",
+    "delete_alert_title": "Supprimer cette proposition enregistrée ?",
+    "delete_alert_description": "Cette action est irréversible.",
+    "toast_delete_error_title": "Échec de la suppression",
+    "toast_delete_error_description": "Impossible de supprimer la proposition. Réessayez."
   },
   "materials": {
     "button_label": "Coût des matériaux",

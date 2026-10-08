@@ -129,7 +129,20 @@
     "reward_no_ad": "No hay ningún video disponible ahora. Inténtalo de nuevo en unos instantes.",
     "reward_no_fill": "Ahora mismo no hay anuncios disponibles para desbloquear una solicitud gratis. Inténtalo más tarde, o suscríbete para no depender de los videos.",
     "reward_not_earned": "Video no completado: velo hasta el final para desbloquear la solicitud.",
-    "reward_pending": "Todavía estoy confirmando el video. Inténtalo de nuevo en unos segundos."
+    "reward_pending": "Todavía estoy confirmando el video. Inténtalo de nuevo en unos segundos.",
+    "save_button": "Guardar esta propuesta",
+    "saved_button": "Guardada",
+    "toast_saved_title": "Propuesta guardada",
+    "toast_saved_description": "La propuesta se añadió a tus propuestas guardadas.",
+    "toast_save_error_title": "No se pudo guardar",
+    "toast_save_error_description": "No hemos podido guardar la propuesta. Inténtalo de nuevo.",
+    "saved_section_title": "Tus propuestas guardadas",
+    "saved_empty": "Todavía no has guardado ninguna propuesta de fragancia.",
+    "delete_button": "Eliminar",
+    "delete_alert_title": "¿Eliminar esta propuesta guardada?",
+    "delete_alert_description": "Esta acción no se puede deshacer.",
+    "toast_delete_error_title": "No se pudo eliminar",
+    "toast_delete_error_description": "No hemos podido eliminar la propuesta. Inténtalo de nuevo."
   },
   "materials": {
     "button_label": "Costo de materiales",

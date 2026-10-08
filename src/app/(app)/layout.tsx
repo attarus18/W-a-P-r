@@ -8,6 +8,7 @@ import { ProductProvider } from "@/context/product-context";
 import { RecipeProvider } from "@/context/recipe-context";
 import { MaterialsProvider } from "@/context/materials-context";
 import { SubscriptionProvider } from "@/context/subscription-context";
+import { FragranceConceptProvider } from "@/context/fragrance-concept-context";
 
 // Radix's Dialog/DropdownMenu/AlertDialog primitives each lock
 // `body.style.pointerEvents = "none"` while open and restore it on close.
@@ -42,16 +43,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <ProductProvider>
         <RecipeProvider>
           <MaterialsProvider>
-            <CurrencyProvider>
-              <main
-                className="p-4 sm:p-6 lg:p-8 pb-20"
-                style={{ paddingBottom: 'calc(5rem + var(--admob-banner-offset, 0px))' }}
-              >
-                {children}
-              </main>
-              <AppNavbar />
-              <AdmobBanner />
-            </CurrencyProvider>
+            <FragranceConceptProvider>
+              <CurrencyProvider>
+                <main
+                  className="p-4 sm:p-6 lg:p-8 pb-20"
+                  style={{ paddingBottom: 'calc(5rem + var(--admob-banner-offset, 0px))' }}
+                >
+                  {children}
+                </main>
+                <AppNavbar />
+                <AdmobBanner />
+              </CurrencyProvider>
+            </FragranceConceptProvider>
           </MaterialsProvider>
         </RecipeProvider>
       </ProductProvider>

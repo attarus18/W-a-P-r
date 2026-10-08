@@ -129,7 +129,20 @@
     "reward_no_ad": "Nessun video disponibile in questo momento. Riprova tra poco.",
     "reward_no_fill": "Al momento non ci sono pubblicità disponibili per sbloccare la richiesta gratis. Riprova più tardi, oppure abbonati per non dipendere dai video.",
     "reward_not_earned": "Video non completato: per sbloccare la richiesta guardalo fino alla fine.",
-    "reward_pending": "Sto ancora confermando il video. Riprova tra qualche secondo."
+    "reward_pending": "Sto ancora confermando il video. Riprova tra qualche secondo.",
+    "save_button": "Salva questa proposta",
+    "saved_button": "Salvata",
+    "toast_saved_title": "Proposta salvata",
+    "toast_saved_description": "La proposta è stata aggiunta alle tue proposte salvate.",
+    "toast_save_error_title": "Salvataggio non riuscito",
+    "toast_save_error_description": "Non siamo riusciti a salvare la proposta. Riprova.",
+    "saved_section_title": "Le tue proposte salvate",
+    "saved_empty": "Non hai ancora salvato nessuna proposta di fragranza.",
+    "delete_button": "Elimina",
+    "delete_alert_title": "Eliminare questa proposta salvata?",
+    "delete_alert_description": "L'azione non può essere annullata.",
+    "toast_delete_error_title": "Eliminazione non riuscita",
+    "toast_delete_error_description": "Non siamo riusciti a eliminare la proposta. Riprova."
   },
   "materials": {
     "button_label": "Costo Materiali",

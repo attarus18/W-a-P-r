@@ -129,7 +129,20 @@
     "reward_no_ad": "Er is momenteel geen video beschikbaar. Probeer het over even opnieuw.",
     "reward_no_fill": "Er zijn nu geen advertenties beschikbaar om een gratis aanvraag te ontgrendelen. Probeer het later opnieuw, of neem een abonnement om niet van video's afhankelijk te zijn.",
     "reward_not_earned": "Video niet volledig bekeken: bekijk hem tot het einde om het verzoek te ontgrendelen.",
-    "reward_pending": "De video wordt nog bevestigd. Probeer het over een paar seconden opnieuw."
+    "reward_pending": "De video wordt nog bevestigd. Probeer het over een paar seconden opnieuw.",
+    "save_button": "Dit voorstel opslaan",
+    "saved_button": "Opgeslagen",
+    "toast_saved_title": "Voorstel opgeslagen",
+    "toast_saved_description": "Het voorstel is toegevoegd aan je opgeslagen voorstellen.",
+    "toast_save_error_title": "Opslaan mislukt",
+    "toast_save_error_description": "We konden het voorstel niet opslaan. Probeer het opnieuw.",
+    "saved_section_title": "Je opgeslagen voorstellen",
+    "saved_empty": "Je hebt nog geen geurvoorstel opgeslagen.",
+    "delete_button": "Verwijderen",
+    "delete_alert_title": "Dit opgeslagen voorstel verwijderen?",
+    "delete_alert_description": "Deze actie kan niet ongedaan worden gemaakt.",
+    "toast_delete_error_title": "Verwijderen mislukt",
+    "toast_delete_error_description": "We konden het voorstel niet verwijderen. Probeer het opnieuw."
   },
   "materials": {
     "button_label": "Materiaalkosten",
