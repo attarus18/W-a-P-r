@@ -49,6 +49,40 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <!-- Widget della home screen (vedi RevenueWidgetProvider, InventoryWidgetProvider, RecipesWidgetProvider) -->
+        <receiver
+            android:name=".RevenueWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_revenue_info" />
+        </receiver>
+
+        <receiver
+            android:name=".InventoryWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_inventory_info" />
+        </receiver>
+
+        <receiver
+            android:name=".RecipesWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_recipes_info" />
+        </receiver>
     </application>
 
     <!-- Permissions -->

@@ -4,4 +4,15 @@
     <string name="title_activity_main">WaxPro Manager</string>
     <string name="package_name">appinventor.ai_attarus18.CalcoloCandele</string>
     <string name="custom_url_scheme">appinventor.ai_attarus18.CalcoloCandele</string>
+
+    <!-- Widget della home screen -->
+    <string name="widget_revenue_title">Entrate del mese</string>
+    <string name="widget_revenue_description">Entrate dell\'ultimo mese</string>
+    <string name="widget_inventory_title">Magazzino</string>
+    <string name="widget_inventory_description">Stato del magazzino</string>
+    <string name="widget_recipes_title">Ricette salvate</string>
+    <string name="widget_recipes_description">Ultime ricette salvate</string>
+    <string name="widget_loading">Caricamento…</string>
+    <string name="widget_signed_out">Apri WaxPro e accedi</string>
+    <string name="widget_error">Dati non disponibili</string>
 </resources>

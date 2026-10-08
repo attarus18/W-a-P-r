@@ -11,6 +11,9 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // I plugin Capacitor "custom" (scritti qui nel progetto, non da npm)
+        // vanno registrati prima di super.onCreate().
+        registerPlugin(WidgetAuthPlugin.class);
         super.onCreate(savedInstanceState);
         enableImmersiveMode();
     }

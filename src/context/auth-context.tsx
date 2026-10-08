@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
+import { syncWidgetSession } from '@/lib/native-widget-sync';
 
 interface AuthContextState {
   supabase: SupabaseClient;
@@ -24,11 +25,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       setUserError(error);
       setIsUserLoading(false);
+      syncWidgetSession(session);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setIsUserLoading(false);
+      // Tiene i widget della home screen Android al corrente di login,
+      // refresh del token e logout. No-op fuori dall'app nativa.
+      syncWidgetSession(session);
     });
 
     return () => subscription.unsubscribe();
