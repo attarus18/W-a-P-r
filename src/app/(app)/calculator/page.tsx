@@ -17,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2, Package, Tag, MoreHorizontal, Boxes } from 'lucide-react';
+import { Share2, RotateCcw, Droplets, Palette, Truck, GlassWater, Flame, Combine, Printer, Loader2, Package, Tag, MoreHorizontal, Boxes, Percent } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { useCurrency } from '@/context/currency-context';
@@ -47,6 +47,17 @@ type FormValues = {
   packaging: number;
   etichette: number;
   altro: number;
+  marginRetail: number;
+  marginWholesale: number;
+};
+
+// Formula standard di markup: parte dal costo e dal margine desiderato sul
+// prezzo di vendita (non sul costo), es. margine 65% = il costo e' il 35%
+// del prezzo finale. Margini >= 100 non hanno un prezzo finito.
+const suggestedPrice = (cost: number, marginPct: number): number | null => {
+  const margin = Number(marginPct) || 0;
+  if (margin >= 100) return null;
+  return cost / (1 - margin / 100);
 };
 
 export default function CalculatorPage() {
@@ -67,6 +78,8 @@ export default function CalculatorPage() {
       packaging: 0,
       etichette: 0,
       altro: 0,
+      marginRetail: 65,
+      marginWholesale: 35,
     }
   });
   const [totalCost, setTotalCost] = useState<number | null>(null);
@@ -102,6 +115,10 @@ export default function CalculatorPage() {
   const coloreUnit = watch('coloreUnit');
   const ceraVariantId = watch('ceraVariantId');
   const stoppinoVariantId = watch('stoppinoVariantId');
+  const marginRetail = watch('marginRetail');
+  const marginWholesale = watch('marginWholesale');
+  const suggestedRetailPrice = totalCost !== null ? suggestedPrice(totalCost, marginRetail) : null;
+  const suggestedWholesalePrice = totalCost !== null ? suggestedPrice(totalCost, marginWholesale) : null;
 
   // Promemoria "leggero" mentre si compila il form: avvisa al massimo una
   // volta per visita alla pagina, cosi' non interrompe la digitazione.
@@ -145,7 +162,7 @@ export default function CalculatorPage() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = data => {
-    const { nomeProdotto, ceraVariantId, ceraQty, ceraUnit, stoppinoVariantId, stoppinoQty, fragranzaQty, fragranzaUnit, coloreQty, coloreUnit, ...flatCostFields } = data;
+    const { nomeProdotto, ceraVariantId, ceraQty, ceraUnit, stoppinoVariantId, stoppinoQty, fragranzaQty, fragranzaUnit, coloreQty, coloreUnit, marginRetail, marginWholesale, ...flatCostFields } = data;
     const flatCost = Object.values(flatCostFields).reduce((acc, value) => acc + (Number(value) || 0), 0);
     const cost = flatCost
       + getWaxCost(ceraVariantId, ceraQty, ceraUnit)
@@ -278,6 +295,26 @@ export default function CalculatorPage() {
         y += 15;
         doc.setFontSize(22);
         doc.text(formatCurrency(totalCost), pageWidth - margin - 15, y, { align: 'right' });
+
+        y += 35;
+
+        // --- SUGGESTED PRICES ---
+        const retailPrice = suggestedPrice(totalCost, formValues.marginRetail);
+        const wholesalePrice = suggestedPrice(totalCost, formValues.marginWholesale);
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(mutedColor);
+        doc.text(t('calculator.margin_section_title').toUpperCase(), margin, y);
+        y += 15;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(textColor);
+        doc.setFontSize(11);
+        doc.text(`${t('calculator.suggested_retail_price_label')} (${formValues.marginRetail}%):`, margin, y);
+        doc.text(retailPrice !== null ? formatCurrency(retailPrice) : '—', pageWidth - margin, y, { align: 'right' });
+        y += 15;
+        doc.text(`${t('calculator.suggested_wholesale_price_label')} (${formValues.marginWholesale}%):`, margin, y);
+        doc.text(wholesalePrice !== null ? formatCurrency(wholesalePrice) : '—', pageWidth - margin, y, { align: 'right' });
 
         await savePdf(doc, 'waxpro-costo-produzione.pdf');
     } catch (error) {
@@ -450,6 +487,14 @@ export default function CalculatorPage() {
             <InputField id="packaging" label={t('calculator.packaging_cost_label', { currency: currency.symbol })} icon={Package} />
             <InputField id="etichette" label={t('calculator.labels_cost_label', { currency: currency.symbol })} icon={Tag} />
             <InputField id="altro" label={t('calculator.other_cost_label', { currency: currency.symbol })} icon={MoreHorizontal} />
+
+            <div className="sm:col-span-2 space-y-4 pt-2 border-t">
+              <Label className="text-base">{t('calculator.margin_section_title')}</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <InputField id="marginRetail" label={t('calculator.margin_retail_label')} icon={Percent} />
+                <InputField id="marginWholesale" label={t('calculator.margin_wholesale_label')} icon={Percent} />
+              </div>
+            </div>
           </CardContent>
           <CardFooter className="flex justify-between items-center flex-wrap gap-4">
              <Button type="submit">{t('calculator.submit_button')}</Button>
@@ -468,8 +513,19 @@ export default function CalculatorPage() {
               {productName ? `${productName} — ${t('calculator.result_description')}` : t('calculator.result_description')}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <p className="text-4xl font-bold text-primary">{formatCurrency(totalCost)}</p>
+            <div className="space-y-2 pt-2 border-t">
+              <p className="text-sm font-semibold text-muted-foreground">{t('calculator.margin_section_title')}</p>
+              <div className="flex justify-between items-baseline">
+                <span className="text-sm text-muted-foreground">{t('calculator.suggested_retail_price_label')} ({marginRetail}%)</span>
+                <span className="text-lg font-bold text-primary">{suggestedRetailPrice !== null ? formatCurrency(suggestedRetailPrice) : '—'}</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="text-sm text-muted-foreground">{t('calculator.suggested_wholesale_price_label')} ({marginWholesale}%)</span>
+                <span className="text-lg font-bold text-primary">{suggestedWholesalePrice !== null ? formatCurrency(suggestedWholesalePrice) : '—'}</span>
+              </div>
+            </div>
           </CardContent>
           <CardFooter className="flex-wrap justify-center gap-4">
             <Button variant="outline" onClick={handleShare}>
