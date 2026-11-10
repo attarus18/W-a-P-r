@@ -14,3 +14,16 @@ export const WAX_FRAGRANCE_PROFILES: Record<WaxType, { min: number; max: number;
 };
 
 export const DEFAULT_WAX_TYPE: WaxType = 'soy';
+
+// Densita' tipica (g/ml) per tipo di cera, usata per stimare il peso totale
+// a partire dal volume del contenitore. Fonte: pratiche comuni della
+// candelistica artigianale - valori indicativi, variano con la marca e la
+// temperatura di colata.
+export const WAX_DENSITIES: Record<WaxType, number> = {
+  soy: 0.9,
+  olive: 0.91,
+  rapeseed: 0.9,
+  beeswax: 0.96,
+  coconut: 0.92,
+  paraffin: 0.9,
+};
