@@ -15,11 +15,13 @@ export interface MaterialVariant {
   name: string;
   unit: string;
   price: number;
+  supplier?: string;
 }
 export interface SingleMaterial {
   id: string;
   unit: string;
   price: number;
+  supplier?: string;
 }
 
 interface MaterialsContextType {
@@ -29,7 +31,7 @@ interface MaterialsContextType {
   color?: SingleMaterial;
   isLoading: boolean;
   saveVariants: (materialType: VariantMaterialType, variants: MaterialVariant[]) => Promise<void>;
-  saveSingleMaterial: (materialType: SingleMaterialType, unit: string, price: number) => Promise<void>;
+  saveSingleMaterial: (materialType: SingleMaterialType, unit: string, price: number, supplier?: string) => Promise<void>;
 }
 
 const MaterialsContext = createContext<MaterialsContextType | undefined>(undefined);
@@ -64,10 +66,10 @@ export const MaterialsProvider = ({ children }: { children: ReactNode }) => {
     let fragrance: SingleMaterial | undefined;
     let color: SingleMaterial | undefined;
     (data ?? []).forEach((row: any) => {
-      if (row.material_type === 'wax') wax.push({ id: row.id, name: row.name ?? '', unit: row.unit, price: row.price });
-      else if (row.material_type === 'wick') wick.push({ id: row.id, name: row.name ?? '', unit: row.unit, price: row.price });
-      else if (row.material_type === 'fragrance') fragrance = { id: row.id, unit: row.unit, price: row.price };
-      else if (row.material_type === 'color') color = { id: row.id, unit: row.unit, price: row.price };
+      if (row.material_type === 'wax') wax.push({ id: row.id, name: row.name ?? '', unit: row.unit, price: row.price, supplier: row.supplier ?? undefined });
+      else if (row.material_type === 'wick') wick.push({ id: row.id, name: row.name ?? '', unit: row.unit, price: row.price, supplier: row.supplier ?? undefined });
+      else if (row.material_type === 'fragrance') fragrance = { id: row.id, unit: row.unit, price: row.price, supplier: row.supplier ?? undefined };
+      else if (row.material_type === 'color') color = { id: row.id, unit: row.unit, price: row.price, supplier: row.supplier ?? undefined };
     });
     setRemoteWax(wax);
     setRemoteWick(wick);
@@ -120,6 +122,7 @@ export const MaterialsProvider = ({ children }: { children: ReactNode }) => {
             name: v.name,
             unit: v.unit,
             price: v.price,
+            supplier: v.supplier || null,
             updated_at: new Date().toISOString(),
           })),
           { onConflict: 'id' }
@@ -132,7 +135,7 @@ export const MaterialsProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user, supabase, refetch, remoteWax, remoteWick]);
 
-  const saveSingleMaterial = useCallback(async (materialType: SingleMaterialType, unit: string, price: number) => {
+  const saveSingleMaterial = useCallback(async (materialType: SingleMaterialType, unit: string, price: number, supplier?: string) => {
     const existing = materialType === 'fragrance'
       ? (user ? remoteFragrance : localFragrance)
       : (user ? remoteColor : localColor);
@@ -147,14 +150,15 @@ export const MaterialsProvider = ({ children }: { children: ReactNode }) => {
           name: null,
           unit,
           price,
+          supplier: supplier || null,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'id' }
       );
       await refetch();
     } else {
-      if (materialType === 'fragrance') setLocalFragrance({ id, unit, price });
-      else setLocalColor({ id, unit, price });
+      if (materialType === 'fragrance') setLocalFragrance({ id, unit, price, supplier });
+      else setLocalColor({ id, unit, price, supplier });
     }
   }, [user, supabase, refetch, remoteFragrance, remoteColor, localFragrance, localColor]);
 

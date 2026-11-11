@@ -45,17 +45,21 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
   const [wickList, setWickList] = useState<MaterialVariant[]>([]);
   const [fragrancePrice, setFragrancePrice] = useState('0');
   const [fragranceUnit, setFragranceUnit] = useState<'ml' | 'l' | 'fl_oz'>('ml');
+  const [fragranceSupplier, setFragranceSupplier] = useState('');
   const [colorPrice, setColorPrice] = useState('0');
   const [colorUnit, setColorUnit] = useState<'g' | 'oz'>('g');
+  const [colorSupplier, setColorSupplier] = useState('');
 
   const [newWaxPreset, setNewWaxPreset] = useState<string>('soy');
   const [newWaxCustomName, setNewWaxCustomName] = useState('');
   const [newWaxPrice, setNewWaxPrice] = useState('0');
   const [newWaxUnit, setNewWaxUnit] = useState<'kg' | 'lb'>('kg');
+  const [newWaxSupplier, setNewWaxSupplier] = useState('');
 
   const [newWickPreset, setNewWickPreset] = useState<string>('cotton');
   const [newWickCustomName, setNewWickCustomName] = useState('');
   const [newWickPrice, setNewWickPrice] = useState('0');
+  const [newWickSupplier, setNewWickSupplier] = useState('');
 
   useEffect(() => {
     if (!open) return;
@@ -63,15 +67,19 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
     setWickList(wickVariants);
     setFragrancePrice(String(fragrance?.price ?? 0));
     setFragranceUnit((fragrance?.unit as 'ml' | 'l' | 'fl_oz') ?? 'ml');
+    setFragranceSupplier(fragrance?.supplier ?? '');
     setColorPrice(String(color?.price ?? 0));
     setColorUnit((color?.unit as 'g' | 'oz') ?? 'g');
+    setColorSupplier(color?.supplier ?? '');
     setNewWaxPreset('soy');
     setNewWaxCustomName('');
     setNewWaxPrice('0');
     setNewWaxUnit('kg');
+    setNewWaxSupplier('');
     setNewWickPreset('cotton');
     setNewWickCustomName('');
     setNewWickPrice('0');
+    setNewWickSupplier('');
   }, [open, waxVariants, wickVariants, fragrance, color]);
 
   const waxPresetLabel = (preset: string) => t(`materials.wax_preset_${preset}`);
@@ -80,16 +88,18 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
   const handleAddWax = () => {
     const name = newWaxPreset === 'other' ? newWaxCustomName.trim() : waxPresetLabel(newWaxPreset);
     if (!name) return;
-    setWaxList((prev) => [...prev, { id: '', name, unit: newWaxUnit, price: parseFloat(newWaxPrice) || 0 }]);
+    setWaxList((prev) => [...prev, { id: '', name, unit: newWaxUnit, price: parseFloat(newWaxPrice) || 0, supplier: newWaxSupplier.trim() || undefined }]);
     setNewWaxCustomName('');
     setNewWaxPrice('0');
+    setNewWaxSupplier('');
   };
   const handleAddWick = () => {
     const name = newWickPreset === 'other' ? newWickCustomName.trim() : wickPresetLabel(newWickPreset);
     if (!name) return;
-    setWickList((prev) => [...prev, { id: '', name, unit: 'piece', price: parseFloat(newWickPrice) || 0 }]);
+    setWickList((prev) => [...prev, { id: '', name, unit: 'piece', price: parseFloat(newWickPrice) || 0, supplier: newWickSupplier.trim() || undefined }]);
     setNewWickCustomName('');
     setNewWickPrice('0');
+    setNewWickSupplier('');
   };
 
   const updateWax = (index: number, patch: Partial<MaterialVariant>) => {
@@ -107,8 +117,8 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
       await Promise.all([
         saveVariants('wax', waxList),
         saveVariants('wick', wickList),
-        saveSingleMaterial('fragrance', fragranceUnit, parseFloat(fragrancePrice) || 0),
-        saveSingleMaterial('color', colorUnit, parseFloat(colorPrice) || 0),
+        saveSingleMaterial('fragrance', fragranceUnit, parseFloat(fragrancePrice) || 0, fragranceSupplier.trim() || undefined),
+        saveSingleMaterial('color', colorUnit, parseFloat(colorPrice) || 0, colorSupplier.trim() || undefined),
       ]);
       toast({ title: t('materials.toast_saved_title') });
       setOpen(false);
@@ -135,30 +145,38 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
           <div className="space-y-3">
             <Label className="text-base">{t('materials.wax_section_title')}</Label>
             {waxList.map((variant, index) => (
-              <div key={variant.id || `new-wax-${index}`} className="flex gap-2 items-center">
+              <div key={variant.id || `new-wax-${index}`} className="space-y-1">
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={variant.name}
+                    onChange={(e) => updateWax(index, { name: e.target.value })}
+                    className="flex-1 min-w-0"
+                  />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={variant.price}
+                    onChange={(e) => updateWax(index, { price: parseFloat(e.target.value) || 0 })}
+                    className="w-20 shrink-0"
+                  />
+                  <Select value={variant.unit} onValueChange={(v) => updateWax(index, { unit: v })}>
+                    <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
+                      <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeWax(index)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
                 <Input
-                  value={variant.name}
-                  onChange={(e) => updateWax(index, { name: e.target.value })}
-                  className="flex-1 min-w-0"
+                  value={variant.supplier ?? ''}
+                  onChange={(e) => updateWax(index, { supplier: e.target.value })}
+                  placeholder={t('materials.supplier_placeholder')}
+                  className="text-sm"
                 />
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={variant.price}
-                  onChange={(e) => updateWax(index, { price: parseFloat(e.target.value) || 0 })}
-                  className="w-20 shrink-0"
-                />
-                <Select value={variant.unit} onValueChange={(v) => updateWax(index, { unit: v })}>
-                  <SelectTrigger className="w-24 shrink-0"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="kg">{t('materials.unit_kg')}</SelectItem>
-                    <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeWax(index)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
               </div>
             ))}
             <div className="flex gap-2 items-center flex-wrap">
@@ -194,6 +212,12 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
                   <SelectItem value="lb">{t('materials.unit_lb')}</SelectItem>
                 </SelectContent>
               </Select>
+              <Input
+                placeholder={t('materials.supplier_placeholder')}
+                value={newWaxSupplier}
+                onChange={(e) => setNewWaxSupplier(e.target.value)}
+                className="flex-1 min-w-[120px]"
+              />
               <Button type="button" variant="secondary" size="icon" className="shrink-0" onClick={handleAddWax}>
                 <Plus className="h-4 w-4" />
               </Button>
@@ -204,23 +228,31 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
           <div className="space-y-3">
             <Label className="text-base">{t('materials.wick_section_title')}</Label>
             {wickList.map((variant, index) => (
-              <div key={variant.id || `new-wick-${index}`} className="flex gap-2 items-center">
+              <div key={variant.id || `new-wick-${index}`} className="space-y-1">
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={variant.name}
+                    onChange={(e) => updateWick(index, { name: e.target.value })}
+                    className="flex-1 min-w-0"
+                  />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={variant.price}
+                    onChange={(e) => updateWick(index, { price: parseFloat(e.target.value) || 0 })}
+                    className="w-24 shrink-0"
+                  />
+                  <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeWick(index)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
                 <Input
-                  value={variant.name}
-                  onChange={(e) => updateWick(index, { name: e.target.value })}
-                  className="flex-1 min-w-0"
+                  value={variant.supplier ?? ''}
+                  onChange={(e) => updateWick(index, { supplier: e.target.value })}
+                  placeholder={t('materials.supplier_placeholder')}
+                  className="text-sm"
                 />
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={variant.price}
-                  onChange={(e) => updateWick(index, { price: parseFloat(e.target.value) || 0 })}
-                  className="w-24 shrink-0"
-                />
-                <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeWick(index)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
               </div>
             ))}
             <div className="flex gap-2 items-center flex-wrap">
@@ -248,6 +280,12 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
                 value={newWickPrice}
                 onChange={(e) => setNewWickPrice(e.target.value)}
                 className="w-24 shrink-0"
+              />
+              <Input
+                placeholder={t('materials.supplier_placeholder')}
+                value={newWickSupplier}
+                onChange={(e) => setNewWickSupplier(e.target.value)}
+                className="flex-1 min-w-[120px]"
               />
               <Button type="button" variant="secondary" size="icon" className="shrink-0" onClick={handleAddWick}>
                 <Plus className="h-4 w-4" />
@@ -277,6 +315,12 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
                 </SelectContent>
               </Select>
             </div>
+            <Input
+              value={fragranceSupplier}
+              onChange={(e) => setFragranceSupplier(e.target.value)}
+              placeholder={t('materials.supplier_placeholder')}
+              className="text-sm"
+            />
           </div>
 
           {/* COLORE */}
@@ -300,6 +344,12 @@ export default function MaterialsDialog({ children, open: controlledOpen, onOpen
                 </SelectContent>
               </Select>
             </div>
+            <Input
+              value={colorSupplier}
+              onChange={(e) => setColorSupplier(e.target.value)}
+              placeholder={t('materials.supplier_placeholder')}
+              className="text-sm"
+            />
           </div>
         </div>
         <DialogFooter>

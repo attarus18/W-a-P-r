@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer, BookMarked, Layers } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RotateCcw, Scale, Droplets, Palette, NotebookPen, Flame, Weight, Share2, Printer, BookMarked, Layers, Beaker } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -17,11 +18,15 @@ import { useRecipes } from '@/context/recipe-context';
 import { useSubscription } from '@/context/subscription-context';
 import SaveRecipeDialog from '@/components/recipes/save-recipe-dialog';
 import { FREE_RECIPE_LIMIT, RECIPE_LIMITS, type PaidPlan } from '@/lib/constants';
-import { WAX_TYPES, WAX_FRAGRANCE_PROFILES, DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
+import { WAX_TYPES, WAX_FRAGRANCE_PROFILES, WAX_DENSITIES, DEFAULT_WAX_TYPE, type WaxType } from '@/lib/wax-types';
+import { convertWeight, type WeightUnit } from '@/lib/units';
+
+type InputMode = 'weight' | 'volume';
 
 type FormValues = {
   totalWeight: number;
   unit: 'g' | 'oz' | 'kg' | 'lb';
+  containerVolume: number;
 };
 
 type RecipeResult = {
@@ -36,6 +41,7 @@ export default function RecipeCalculatorPage() {
   const [waxType, setWaxType] = useState<WaxType>(DEFAULT_WAX_TYPE);
   const [fragrance, setFragrance] = useState(WAX_FRAGRANCE_PROFILES[DEFAULT_WAX_TYPE].default);
   const [color, setColor] = useState(1);
+  const [inputMode, setInputMode] = useState<InputMode>('weight');
   const [result, setResult] = useState<RecipeResult | null>(null);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const { recipes, addRecipe } = useRecipes();
@@ -54,11 +60,20 @@ export default function RecipeCalculatorPage() {
     defaultValues: {
       totalWeight: 100,
       unit: 'g',
+      containerVolume: 100,
     },
   });
 
+  // Peso stimato di cera per il volume del contenitore inserito, in base
+  // alla densita' tipica della cera scelta: usato sia nell'anteprima live
+  // che come peso totale effettivo quando si calcola in modalita' "volume".
+  const getWeightFromVolume = (volumeMl: number, unit: WeightUnit) =>
+    convertWeight((Number(volumeMl) || 0) * WAX_DENSITIES[waxType], 'g', unit);
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const totalWeight = data.totalWeight;
+    const totalWeight = inputMode === 'volume'
+      ? getWeightFromVolume(data.containerVolume, data.unit)
+      : data.totalWeight;
     const fragranceAmount = totalWeight * (fragrance / 100);
     const colorAmount = totalWeight * (color / 100);
     const waxAmount = totalWeight - fragranceAmount - colorAmount;
@@ -81,11 +96,15 @@ export default function RecipeCalculatorPage() {
     setWaxType(DEFAULT_WAX_TYPE);
     setFragrance(WAX_FRAGRANCE_PROFILES[DEFAULT_WAX_TYPE].default);
     setColor(1);
+    setInputMode('weight');
     setResult(null);
   };
   
   const unit = form.watch('unit');
-  const totalWeight = form.watch('totalWeight');
+  const rawTotalWeight = form.watch('totalWeight');
+  const containerVolume = form.watch('containerVolume');
+  const estimatedWeightFromVolume = getWeightFromVolume(containerVolume, unit);
+  const totalWeight = inputMode === 'volume' ? estimatedWeightFromVolume : rawTotalWeight;
 
   const getRecipeLimit = () => {
     const plan = subscription?.subscriptionPlan as PaidPlan | undefined;
@@ -276,6 +295,16 @@ ${t('recipe_calculator.result_title')}:
                     </SelectContent>
                 </Select>
             </div>
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2"><Beaker className="h-4 w-4" />{t('recipe_calculator.input_mode_label')}</Label>
+              <Tabs value={inputMode} onValueChange={(v) => setInputMode(v as InputMode)}>
+                <TabsList className="grid w-full grid-cols-2 h-auto">
+                  <TabsTrigger value="weight" className="whitespace-normal text-center leading-tight py-2">{t('recipe_calculator.input_mode_weight')}</TabsTrigger>
+                  <TabsTrigger value="volume" className="whitespace-normal text-center leading-tight py-2">{t('recipe_calculator.input_mode_volume')}</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="unit" className="flex items-center gap-2"><Scale className="h-4 w-4" />{t('recipe_calculator.unit_label')}</Label>
@@ -291,12 +320,25 @@ ${t('recipe_calculator.result_title')}:
                         </SelectContent>
                     </Select>
                 </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="totalWeight" className="flex items-center gap-2"><Weight className="h-4 w-4" />{t('recipe_calculator.total_weight_label', { unit })}</Label>
-                    <Input id="totalWeight" type="number" {...form.register('totalWeight', { valueAsNumber: true })} />
-                </div>
+                {inputMode === 'weight' ? (
+                  <div className="space-y-2">
+                      <Label htmlFor="totalWeight" className="flex items-center gap-2"><Weight className="h-4 w-4" />{t('recipe_calculator.total_weight_label', { unit })}</Label>
+                      <Input id="totalWeight" type="number" {...form.register('totalWeight', { valueAsNumber: true })} />
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                      <Label htmlFor="containerVolume" className="flex items-center gap-2"><Beaker className="h-4 w-4" />{t('recipe_calculator.container_volume_label')}</Label>
+                      <Input id="containerVolume" type="number" {...form.register('containerVolume', { valueAsNumber: true })} />
+                      <p className="text-xs text-muted-foreground">
+                        {t('recipe_calculator.estimated_weight_hint', {
+                          weight: estimatedWeightFromVolume.toFixed(1),
+                          unit,
+                        })}
+                      </p>
+                  </div>
+                )}
             </div>
-            
+
             <div className="space-y-4">
               <Label htmlFor="fragrancePercentage" className="flex items-center gap-2">
                 <Droplets className="h-4 w-4" />

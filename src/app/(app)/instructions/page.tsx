@@ -42,8 +42,10 @@ export default function InstructionsPage() {
                   <li><strong>{t('calculator.packaging_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li7')}</li>
                   <li><strong>{t('calculator.labels_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li8')}</li>
                   <li><strong>{t('calculator.other_cost_label', {currency: ''}).replace(' ()', '')}:</strong> {t('instructions.calculator.li9')}</li>
+                  <li><strong>{t('calculator.margin_section_title')}:</strong> {t('instructions.calculator.li10')}</li>
                 </ul>
                 <p>{t('instructions.calculator.p2')}</p>
+                <p>{t('instructions.calculator.p3')}</p>
               </AccordionContent>
             </AccordionItem>
             
@@ -61,6 +63,7 @@ export default function InstructionsPage() {
                   <li><strong>{t('recipe_calculator.total_weight_label', {unit: ''}).replace(' ()', '')}:</strong> {t('instructions.recipe_calculator.li2')}</li>
                   <li><strong>{t('recipe_calculator.fragrance_label')}:</strong> {t('instructions.recipe_calculator.li3')}</li>
                   <li><strong>{t('recipe_calculator.color_label')}:</strong> {t('instructions.recipe_calculator.li4')}</li>
+                  <li><strong>{t('recipe_calculator.input_mode_label')}:</strong> {t('instructions.recipe_calculator.li5')}</li>
                 </ul>
                 <p>{t('instructions.recipe_calculator.p2')}</p>
                 <p>{t('instructions.recipe_calculator.p3')}</p>
