@@ -298,9 +298,9 @@ ${t('recipe_calculator.result_title')}:
             <div className="space-y-2">
               <Label className="flex items-center gap-2"><Beaker className="h-4 w-4" />{t('recipe_calculator.input_mode_label')}</Label>
               <Tabs value={inputMode} onValueChange={(v) => setInputMode(v as InputMode)}>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="weight">{t('recipe_calculator.input_mode_weight')}</TabsTrigger>
-                  <TabsTrigger value="volume">{t('recipe_calculator.input_mode_volume')}</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 h-auto">
+                  <TabsTrigger value="weight" className="whitespace-normal text-center leading-tight py-2">{t('recipe_calculator.input_mode_weight')}</TabsTrigger>
+                  <TabsTrigger value="volume" className="whitespace-normal text-center leading-tight py-2">{t('recipe_calculator.input_mode_volume')}</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
