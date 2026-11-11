@@ -539,7 +539,9 @@
       "li7": "Die Kosten für die Verpackung (Kartons, Umhüllungen usw.).",
       "li8": "Die Kosten für Etiketten.",
       "li9": "Alle sonstigen zusätzlichen Kosten.",
-      "p2": "Klicken Sie auf 'Gesamt Berechnen', um die Endkosten zu sehen: Die Seite scrollt automatisch zum Ergebnis. Von dort können Sie 'Ergebnis Teilen' verwenden, um das Ergebnis zu kopieren, oder 'PDF Exportieren', um ein druckbares Blatt herunterzuladen. Die Schaltfläche 'Zurücksetzen' leert alle Felder."
+      "li10": "Legen Sie eine Einzelhandels- und eine Großhandelsmarge fest: Die App berechnet automatisch den empfohlenen Verkaufspreis für jede, basierend auf den Produktionskosten.",
+      "p2": "Klicken Sie auf 'Gesamt Berechnen', um die Endkosten zu sehen: Die Seite scrollt automatisch zum Ergebnis. Von dort können Sie 'Ergebnis Teilen' verwenden, um das Ergebnis zu kopieren, oder 'PDF Exportieren', um ein druckbares Blatt herunterzuladen. Die Schaltfläche 'Zurücksetzen' leert alle Felder.",
+      "p3": "Im Dialog 'Materialkosten' können Sie auch den Lieferanten für jedes Material (Wachs, Docht, Duft, Farbe) notieren, damit Sie immer wissen, wo Sie es gekauft haben."
     },
     "recipe_calculator": {
       "p1": "Dieses Werkzeug ist unerlässlich für die Erstellung präziser Rezepte. Es hilft Ihnen, die richtigen Proportionen von Wachs, Duft und Farbe basierend auf dem gewünschten Gesamtgewicht zu berechnen.",
@@ -547,6 +549,7 @@
       "li2": "Geben Sie das Gesamtgewicht der Kerze ein, die Sie herstellen möchten.",
       "li3": "Verwenden Sie den Schieberegler, um den Duftprozentsatz zu definieren.",
       "li4": "Verwenden Sie den Schieberegler, um den Farbprozentsatz zu definieren.",
+      "li5": "Als Alternative zum Gesamtgewicht wechseln Sie in den Modus 'Behältervolumen' und geben das Volumen in ml ein: Die App schätzt automatisch das benötigte Wachsgewicht basierend auf der typischen Dichte des gewählten Wachses.",
       "p2": "Wenn Sie auf 'Rezept Berechnen' klicken, zeigt Ihnen die App die genauen Mengen jedes Inhaltsstoffs an und scrollt automatisch zum Ergebnis.",
       "p3": "Von dort können Sie das Ergebnis teilen, als PDF exportieren, oder in Ihrem Rezeptarchiv speichern, um es später wiederzuverwenden."
     },

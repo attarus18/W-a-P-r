@@ -539,7 +539,9 @@
       "li7": "Le coût de l'emballage (boîtes, papier, etc.).",
       "li8": "Le coût des étiquettes.",
       "li9": "Tout autre coût supplémentaire.",
-      "p2": "Cliquez sur 'Calculer le Total' pour voir le coût final : la page défile automatiquement jusqu'au résultat. De là, vous pouvez utiliser 'Partager le Résultat' pour copier le résultat ou 'Exporter en PDF' pour télécharger une fiche imprimable. Le bouton 'Réinitialiser' efface tous les champs."
+      "li10": "Définissez une marge au détail et une marge en gros : l'application calcule automatiquement le prix de vente recommandé pour chacune, en fonction du coût de production.",
+      "p2": "Cliquez sur 'Calculer le Total' pour voir le coût final : la page défile automatiquement jusqu'au résultat. De là, vous pouvez utiliser 'Partager le Résultat' pour copier le résultat ou 'Exporter en PDF' pour télécharger une fiche imprimable. Le bouton 'Réinitialiser' efface tous les champs.",
+      "p3": "Dans la boîte de dialogue « Coût des matériaux », vous pouvez aussi noter le fournisseur de chaque matériau (cire, mèche, parfum, couleur), pour toujours vous rappeler où vous l'avez acheté."
     },
     "recipe_calculator": {
       "p1": "Cet outil est essentiel pour créer des recettes précises. Il vous aide à calculer les bonnes proportions de cire, de parfum et de couleur en fonction du poids total souhaité.",
@@ -547,6 +549,7 @@
       "li2": "Entrez le poids total de la bougie que vous souhaitez produire.",
       "li3": "Utilisez le curseur pour définir le pourcentage de parfum.",
       "li4": "Utilisez le curseur pour définir le pourcentage de couleur.",
+      "li5": "En alternative au poids total, passez en mode « Volume du Contenant » et saisissez le volume en ml : l'application estime automatiquement le poids de cire nécessaire selon la densité typique de la cire choisie.",
       "p2": "En cliquant sur 'Calculer la Recette', l'application vous montrera les quantités exactes de chaque ingrédient et défilera automatiquement jusqu'au résultat.",
       "p3": "De là, vous pouvez partager le résultat, l'exporter en PDF, ou l'enregistrer dans votre Archive des Recettes pour le réutiliser plus tard."
     },

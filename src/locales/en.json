@@ -539,7 +539,9 @@
       "li7": "The cost of packaging (boxes, wrapping, etc.).",
       "li8": "The cost of labels.",
       "li9": "Any other additional cost.",
-      "p2": "Click 'Calculate Total' to see the final cost: the page automatically scrolls to the result. From there you can use 'Share' to copy the result or 'Export PDF' to download a printable sheet. The 'Reset' button clears all fields."
+      "li10": "Set a retail and a wholesale margin: the app automatically calculates the recommended selling price for each, based on the production cost.",
+      "p2": "Click 'Calculate Total' to see the final cost: the page automatically scrolls to the result. From there you can use 'Share' to copy the result or 'Export PDF' to download a printable sheet. The 'Reset' button clears all fields.",
+      "p3": "In the 'Materials Cost' dialog you can also note the supplier for each material (wax, wick, fragrance, color), so you always remember where you bought it."
     },
     "recipe_calculator": {
       "p1": "This tool is essential for creating precise recipes. It helps you calculate the correct proportions of wax, fragrance, and color based on the desired total weight.",
@@ -547,6 +549,7 @@
       "li2": "Enter the total weight of the candle you want to produce.",
       "li3": "Use the slider to define the fragrance percentage.",
       "li4": "Use the slider to define the color percentage.",
+      "li5": "As an alternative to total weight, switch to 'Container Volume' mode and enter the volume in ml: the app automatically estimates the wax weight needed based on the typical density of the chosen wax.",
       "p2": "By clicking 'Calculate Recipe', the app will show you the exact quantities of each ingredient and automatically scroll to the result.",
       "p3": "From there you can share the result, export it as a PDF, or save it to your Recipe Archive to reuse it later."
     },

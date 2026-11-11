@@ -539,7 +539,9 @@
       "li7": "De kosten van de verpakking (dozen, inpakmateriaal, enz.).",
       "li8": "De kosten van de labels.",
       "li9": "Eventuele andere bijkomende kosten.",
-      "p2": "Klik op 'Totaal berekenen' om de uiteindelijke kosten te zien: de pagina scrollt automatisch naar het resultaat. Van daaruit kun je 'Delen' gebruiken om het resultaat te kopiëren of 'Exporteer PDF' om een afdrukbaar blad te downloaden. Met de knop 'Reset' maak je alle velden leeg."
+      "li10": "Stel een retailmarge en een groothandelsmarge in: de app berekent automatisch de aanbevolen verkoopprijs voor elk, op basis van de productiekosten.",
+      "p2": "Klik op 'Totaal berekenen' om de uiteindelijke kosten te zien: de pagina scrollt automatisch naar het resultaat. Van daaruit kun je 'Delen' gebruiken om het resultaat te kopiëren of 'Exporteer PDF' om een afdrukbaar blad te downloaden. Met de knop 'Reset' maak je alle velden leeg.",
+      "p3": "In de dialoog 'Materiaalkosten' kun je ook de leverancier van elk materiaal (was, lont, geurstof, kleurstof) noteren, zodat je altijd weet waar je het hebt gekocht."
     },
     "recipe_calculator": {
       "p1": "Deze tool is essentieel voor het maken van nauwkeurige recepten. Hiermee bereken je de juiste verhoudingen was, geurstof en kleurstof op basis van het gewenste totaalgewicht.",
@@ -547,6 +549,7 @@
       "li2": "Voer het totaalgewicht in van de kaars die je wilt maken.",
       "li3": "Gebruik de schuifregelaar om het geurpercentage in te stellen.",
       "li4": "Gebruik de schuifregelaar om het kleurpercentage in te stellen.",
+      "li5": "Als alternatief voor het totaalgewicht kun je overschakelen naar de modus 'Containervolume' en het volume in ml invoeren: de app schat automatisch het benodigde wasgewicht op basis van de typische dichtheid van de gekozen was.",
       "p2": "Klik op 'Recept berekenen' en de app toont de exacte hoeveelheden van elk ingrediënt en scrollt automatisch naar het resultaat.",
       "p3": "Van daaruit kun je het resultaat delen, als PDF exporteren of opslaan in je Receptenarchief om het later opnieuw te gebruiken."
     },

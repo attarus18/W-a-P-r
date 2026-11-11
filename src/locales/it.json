@@ -539,7 +539,9 @@
       "li7": "Il costo del packaging (scatole, confezioni, ecc.).",
       "li8": "Il costo delle etichette.",
       "li9": "Qualsiasi altro costo aggiuntivo.",
-      "p2": "Clicca su 'Calcola Totale' per vedere il costo finale: la pagina scorre automaticamente al risultato. Da lì puoi usare 'Condividi' per copiare il risultato o 'Esporta PDF' per scaricare una scheda stampabile. Il pulsante 'Reset' azzera tutti i campi."
+      "li10": "Imposta un margine per il dettaglio e uno per l'ingrosso: l'app calcola in automatico il prezzo di vendita consigliato per ciascuno, in base al costo di produzione.",
+      "p2": "Clicca su 'Calcola Totale' per vedere il costo finale: la pagina scorre automaticamente al risultato. Da lì puoi usare 'Condividi' per copiare il risultato o 'Esporta PDF' per scaricare una scheda stampabile. Il pulsante 'Reset' azzera tutti i campi.",
+      "p3": "Nel dialog 'Costo Materiali' puoi anche annotare il fornitore di ogni materiale (cera, stoppino, fragranza, colore), per ricordare sempre a chi lo hai comprato."
     },
     "recipe_calculator": {
       "p1": "Questo strumento è essenziale per creare ricette precise. Ti aiuta a calcolare le giuste proporzioni di cera, fragranza e colore in base al peso totale desiderato.",
@@ -547,6 +549,7 @@
       "li2": "Inserisci il peso totale della candela che vuoi produrre.",
       "li3": "Usa lo slider per definire la percentuale di fragranza.",
       "li4": "Usa lo slider per definire la percentuale di colore.",
+      "li5": "In alternativa al peso totale, passa alla modalità 'Volume Contenitore' e inserisci il volume in ml: l'app stima automaticamente il peso di cera necessario in base alla densità tipica della cera scelta.",
       "p2": "Cliccando su 'Calcola Ricetta', l'app ti mostrerà le quantità esatte di ogni ingrediente e scorrerà automaticamente al risultato.",
       "p3": "Da lì puoi condividere il risultato, esportarlo in PDF, oppure salvarlo nel tuo Archivio Ricette per riutilizzarlo in futuro."
     },

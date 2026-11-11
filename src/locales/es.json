@@ -539,7 +539,9 @@
       "li7": "El costo del embalaje (cajas, envoltorios, etc.).",
       "li8": "El costo de las etiquetas.",
       "li9": "Cualquier otro costo adicional.",
-      "p2": "Haz clic en 'Calcular Total' para ver el costo final: la página se desplaza automáticamente al resultado. Desde allí puedes usar 'Compartir' para copiar el resultado o 'Exportar PDF' para descargar una ficha imprimible. El botón 'Reiniciar' borra todos los campos."
+      "li10": "Establece un margen al detalle y uno al mayoreo: la app calcula automáticamente el precio de venta recomendado para cada uno, según el costo de producción.",
+      "p2": "Haz clic en 'Calcular Total' para ver el costo final: la página se desplaza automáticamente al resultado. Desde allí puedes usar 'Compartir' para copiar el resultado o 'Exportar PDF' para descargar una ficha imprimible. El botón 'Reiniciar' borra todos los campos.",
+      "p3": "En el diálogo 'Costo de materiales' también puedes anotar el proveedor de cada material (cera, mecha, fragancia, color), para recordar siempre dónde lo compraste."
     },
     "recipe_calculator": {
       "p1": "Esta herramienta es esencial para crear recetas precisas. Le ayuda a calcular las proporciones correctas de cera, fragancia y color según el peso total deseado.",
@@ -547,6 +549,7 @@
       "li2": "Ingresa el peso total de la vela que deseas producir.",
       "li3": "Use el control deslizante para definir el porcentaje de fragancia.",
       "li4": "Use el control deslizante para definir el porcentaje de color.",
+      "li5": "Como alternativa al peso total, cambia al modo 'Volumen del Recipiente' e ingresa el volumen en ml: la app estima automáticamente el peso de cera necesario según la densidad típica de la cera elegida.",
       "p2": "Al hacer clic en 'Calcular Receta', la aplicación le mostrará las cantidades exactas de cada ingrediente y se desplazará automáticamente al resultado.",
       "p3": "Desde allí puedes compartir el resultado, exportarlo a PDF, o guardarlo en tu Archivo de Recetas para reutilizarlo más adelante."
     },
